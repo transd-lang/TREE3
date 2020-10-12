@@ -1366,7 +1366,7 @@ void s161::s182( s160* s192, size_t s193 /*= 0*/ )
 
 const s161& s161::s184( const std::wstring& s170 ) const
 {
-	int cnt = s173.count( s170 );
+	size_t cnt = s173.count( s170 );
 	if( cnt > 1 )
 		throw s5( L"multiple values: " + s170, (uint32_t)s63 );
 	if( cnt == 1 ) {
@@ -1627,6 +1627,15 @@ s210* s507( s227& m, const wstring& key )
 	if( ret == m.end() )
 		throw s5( L"no such key: " + key, (uint32_t)s5::s6::s12 );
 	return ret->second;
+}
+
+void s515( const std::wstring& s, std::wstring& modName, std::wstring& s357 )
+{
+	size_t pl = s.find( L"::" );
+	if( pl == string::npos || s.find( L"::", pl + 1 ) != string::npos )
+		throw s5( L"unknown format of qualified name: " + s, (uint32_t)s5::s6::s9 );
+	modName = s.substr( 0, pl );
+	s357 = s.substr( pl + 2 );
 }
 vector<wstring> s256::s259 = { s96::s113, s96::s111,
 																					s96::s114, s96::s112 };
@@ -3217,7 +3226,7 @@ void s307::s196( std::wostream* pd, int ind /*=0*/ ) const
 
 
 s228::s228( const s228& right )
-	: s210( right.s192, s201 ), s229( right.s229 ), s312( right.s312 )
+	: s210( right.s192, s201 ), s229( right.s229 ), s312( right.s312 ), s314( 0 )
 
 {
 
@@ -3979,7 +3988,7 @@ Transd* s324::s356( s426* cs, s160* s192, s164* s429,
 
 	if( s338 ) {
 
-		ret = new s324( s192, s429, s430, s166, s338, s431->s233( s357 ) );
+		ret = new s324( s192, s430, s166, s338, s431->s233( s357 ) );
 		ret->s346 = s342;
 
 	}
@@ -4006,7 +4015,7 @@ Transd* s324::s356( s426* cs, s160* s192, s164* s429,
 }
 
 s324::s324( s160* s192, s164* s441, s164* s442, const vector<s210*>& l )
-	: s164( s192, 0, s202 ), s338( NULL ), s429( s441 ), s352( s442 ),
+	: s164( s192, 0, s202 ), s338( NULL ), s429( s441 ), s352( s442 ), s447( NULL ),
 		virtType( s488 )
 {
 	size_t n = 0;
@@ -4029,9 +4038,9 @@ s324::s324( s160* s192, s164* s441, s164* s442, const vector<s210*>& l )
 	s351.insert( s351.end(), l.begin() + n, l.end() );
 }
 
-s324::s324( s160* s192, s164* s441, s164* s442, const std::vector<s210*>& l,
+s324::s324( s160* s192, s164* s442, const std::vector<s210*>& l,
 	s292 s443, size_t s444 )
-	: s164( s192, 0, s202 ), s338( s443 ), s352( s442 ), virtType( s488 )
+	: s164( s192, 0, s202 ), s338( s443 ), s429( NULL ), s352( s442 ), s447( NULL ), virtType( s488 )
 {
 	s214 = s444;
 	s166 = l;
@@ -4042,7 +4051,7 @@ s324::s324( const s324& right, s164* s441, s164* s442,
 	: s164( right.s192, right.s214, right.s213 ), 
 
 		s170( right.s170 ), s349( right.s349 ),
-		s429( s441 ), s352( s442 ), virtType( s488 )
+		s429( s441 ), s352( s442 ), s447( NULL ), virtType( s488 )
 {
 
 	s338 = right.s338;
@@ -4916,16 +4925,11 @@ s209* s160::run()
 	return callFunc( s371, l );
 }
 
-s209* s160::callFunc( const wstring& s357, vector<wstring>& l )
+s209* s160::callFunc( const wstring& s, vector<wstring>& l )
 {
-	size_t pl = s357.find( L"::" );
-	if( pl == string::npos || s357.find( L"::", pl + 1 ) != string::npos )
-		throw s5( L"unknown entry point: " + s357, (uint32_t)s5::s6::s9 );
-	wstring s513 = s357.substr( 0, pl );
-	wstring s514 = s357.substr( pl + 2 );
-
+	wstring  s514, s513;
+	s515( s, s513, s514 );
 	s164* mod = (s164*)s326.get( s513 );
-
 	s324* s372 = (s324*)mod->s336( s514, L"::" );
 	vector<s210*> s166;
 	for( size_t n = 0; n < l.size(); n++ ) {
@@ -4936,11 +4940,23 @@ s209* s160::callFunc( const wstring& s357, vector<wstring>& l )
 	s372->s495( s166 );
 	s210* pr = s372->s216();
 	if( !pr )
-		s372->s221( mod->s190() );
+		s372->s221( L"::" );
 	else
-		s372->s496( mod->s190() );
+		s372->s496( L"::" );
 
 	return s372->s217();
+}
+
+s324* s160::getProc( const std::wstring& s )
+{
+	wstring  s514, s513;
+	s515( s, s513, s514 );
+	s164* mod = (s164*)s326.get( s513 );
+	s324* s372 = (s324*)mod->s336( s514, L"::" );
+	s210* pr = s372->s216();
+	if( !pr )
+		s372->s221( mod->s190() );
+	return s372;
 }
 
 void s160::s373( const std::wstring& s394 )
@@ -5131,6 +5147,12 @@ void loadProgram( HPROG handle, const wstring& s394 )
 	p->s502( s394 );
 }
 
+TDType* getProc( HPROG handle, const std::wstring& s357 )
+{
+	s160* p = handles[handle];
+	return (TDType*)p->getProc( s357 );
+}
+
 void s504( HPROG handle, s44::s57& obj )
 {
 	s160* p = handles[handle];
@@ -5159,7 +5181,7 @@ void* getExportVariable( HPROG handle, const std::wstring& s170 )
 	return p->getExportVariable( s170 );
 }
 
-void* execute( s163* p )
+void* execute( TDType* p )
 {
 	return ( (s291*)p->s217() )->addr();
 }

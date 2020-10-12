@@ -732,6 +732,7 @@ public:
 
 typedef std::multimap<std::wstring, s210*> s227;
 s210* s507( s227& m, const std::wstring& key );
+void s515( const std::wstring& s, std::wstring& modName, std::wstring& s357 );
 
 class s209;
 class s228;
@@ -1210,7 +1211,7 @@ class s228
 	std::vector<size_t> s313;
 	size_t s314;
 public:
-	s228( const std::wstring& s, s160* s192 ) : s210( s192, s201 ), s229( s )/*, off(NULL)*/ { }
+	s228( const std::wstring& s, s160* s192 ) : s210( s192, s201 ), s229( s ), s314( 0 )/*, off(NULL)*/ { }
 	s228( const s228& right );
 
 	virtual bool isTypeOf( const s209* classObj ) const override;
@@ -1373,7 +1374,7 @@ public:
 	s324( const s324& right, s164* s429, s164* s352,
 		const std::vector<s210*>& s166 );
 	s324( s160* s192, s164* s429, s164* s352, const std::vector<s210*>& l );
-	s324( s160* s192, s164* s429, s164* s352, const std::vector<s210*>& l,
+	s324( s160* s192, s164* s352, const std::vector<s210*>& l,
 		s292 s338, size_t s214 );
 	virtual ~s324();
 	void s497( s486 vt ) { virtType = vt; }
@@ -1555,7 +1556,8 @@ public:
 	void s504( s44::s57& obj );
 	void s505( const std::wstring& s385 );
 	s209* run();
-	s209* callFunc( const std::wstring& func, std::vector<std::wstring>& l );
+	s209* callFunc( const std::wstring& s357, std::vector<std::wstring>& l );
+	s324* getProc( const std::wstring& s357 );
 
 	s324* s377( const std::wstring& s357, std::vector<s210*>& s166, s164* s429, s164* s430 );
 	s163* s378( const std::wstring& val, const std::wstring& s226 );
@@ -1579,8 +1581,10 @@ void loadProgram( HPROG handle, const std::wstring& s394 );
 void s504( HPROG handle, s44::s57& obj );
 s209* run( HPROG handle );
 void* callFunc( HPROG handle, const std::wstring& sf, std::vector<std::wstring>& l );
+TDType* getProc( HPROG handle, const std::wstring& s357 );
+
 void* getExportVariable( HPROG handle, const std::wstring& s170 );
-void* execute( s163* func );
+void* execute( TDType* func );
 void importSymbol( HPROG handle, const std::wstring& modName, const std::wstring& symName,
 										const std::wstring& s226 );
 void importFile( HPROG handle, const std::wstring& modName, const std::wstring& s388,
