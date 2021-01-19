@@ -36,10 +36,14 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.1";
+wstring buildnum = L"102";
 wstring copyright = L"FREND: shell for TransD programming language.\n\nCopyright (c) 2020 Albert Berger."
-"\nVersion: " + version;
+"\nVersion: " + version + L"." + buildnum;
 
 #define CMD_RUNFILE 1
+
+wstring whitespace = L"\n\r\t ";
+
 
 wstring clearAll( const std::wstring& s, const std::wstring& c )
 {
@@ -65,6 +69,49 @@ wstring getStringVal_( const wstring& prompt, bool endLn = false )
 void showFrendInfo()
 {
 	wcout << copyright << endl;
+}
+
+void findPairedBlock( const wstring& s, size_t startFrom, wchar_t c, size_t& start, size_t& end )
+{
+	end = string::npos;
+	start = s.find( c, startFrom );
+	if( start == string::npos || start == s.size() - 1 )
+		return;
+	bool backslash = false;
+	for( size_t n = start + 1; n < s.size(); ++n ) {
+		if( s[n] == L'\\' )
+			backslash = !backslash;
+		else
+			backslash = false;
+		if( s[n] == c && !backslash ) {
+			end = n;
+			return;
+		}
+	}
+}
+
+void parseArgs( const wstring& sf, vector<wstring>& res )
+{
+	size_t stPos = sf.find_first_not_of( whitespace );
+	size_t _frStart, _frEnd;
+	while( stPos != string::npos ) {
+		wchar_t c = sf[stPos];
+		wstring arg;
+		if( c == L'\"' || c == L'\'' ) {
+			findPairedBlock( sf, stPos, c, _frStart, _frEnd );
+			if( _frEnd == string::npos )
+				throw TDException( L"Quotes don't match near \'" + sf.substr( stPos, 40 ) + L"...\'" );
+			arg = sf.substr( stPos, _frEnd - stPos + 1 );
+			stPos = sf.find_first_not_of( whitespace, _frEnd );
+		}
+		else {
+			_frEnd = sf.find_first_of( whitespace );
+			arg = sf.substr( stPos, _frEnd - stPos );
+			stPos = _frEnd;
+		}
+
+		res.push_back( arg );
+	}
 }
 
 struct OPTIONS
@@ -108,12 +155,16 @@ void importFile( const wstring& fpath )
 	transd::importFile( prog, shellModuleName, fpath, shellModuleName );
 }
 
-void runFile( const wstring& fpath )
+void runFile( const wstring& args_ )
 {
+	vector<wstring> args;
+	parseArgs( args_, args );
+	if( args.empty() )
+		return;
 	try {
 		HPROG prog = createAssembly();
-		loadProgram( prog, fpath );
-		transd::run( prog );
+		loadProgram( prog, args[0] );
+		transd::run( prog, args );
 	}
 	catch( TDException& e ) {
 		wcout << L"TDException has occured: \n\n" << e.Msg() << endl;

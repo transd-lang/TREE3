@@ -1,6 +1,7 @@
-This license only covers FREND shell project and doesn't cover the distribution
-Transd library files: transd.hpp and transd.cpp. They are a different product
-used in FREND and covered by a separate license.
+This license only covers FREND interpreter project and doesn't cover the distribution 
+files of Tourbillon compiler library: transd.hpp and transd.cpp included in the FREND
+project. Tourbillon compiler is a separate product used in FREND and covered by a
+separate license.
 
                                  Apache License
                            Version 2.0, January 2004
