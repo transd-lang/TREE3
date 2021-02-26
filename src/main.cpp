@@ -1,7 +1,7 @@
 /*
-Copyright (c) 2020 Albert Berger
+Copyright (c) 2020-2021 Albert Berger
 
-Licensed under the Apache License, Version 2.0 (the "License");
+This file is licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may view the text of the License in the 'LICENSE' file
 shipped with the distribution of FREND shell.
@@ -30,14 +30,15 @@ using namespace std;
 using namespace transd;
 
 
-wstring exprPrompt = L"D : ";
+wstring exprPrompt = L"D-: ";
 wstring shellModuleName = L"_frend__";
 wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
-wstring version = L"0.1";
-wstring buildnum = L"102";
-wstring copyright = L"FREND: shell for TransD programming language.\n\nCopyright (c) 2020 Albert Berger."
+wstring version = L"0.2";
+wstring buildnum = L"301";
+wstring copyright = L"FREND: command line REPL application for TransD programming language."
+"\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum;
 
 #define CMD_RUNFILE 1
@@ -100,9 +101,9 @@ void parseArgs( const wstring& sf, vector<wstring>& res )
 		if( c == L'\"' || c == L'\'' ) {
 			findPairedBlock( sf, stPos, c, _frStart, _frEnd );
 			if( _frEnd == string::npos )
-				throw TDException( L"Quotes don't match near \'" + sf.substr( stPos, 40 ) + L"...\'" );
+				throw TransDException( L"Quotes don't match near \'" + sf.substr( stPos, 40 ) + L"...\'" );
 			arg = sf.substr( stPos, _frEnd - stPos + 1 );
-			stPos = sf.find_first_not_of( whitespace, _frEnd );
+			stPos = sf.find_first_not_of( whitespace, ++_frEnd );
 		}
 		else {
 			_frEnd = sf.find_first_of( whitespace );
@@ -146,7 +147,7 @@ void parseArgs( int argc, KCHAR* argv[] )
 		if( arg == L"-version" )
 			showFrendInfo();
 		else
-			throw TDException( L"unknown command line argument: " + arg );
+			throw TransDException( L"unknown command line argument: " + arg );
 	}
 }
 
@@ -166,8 +167,8 @@ void runFile( const wstring& args_ )
 		loadProgram( prog, args[0] );
 		transd::run( prog, args );
 	}
-	catch( TDException& e ) {
-		wcout << L"TDException has occured: \n\n" << e.Msg() << endl;
+	catch( TransDException* e ) {
+		wcout << L"An exception has occured: \n\n" << e->Msg() << endl;
 	}
 	catch( std::exception& e ) {
 		wcout << L"std::exception has occured: \n\n" << U16( e.what() ) << endl;
@@ -206,7 +207,7 @@ int main( int argc, char* argv[] )
 		return 0;
 
 	try {
-		wstring modtxt = L"{ " + shellCallSite + L": (lambda f Null() (eval f)) }";
+		wstring modtxt = L"{ " + shellCallSite + L": (lambda f Null() (eval \"f\")) }";
 		prog = transd::initShell( shellModuleName, modtxt );
 
 		while( true ) {
@@ -225,11 +226,11 @@ int main( int argc, char* argv[] )
 			//wcout << res->to_wstring() << endl << endl;
 		}
 	}
-	catch( TDException& e ) {
-		wcout << L"kException was intercepted in main function: \n\n" << e.Msg() << endl;
+	catch( TransDException* e ) {
+		wcout << L"Unhandled exception: \n\n" << e->Msg() << endl;
 	}
 	catch( std::exception& e ) {
-		wcout << L"std::exception was intercepted in main function: \n\n" << U16( e.what() ) << endl;
+		wcout << L"Unhandled std::exception: \n\n" << U16( e.what() ) << endl;
 	}
 
 	return 0;

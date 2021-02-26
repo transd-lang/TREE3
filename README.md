@@ -8,7 +8,7 @@ The interpreter allows you to evaluate Transd expressions by simply typing them 
 the command line:
 
 ```
-D : (+ 1 1)
+D-: (+ 1 1)
 2
 ```
 
@@ -42,22 +42,21 @@ right away, without an additional installation procedure.
 
 ##### Compiling Frend from source code
 
-Obtain the Frend's source code (either by downloading an archive or by cloning the
-project with git onto your computer), open the `frend.sln` solution file in Visual
+Obtain the Frend's source code either by downloading an archive or by cloning the
+project with git onto your computer. Open the `frend.sln` solution file in Visual
 Studio (2017 and above) and build the solution. After building, the `frend.exe`
-file contains the compiled interpreter and is ready to use.
+file contains the compiled REPL program and is ready to use.
 
 
 ### Linux
 
-1. Obtain the Frend's source code (either by downloading an archive or by cloning the
-project with git onto your computer).
+1. Obtain the Frend's source code either by downloading from GitHub an archive or 
+by cloning the git project onto your computer.
 
-2. In the shell go to the `src` directory of the downloaded project and run the
-following command, with replacing `<YOUR_COMPILER>` with the name of your compiler,
-e.g. `g++`:
+2. In the shell go to the directory of the downloaded project and run the 'make'
+command:
 
-`<YOU_COMPILER> -O3 transd.cpp main.cpp -D__LINUX__ -o frend`
+`$ make`
 
-After compiling, the `frend` executable contains the compiled interpreter and is
+After compiling, the `frend` executable contains the compiled REPL program and is
 ready to use.

@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClInclude Include="src\transd.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="notes\debug.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
