@@ -35,8 +35,8 @@ wstring shellModuleName = L"_frend__";
 wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
-wstring version = L"0.2";
-wstring buildnum = L"301";
+wstring version = L"0.3";
+wstring buildnum = L"100";
 wstring copyright = L"FREND: command line REPL application for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum;
@@ -57,13 +57,13 @@ wstring clearAll( const std::wstring& s, const std::wstring& c )
 
 wstring getStringVal_( const wstring& prompt, bool endLn = false )
 {
-	wcout << prompt; 
 	if( endLn ) wcout << endl;
 	wstring val;
+	vector<wstring> h;
 
-	getline( wcin, val );
+	val = consutils::getStringValHist( prompt, h );
 
-	//wcout << endl;
+	wcout << endl;
 	return val;
 }
 
@@ -221,9 +221,8 @@ int main( int argc, char* argv[] )
 				runFile( clearAll( sf.substr( 4 ), L" " ) );
 			else if( sf == L"q" )
 				break;
-			else
+			else 
 				evaluateExpression( sf );
-			//wcout << res->to_wstring() << endl << endl;
 		}
 	}
 	catch( TransDException* e ) {

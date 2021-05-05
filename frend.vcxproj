@@ -84,6 +84,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
