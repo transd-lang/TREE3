@@ -36,7 +36,7 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.3";
-wstring buildnum = L"100";
+wstring buildnum = L"101";
 wstring copyright = L"FREND: command line REPL application for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum;

@@ -10160,7 +10160,7 @@ vector<wstring> l;
 s307->callFunc( f, l );
 }
 }
-catch( s17* e ) {
+catch( s17* ) {
 return s386;
 }
 return s385;
