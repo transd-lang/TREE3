@@ -35,11 +35,13 @@ wstring shellModuleName = L"_frend__";
 wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
-wstring version = L"0.3";
-wstring buildnum = L"101";
-wstring copyright = L"FREND: command line REPL application for TransD programming language."
+wstring version = L"0.41";
+wstring buildnum = L"100";
+wstring copyright = L"FREND: a command line REPL application (front end) for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
-"\nVersion: " + version + L"." + buildnum;
+"\nVersion: " + version + L"." + buildnum + 
+L"\n\nThe program uses Tourbillon virtual compiler as a back-end for Transd programming language."
+"\nTourbillon compiler version: " + TRANSD_VERSION;
 
 #define CMD_RUNFILE 1
 

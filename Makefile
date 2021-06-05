@@ -1,5 +1,5 @@
 # In case a c++ compiler is not automatically detected, please set
-# the CC variable manually with the name/path of your c++ compiler.
+# the CC variable manually with the command or path of your c++ compiler.
 # For example: CC = /usr/bin/g++
 CC =
 
