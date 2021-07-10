@@ -20,4 +20,4 @@ endif
 CPPFILES := src/transd.cpp src/main.cpp
 
 all: $(CPPFILES)
-	$(CC) -O2 $(CPPFILES) -D__LINUX__ -o frend
+	$(CC) -std=c++14 -O2 $(CPPFILES) -D__LINUX__ -o frend
