@@ -1514,7 +1514,7 @@ extern s1::s9<s400> s1696;
 #define s1289 s843->s367()
 #define s1587 s865->s367()
 #define s1588 s1469->s367()
-#define s1272 (uint64_t)-1
+#define s1272 0xFFFFFFFFFFFFFFFF
 typedef s374 TDDouble;
 class s387
 : public s278{

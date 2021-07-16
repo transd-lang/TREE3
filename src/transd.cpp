@@ -767,7 +767,6 @@ wstring s122;
 size_t s1229 = 0;
 while( s613 ) {
 s121 = _getch();
-wcout << L"[" << s121 << L"]" << endl;
 #ifdef __LINUX__
 if(s121 == 27) {
 _getch();
@@ -783,14 +782,12 @@ s121 = 8;
 #else			
 if(s121 == 224) {
 s121 = _getch();
-wcout << L"<" << s121 << L">" << endl;
 if( s121 == L'H' ) s121 = s112;
 else if(s121 == L'P') s121 = s113;
 else if(s121 == L'M') s121 = s115;
 else if(s121 == L'K') s121 = s114;}
 else if( s121 == 0 ) {
 s121 = _getch();
-wcout << L"<" << s121 << L">" << endl;
 if( s121 = 83 ) s121 = s119; // S
 else if( s121 = 71 ) s121 = s1733; // G
 else if( s121 = 79 ) s121 = s1732; // O
@@ -9805,7 +9802,8 @@ int mark = (int)*( s281[n].s16<s387*>() )->s393();
 if( mark != s1746 && s281.size() <= n )
 throw new s17( L"incorrect usage of formatting marker: " + (s281[n].s16<s387*>())->s644() );
 if( mark == s1747 && s281[n+1]->s367() != s1285 )
-throw new s17( L"'" + (s281[n].s16<s387*>())->s644() + L"' formatting marker must have an argument" );}}}
+throw new s17( L"'" + (s281[n].s16<s387*>())->s644() + L"' formatting marker must have an argument" );}}
+s1414();}
 s505 s635::s517( s502** s724, size_t s733 ){
 size_t shift = 1;
 for( size_t n = 0; n < nlocs; ++n ) {
