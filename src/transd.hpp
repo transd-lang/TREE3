@@ -28,6 +28,7 @@ Transd Project Website: https://github.com/transd-lang
 #include <cwctype>
 #include <sstream>
 #include <fstream>
+#include <iomanip>
 #if _WIN32 || _WIN64
 #if defined(_WIN64)
 #define OS_64
@@ -459,6 +460,17 @@ static_assert(std::is_unsigned<UINT>::value,
 return (s364 << n) | (s364 >> (sizeof(UINT)*8-n));}
 void s66( const std::wstring& s80 );
 void s83( std::wstring& s79, std::vector<std::wstring>& s1222, std::map<size_t, size_t>& s1146 );
+template<class T>
+std::wstring s1739( T value ) {
+struct Numpunct : public std::numpunct<wchar_t> {
+protected:
+virtual wchar_t do_thousands_sep() const { return L','; }
+virtual std::string do_grouping() const { return "\03"; }
+};
+std::wstringstream ss;
+ss.imbue( { std::locale(), new Numpunct } );
+ss << std::setprecision( 2 ) << std::fixed << value;
+return ss.str();}
 } // namespace s4
 namespace s5 {
 extern std::locale locloc;
@@ -469,10 +481,12 @@ extern std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;}
 #define KCHAR char
 #define TOFS(x) s5::conv.to_bytes(x)
 #define FROMTERM(x) s5::conv.from_bytes(x)
+#define s1736(x) s5::conv.to_bytes(x)
 #else
 #define KCHAR wchar_t
 #define TOFS(x) x
 #define FROMTERM(x) x
+#define s1736(x) x
 #endif
 namespace consutils {
 void s1235();
@@ -511,8 +525,8 @@ char _getch();
 #define s120 224
 #define s118 8
 #define s119 383
-#define KB_HOME 371
-#define KB_END 379
+#define s1733 371
+#define s1732 379
 } // namespace consutils
 namespace s6{
 enum s135{ s136, s137, s138, s143, 
@@ -623,7 +637,7 @@ bool s155 = false, const std::wstring& s74 = L",");
 void s183( const s1034* pf, const std::wstring& s79, std::vector<s1::s9<s145>>& s157,
 bool s155 = false, const std::wstring& s74 = L"," );
 } // namespace s6
-#define TRANSD_VERSION L"0.41"
+#define TRANSD_VERSION L"0.411"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1016 extern const uint32_t
@@ -633,7 +647,7 @@ typedef uint32_t traitnum_t;
 typedef unsigned char tdbyte_t;
 typedef std::basic_string<tdbyte_t> s1489;
 namespace s7 {
-s1016 NCTraitNumAlias0;
+s1016 s1729;
 s1016 s1567;
 s1016 s1568;
 s1016 s1569;
@@ -730,6 +744,8 @@ DEFCONST s1004;
 #define s1236 L','
 DEFCONST s434;
 DEFCONST s1224;
+#define s1734 1
+#define s1735	2
 s1016 s1536;
 s1016 s1459;
 s1016 s1012;
@@ -762,7 +778,7 @@ s1016 s1548;
 s1016 CLTransdFT_ctor1;
 s1016 s1697;
 s1016 s1698;
-s1016 CLTransductor_init;
+s1016 s1730;
 extern std::set<std::wstring> s1241;
 } // namespace s7
 enum s230 { s231, s232, s233, s234 };
@@ -775,7 +791,8 @@ s252, s253,     s255,			s796,
 s256,   s257, s258, s259,			s260,
 s261, s262,		s265,	s988,			s268,
 s266,	 s875,			s805, s925, 	s819,
-s926,  s1484, s1483, s1603, s1602;
+s926,  s1484, s1483, s1603, s1602,
+s1737;
 class s269;
 class s270;
 class s277;
@@ -944,7 +961,7 @@ s1023( const std::wstring& s, s18 code )
 #define s1255		6
 #define s1254		7
 #define s1550		8
-#define ECFailedInitializeObject	9
+#define s1731	9
 #define s1043(x) throw s1044( L"unknown syntax: " + x );
 #define s1042(x) throw s1044( L"syntax error: " + x );
 namespace lang {
@@ -1022,7 +1039,7 @@ static s504 s1121( const std::wstring& s79, const s270* ast_, s269* s307, s502* 
 virtual operator bool() const;
 virtual operator int() const;
 virtual operator double() const;
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const;
 virtual s1489 to_bytes() const;
 /*	static void s295( const std::wstring& s79, size_t& pos,
 std::vector<std::wstring>& s157 );
@@ -1371,7 +1388,7 @@ virtual void* addr() override { return (void*)&s364; }
 virtual operator bool() const { return s364 != 0.0; }
 virtual operator int() const { return (int)s364; }
 virtual operator double() const { return s364; }
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s376
@@ -1401,7 +1418,7 @@ virtual bool operator<( const s502* p ) const override;
 virtual operator bool() const { return s364; }
 virtual operator int() const override { return (int)s364; }
 virtual operator double() const override { return (double)s364; }
-virtual std::wstring to_wstring() const override { return ( s364 ? L"true" : L"false" ); }
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override { return ( s364 ? L"true" : L"false" ); }
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 extern s1::s9<s376> s385;
@@ -1428,7 +1445,7 @@ virtual void s372( s278* p ) const override;
 virtual size_t s331() const;
 virtual bool operator==( const s502* p ) const override;
 virtual bool operator<( const s502* p ) const override;
-virtual std::wstring to_wstring() const override { return s80; }
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override { return s80; }
 virtual operator bool() const { return false; }
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
@@ -1448,7 +1465,7 @@ virtual void s520( s502* s612 ) override;
 virtual size_t s331() const;
 virtual bool operator==( const s502* p ) const override;
 virtual bool operator<( const s502* p ) const override;
-virtual std::wstring to_wstring() const {	return L"";	}
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override {	return L"";	}
 virtual operator bool() const { return false; }
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
@@ -1631,7 +1648,7 @@ virtual void* addr() override { return (void*)&s364; }
 virtual operator bool() const { return s364 != 0; }
 virtual operator int() const { return s364; }
 virtual operator double() const { return (double)s364; }
-virtual std::wstring to_wstring() const { return std::to_wstring( s364 ); }
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s1465
@@ -1660,7 +1677,7 @@ virtual void* addr() override { return (void*)&s364; }
 virtual operator bool() const { return s364 != 0; }
 virtual operator int() const { return (int)s364; }
 virtual operator double() const { return (double)s364; }
-virtual std::wstring to_wstring() const { return std::to_wstring( s364 ); }
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 };
 class s1704
 : public s1471<std::uint64_t, s1704>{
@@ -1688,7 +1705,7 @@ virtual void* addr() override { return (void*)&s364; }
 virtual operator bool() const { return s364 != 0; }
 virtual operator int() const { return (int)s364; }
 virtual operator double() const { return (double)s364; }
-virtual std::wstring to_wstring() const { return std::to_wstring( s364 ); }
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 };
 template <>
 inline void s1471<s1704::s1558, s1704>::s420( s502** s281, size_t s518 ){
@@ -1749,7 +1766,7 @@ virtual void* addr() override { return (void*)&s364; }
 virtual operator bool() const { return s364 != 0; }
 virtual operator int() const { return s364; }
 virtual operator double() const { return (double)s364; }
-virtual std::wstring to_wstring() const { return std::to_wstring( s364 ); }
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override { return std::to_wstring( s364 ); }
 };
 typedef s361 TDInt;
 class s616;
@@ -1822,7 +1839,7 @@ void s673( s279* s676 ) const;
 virtual size_t s331() const;
 virtual bool operator==( const s502* p ) const;
 virtual bool operator<( const s502* p ) const;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const;
 };
 class s585
@@ -1961,6 +1978,10 @@ virtual void s1654( const s1489& src );
 virtual void s1634( s1489& s157, const s1489& s74 = s1489( {'\n'} ) );
 virtual void s1653( const s1489& src );
 virtual void rewind();
+virtual void s1743()=0;
+virtual void s1744( int n )=0;
+virtual void s1741()=0;
+virtual void s1742()=0;
 };
 template<class s1592, class s1594>
 class s1578
@@ -1977,8 +1998,12 @@ static void s1662( s502** s281, size_t n );
 public:
 s1578( s269* s307, s502* ns, const s270* s213 = NULL )
 : Stream( s307, ns, s213 ) {}
-s1578() {}
+s1578(){}
 virtual ~s1578() {}
+virtual void s1743();
+virtual void s1744( int n );
+virtual void s1741();
+virtual void s1742();
 };
 template<class s1592, class s1594>
 s351::s356 s1578<s1592, s1594>::s363;
@@ -2034,7 +2059,7 @@ virtual void s1635( s1489& s157, size_t s1647 ) override;
 virtual void s1654( const s1489& src ) override;
 virtual void s1634( s1489& s157, const s1489& s74 = s1489( { '\0' } ) ) override;
 virtual void s1653( const s1489& src ) override;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 typedef std::basic_istringstream<tdbyte_t> s1670;
@@ -2072,7 +2097,7 @@ virtual void s1635( s1489& s157, size_t s1647 ) override;
 virtual void s1654( const s1489& src ) override;
 virtual void s1634( s1489& s157, const s1489& s74 = s1489( { '\0' } ) ) override;
 virtual void s1653( const s1489& src ) override;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 #define ENC_UTF8  0
@@ -2123,7 +2148,7 @@ virtual void s1635( s1489& s157, size_t s1647 ) override;
 virtual void s1654( const s1489& src ) override;
 virtual void s1634( s1489& s157, const s1489& s74 = s1489( { '\0' } ) ) override;
 virtual void s1653( const s1489& src ) override;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s1574
@@ -2155,7 +2180,7 @@ virtual void s1635( s1489& s157, size_t s1647 ) override;
 virtual void s1654( const s1489& src ) override;
 virtual void s1634( s1489& s157, const s1489& s74 ) override;
 virtual void s1653( const s1489& src ) override;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s1576
@@ -2187,7 +2212,7 @@ virtual void s1635( s1489& s157, size_t s1647 ) override;
 virtual void s1654( const s1489& src ) override;
 virtual void s1634( s1489& s157, const s1489& s74 ) override;
 virtual void s1653( const s1489& src ) override;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 extern s1::s9<s528> s871;
@@ -2244,7 +2269,7 @@ virtual void* addr() override { return (void*)&s364; }
 virtual operator bool() const override { return !s364.empty(); }
 virtual operator int() const override;
 virtual operator double() const override;
-virtual std::wstring to_wstring() const override;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual s1489 to_bytes() const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
@@ -2467,7 +2492,7 @@ extern s1::s9<s1257> s1259;
 extern s1::s9<s1041> s1469;
 typedef int HPROG;
 enum s1541{ s1604=1, s1605, s1606, s1607, s1608, s1609, s1610, s1611, s1614, 
-s1612, s1613, s1615, s1616, s1617, s1618, s1619, s1620, 
+s1612, s1613, s1615, s1616, s1617, s1618, s1619, s1738, s1620, 
 s1621, s1622, s1623,	s1624, s1625 };
 extern std::map<std::wstring, int> s1542;
 extern std::vector<int> BIFuncs1v;
@@ -2517,7 +2542,7 @@ std::vector<std::wstring>& s157 );
 virtual bool s580( const std::wstring& s285, s387* s157,
 const std::wstring& s347 ) const override;
 s505 s226( const std::wstring& s364, const std::wstring& s347 );
-bool s227( const std::wstring& s,	const s502* s1130) const;
+bool s227( s387& rf ) const;
 s278* s228( const std::wstring& sym, const std::wstring& s519,
 bool s544 = true );
 void* s229( const std::wstring& s285 );
@@ -3070,7 +3095,7 @@ void erase( size_t n ) { s364.erase( begin( s364 ) + n ); }
 size_t size() const { return s364.size(); }
 virtual s502* sort( bool reverse, s910* cmp ) override;
 std::vector<s504>& s329() { return s364; }
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s794
@@ -3131,7 +3156,7 @@ void add( s504 el ) { s364.push_back( el ); }
 void assign( const std::vector<s504>& v );
 size_t size() const { return s364.size(); }
 std::vector<s504>& s329() { return s364; }
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s1050
@@ -3168,7 +3193,7 @@ virtual s502* s371( s502* s613, const std::vector<s278*>& l, const s270* ast_ ) 
 virtual s278* s350() const override;
 virtual void s372( s278* p ) const override;
 virtual s1172 s1332( const std::wstring& s1728, const std::vector<s504>& l ) const override;
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 };
 class s1449
 : public s321<s1546, tdbyte_t, s1449>{
@@ -3224,7 +3249,7 @@ void add( tdbyte_t el ) { s364.push_back( el ); }
 void erase( size_t n ) { s364.erase( begin( s364 ) + n ); }
 size_t size() const { return s364.size(); }
 s1558& s329() { return s364; }
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 extern s1::s9<s324> s765;
@@ -3277,7 +3302,7 @@ virtual Iterator* s322( s401* r ) override;
 virtual Iterator* s1329() override;
 virtual Iterator* s1333() override;
 s1558& s329() { return s364; }
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s1553;
@@ -3325,7 +3350,7 @@ virtual Iterator* s322( s401* r ) override;
 virtual Iterator* s1329() override;
 virtual Iterator* s1333() override;
 s1558& s329() { return s364; }
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 extern s1::s9<s333> s771;
@@ -3424,8 +3449,9 @@ virtual s278* s350() const override;
 class s635
 : public s616{
 s504 s43;
+bool lout;
 public:
-enum s1266{ s1381, s1644 };
+enum s1266{ s1381, s1644, mrNoSign, s1747, s1745, s1746 };
 s635( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
 s635( s269* s307 );
 virtual const std::wstring& s306() const override { return s257; }
@@ -3698,7 +3724,7 @@ virtual void s372( s278* p ) const override;
 virtual size_t s331() const;
 virtual bool operator==( const s502* p ) const;
 virtual bool operator<( const s502* p ) const;
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 class s1463
@@ -3729,7 +3755,7 @@ virtual void s372( s278* p ) const override;
 virtual size_t s331() const;
 virtual bool operator==( const s502* p ) const;
 virtual bool operator<( const s502* p ) const;
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 extern s1::s9<s431> s867;
@@ -3866,7 +3892,7 @@ void s569( std::vector<std::wstring>& s157 ) const;
 size_t s331() const;
 bool operator==( const s826* p ) const;
 bool operator<( const s826* p ) const;
-std::wstring to_wstring() const;
+std::wstring to_wstring( uint32_t s1740 = 0 ) const;
 void s311( std::wostream* pd, int s202 = 0 ) const;
 };
 typedef s1::s9<s826> s880;
@@ -3946,7 +3972,7 @@ void s755( const std::wstring& s882, const std::wstring& s785 );
 void s928( const std::wstring& s931 );
 void select( std::wstring& s931, s505 s685, 
 s336::mapped_type::iterator& s949, s336::mapped_type::iterator& s950 );
-virtual std::wstring to_wstring() const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
 extern s1::s9<s680> s808;

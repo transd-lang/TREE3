@@ -199,6 +199,8 @@ int main( int argc, char* argv[] )
 #ifdef WIN32
 	_setmode( _fileno( stdout ), _O_U16TEXT );
 	_setmode( _fileno( stdin ), _O_U16TEXT );
+#else
+	std::locale::global( std::locale( "en_US.UTF-8" ) );
 #endif
 
 	parseArgs( argc, argv );
