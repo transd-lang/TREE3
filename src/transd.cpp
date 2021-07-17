@@ -5885,7 +5885,7 @@ s401::s401( s269* s307 )
 {
 s513 = s865.s13() ? 0 : s865->s367();
 s1394 = new s1704( s307, 0 );
-s1395 = new s1704( s307, s1272 );
+s1395 = new s1704( s307, U64_MAX );
 s1317 = new s1704( s307, 0 );}
 s401::s401( s269* s307, s337* s613, Iterator* it )
 : s337( s307, NULL, NULL ), s1083( s613 ), s1641( it ), s1074( false ), s1075( false ), 
@@ -6122,10 +6122,10 @@ else
 s1718 = s1395.s16<s502*>();}
 if( s1083.s14() )
 return s1083->s322( this );
-s1087 = s1272;//( std::numeric_limits<int>::max )( );// (int)*s1394.s16<s502*>();
+s1087 = U64_MAX;//( std::numeric_limits<int>::max )( );// (int)*s1394.s16<s502*>();
 return this;}
 s278* s401::s323(){
-if( s1087 == s1272 ) {
+if( s1087 == U64_MAX ) {
 if( s1717.s14() ) {
 if( s1717->s367() == s1702 )
 s1087 = *s1717.s16<s1704*>()->s373();
@@ -6823,7 +6823,7 @@ if( !s969 ) {
 if( s1359 < v->s329().size() )
 s718 = new s1454( NULL, v->s329()[s1359++] );}
 else {
-if( s1359 != s1272 )
+if( s1359 != U64_MAX )
 s718 = new s1454( NULL, v->s329()[s1359--] );}
 return s718;}
 s278* s1450::s1054(){
@@ -9757,8 +9757,9 @@ s608.insert( s608.begin(), s611 );}
 s505 s634::s517( s502**, size_t ){
 size_t idx = string::npos;
 for( size_t n = 0; n < s648.size(); ++n ) {
-if( ( bool )*( s648[n]->s517( 0, 0 ).s16<s502*>() ) )
-idx = n;}
+if( ( bool )*( s648[n]->s517( 0, 0 ).s16<s502*>() ) ) {
+idx = n;
+break;}}
 if( idx != string::npos || s649.size() > s648.size() ) {
 if( idx == string::npos )
 idx = s649.size() - 1;

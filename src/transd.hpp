@@ -637,7 +637,7 @@ bool s155 = false, const std::wstring& s74 = L",");
 void s183( const s1034* pf, const std::wstring& s79, std::vector<s1::s9<s145>>& s157,
 bool s155 = false, const std::wstring& s74 = L"," );
 } // namespace s6
-#define TRANSD_VERSION L"0.411"
+#define TRANSD_VERSION L"0.412"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1016 extern const uint32_t
@@ -1514,7 +1514,8 @@ extern s1::s9<s400> s1696;
 #define s1289 s843->s367()
 #define s1587 s865->s367()
 #define s1588 s1469->s367()
-#define s1272 0xFFFFFFFFFFFFFFFF
+#define s1272 ( std::numeric_limits<size_t>::max )( )
+#define U64_MAX ( std::numeric_limits<uint64_t>::max )( )
 typedef s374 TDDouble;
 class s387
 : public s278{
@@ -2355,7 +2356,7 @@ public:
 enum s1266 { s1374, s1382, s1373, s1381, s1384, s1369, s1375 };
 s401( s269* s307 );
 s401( s269* s307, s337* s613, Iterator* it );
-s401( uint64_t b, uint64_t e = s1272 );
+s401( uint64_t b, uint64_t e = U64_MAX );
 s401( s269* s307, const std::wstring& s79, const s270* ast_ = NULL );
 s401( const s401& right, const s270* ast_ = NULL );
 s401( s269* s307, s502* s613, const std::vector<s278*>& l, const s270* ast_ = NULL );
