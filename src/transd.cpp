@@ -8242,8 +8242,9 @@ if( dr->s1344 != s156->s367() || dr->s335 != s364->s367() )
 throw new s17( L"non-compatible types cannot be inserted to an Index" );
 s1558::iterator it = dr->s364.find( (s502*)PARN( 2 ) );
 if( it == dr->s364.end() ) {
-s502* s1390 = (s502*)s364->s350();
-dr->s364.insert( make_pair( (s502*)s156->s350(), s1390 ) );
+s505 s1390 = (s502*)s364->s350();
+s505 spKey = (s502*)s156->s350();
+dr->s364.insert( make_pair( spKey, s1390 ) );
 *s281 = s385;}
 else {
 it->second = (s502*)s364->s350();

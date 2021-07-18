@@ -637,7 +637,7 @@ bool s155 = false, const std::wstring& s74 = L",");
 void s183( const s1034* pf, const std::wstring& s79, std::vector<s1::s9<s145>>& s157,
 bool s155 = false, const std::wstring& s74 = L"," );
 } // namespace s6
-#define TRANSD_VERSION L"0.412"
+#define TRANSD_VERSION L"0.413"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1016 extern const uint32_t
