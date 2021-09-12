@@ -30,6 +30,8 @@ Transd Project Website: https://github.com/transd-lang
 #include <fstream>
 #include <iomanip>
 #include <random>
+#include <thread>
+#include <chrono>
 #if _WIN32 || _WIN64
 #if defined(_WIN64)
 #define OS_64
@@ -543,7 +545,7 @@ std::vector<std::wstring> s1233;
 std::map<size_t, size_t> s1234;
 size_t s1170;
 public:
-s1034( const std::wstring& file );
+s1034( const std::wstring& file, bool s199 = true );
 const std::wstring& Path() const { return s199;  }
 void read( std::vector<s1::s9<s147>>& s157, 
 const std::wstring& s195 = std::wstring(L"") );
@@ -567,6 +569,7 @@ bool s160( const std::wstring& s156 ) const;
 void s161( const std::wstring& s156, std::vector<s146>& s157 ) const;
 const s146 s162( const std::wstring& s156 ) const;
 void s163( const std::wstring& s78, s146 s364, s149 ap=s150 );
+void s1808( const std::wstring& s78 );
 void s164( std::vector<std::pair<std::wstring, s146>>& s157 ) const;
 bool operator==( const s147& r )  const;
 void s165( std::wostream* pd, int s202 ) const;
@@ -638,7 +641,7 @@ bool s155 = false, const std::wstring& s74 = L",");
 void s183( const s1034* pf, const std::wstring& s79, std::vector<s1::s9<s145>>& s157,
 bool s155 = false, const std::wstring& s74 = L"," );
 } // namespace s6
-#define TRANSD_VERSION L"0.414"
+#define TRANSD_VERSION L"0.415"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1016 extern const uint32_t
@@ -666,7 +669,7 @@ DEFCONST s442;
 DEFCONST s443;
 DEFCONST s444;
 DEFCONST s445;
-DEFCONST s1080;
+DEFCONST s1806;
 DEFCONST s446;
 DEFCONST s447;
 DEFCONST s448;
@@ -685,6 +688,7 @@ DEFCONST s1264;
 DEFCONST s1525;
 DEFCONST s1563;
 DEFCONST s1564;
+DEFCONST s1778;
 DEFCONSTI s941;
 DEFCONSTI s454;
 DEFCONSTI s455;
@@ -768,6 +772,7 @@ s1016 s1245;
 s1016 s1537;
 s1016 s1538;
 s1016 s1539;
+s1016 s1774;
 s1016 s1246;
 s1016 s1457;
 s1016 s1456;
@@ -781,6 +786,8 @@ s1016 CLTransdFT_ctor1;
 s1016 s1697;
 s1016 s1698;
 s1016 s1730;
+s1016 s1776;
+s1016 s1775;
 extern std::set<std::wstring> s1241;
 } // namespace s7
 enum s230 { s231, s232, s233, s234 };
@@ -789,12 +796,14 @@ extern const std::wstring s236, s237, s238,				s879,
 s239,  s240,     s241,    s242,      s243,
 s244,  s245, s246, s247,s250,
 s248, s249,			s264,	s251,			s263,
-s252, s253,     s255,			s796,
+s252, s253,     s255,		s796,
 s256,   s257, s258, s259,			s260,
 s261, s262,		s265,	s988,			s268,
 s266,	 s875,			s805, s925, 	s819,
-s926,  s1484, s1483, s1603, s1602,
-s1737;
+s926,  s1484, s1797, s1483, s1603, 
+s1602,
+s1737,  s1793,  s1792, s1791,
+s1796, s1794, s1795;
 class s269;
 class s270;
 class s277;
@@ -1023,7 +1032,7 @@ void s1414() { wh = 0; }
 void s1412(bool b = true) { if(b) wh |= (1 << (s7::s1343-1)); 
 else wh &= ~(1 << (s7::s1343-1));}
 bool s1349() const { return wh >= 0; }
-bool s1348() const { return wh & (1 << (s7::s1343-1)); }
+bool s1348() const { return (wh > 0) && (wh & (1 << (s7::s1343-1))); }
 virtual bool s522( const s502* s523 ) const;
 virtual bool s1716( s1172 tp ) const;
 virtual const s1014& s1104() const { return s1092;  }
@@ -1154,6 +1163,7 @@ void reset();
 void s297();
 void s540( const s501& st );
 void s224( s502* p, const std::wstring& s362 );
+void s1843( const std::wstring& s362 );
 s1172 s1155( const s869::Cont& v );
 traitnum_t s1404( const std::wstring& trait, s1172& s1685 );
 void s1302( s869::s980 type, const std::wstring& trait, s1172& s1685 );
@@ -1211,8 +1221,8 @@ std::vector<std::wstring>& s157 );
 class s501{
 public:
 enum s149 { s150, s558, s151, s152 };
+typedef std::map<std::wstring, s504> s559;
 private:
-typedef std::map<std::wstring, s505> s559;
 s559 s577;
 s560 s561;
 s550* s563;
@@ -1221,9 +1231,11 @@ public:
 s501( ): s561( s532 ), s563( NULL ) {}
 s501( s560 am ) : s561( am ), s563( NULL ) {}
 s501( const s501& s564 );
+const s559& Table() const { return s577; }
 void s520( s502* s519, bool s539 = true );
+void s1826();
 void reset();
-void s565( const std::wstring& s78, s502* sym, s149 ap = s150 );
+void s565( const std::wstring& s78, s278* sym, s149 ap = s150 );
 void s565( const std::wstring& s78, s6::s146 s364, s149 ap = s150 );
 void s566( const std::wstring& s78 );
 void s567( const s6::s147& obj, s149 ap = s150 );
@@ -1237,10 +1249,12 @@ void s570( std::vector<std::wstring>& s157 ) const;
 void s571( const s501& t, std::vector<std::wstring>& s157 ) const;
 void copy( s501& t, s279* s613, s616* s612, s149 ap = s150 ) const;
 void s572( s501& t ) const;
+void s1790( s501& t ) const;
 void s573( s534 pv, s270* s81 );
 void s557( const std::wstring& s347,
 std::vector<std::wstring>& s157 );
 bool s574( const std::wstring& s285, const std::wstring& s347 ) const;
+std::wstring to_wstring( uint32_t s1740 ) const;
 void s311( std::wostream* pd, int s202 = 0 ) const;
 };
 class s575{
@@ -1252,6 +1266,7 @@ public:
 s575();
 void s578( const std::wstring& s );
 void s520( s269* s307, const std::wstring& s582 );
+void s1826( s269* s307 );
 void s579( const std::wstring& s78, s269* s307, const std::wstring& s582 );
 bool s580( const std::wstring& sym, s387* ref );
 void copy( s575& t ) const;
@@ -1345,6 +1360,7 @@ class s374
 : public s351{
 static s356 s363;
 double s364;
+static void s1385( s502** s281, size_t n );
 static void s403( s502** s281, size_t n );
 static void s404( s502** s281, size_t n );
 static void s405( s502** s281, size_t n );
@@ -1372,11 +1388,13 @@ static void s425( s502** s281, size_t n );
 virtual void s365() override;
 virtual const s356& s357() const override { return s363; }
 public:
+typedef double s1558;
 s374( s269* s307 ) : s351( s307, NULL, NULL ) {}
 s374( const s374& r );
 s374( s269* s307, const std::vector<s278*>& l );
 s374( s269* s307, double d );
 s374( s269* s307, const std::wstring& s, size_t& pos );
+static s505 proto;
 virtual s502* s370( const s270& s737, s502* s613, const std::wstring& s347 ) override;
 virtual s502* s371( s502* s613, const std::vector<s278*>& l, const s270* ast_ ) const override;
 virtual void s520( s502* s612 ) override;	
@@ -1398,6 +1416,7 @@ class s376
 static s356 s363;
 bool s364;
 static void s403( s502** s281, size_t n );
+static void s1385( s502** s281, size_t n );
 static void s429( s502** s281, size_t n );
 static void s414( s502** s281, size_t n );
 virtual void s365() override;
@@ -1407,6 +1426,7 @@ s376( s269* s307 ) : s351( s307, NULL, NULL ) {}
 s376( s269* s307, bool b );
 s376( s269* s307, const std::wstring& s, size_t& pos );
 s376( const s376& right );
+static s505 proto;
 virtual s502* s370( const s270& s737, s502* s613, const std::wstring& s347 ) override;
 virtual s502* s371( s502* s613, const std::vector<s278*>& l, const s270* ast_ ) const override;
 bool* s373() { return &s364; }
@@ -1495,8 +1515,41 @@ virtual void s520( s502* s612 ) override;
 virtual operator bool() const { return false; }
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
-extern s1::s9<s374> s859;
-extern s1::s9<s376> s803;
+class s1779 
+: public s351{
+s501 s656;
+static s356 s363;
+std::wstring s1822;
+static void s1818( s502** s281, size_t n );
+static void s1816( s502** s281, size_t n );
+static void s1813( s502** s281, size_t n );
+static void s1814( s502** s281, size_t n );
+static void s1837( s502** s281, size_t n );
+static void s1839( s502** s281, size_t n );
+virtual void s365() override;
+virtual const s356& s357() const override { return s363; }
+public:
+s1779( s269* s307 ) : s351( s307, NULL, NULL ) {}
+s1779( s269* s307, s502* s613, const std::wstring& s79, const s270* ast_=NULL );
+s1779( const s1779& right, const s270* ast_ = NULL );
+s1779( s269* s307, s502* s613, const s6::s147* s1821, const s270* ast_ = NULL );
+static s505 proto;
+virtual s502* s370( const s270& s737, s502* s613, const std::wstring& s347 ) override;
+virtual s502* s371( s502* s613, const std::vector<s278*>& l, const s270* ast_ ) const override;
+virtual s1172 s1332( const std::wstring& s1728, const std::vector<s504>& l ) const override;
+virtual void* addr() override { return (void*)&s656; }
+virtual void s520( s502* s962 ) override;
+virtual s278* s350() const override;
+virtual void s372( s278* p ) const override;
+virtual size_t s331() const;
+virtual bool operator==( const s502* p ) const;
+virtual bool operator<( const s502* p ) const;
+void load( const std::wstring& s79, bool s199 );
+void s1819( const s6::s147* ob, s501::s149 ap = s501::s150 );
+void s1809( s501::s559& st ) const;
+virtual std::wstring to_wstring( uint32_t s1740 = 0 ) const override;
+virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
+};
 extern s1::s9<s377> s876;
 extern s1::s9<s380> s781;
 extern s1::s9<s400> s829;
@@ -1507,11 +1560,11 @@ extern s1::s9<s400> s384;
 extern s1::s9<s400> s951;
 extern s1::s9<s400> s1696;
 #define s1287 s781->s367()
-#define s1276 s803->s367()
+#define s1276 s376::proto->s367()
 #define s1475 s1454::proto->s367()
 #define s1755 s1749::proto->s367()
 #define s1285 s361::proto->s367()
-#define s1284 s859->s367()
+#define s1284 s374::proto->s367()
 #define s1701 s1465::proto->s367()
 #define s1702 s1704::proto->s367()
 #define s1289 s375::proto->s367()
@@ -1550,6 +1603,30 @@ void s399( s502* p ) { s390 = p; }
 void s1079( const std::vector<std::wstring> &v );
 virtual void s311( std::wostream* pd, int s202 = 0 ) const override;
 };
+class s1777
+: public s502{
+s505 pobj;
+protected:
+virtual s502* s370( const s270& s737, s502* s613,
+const std::wstring& s347 ) override {	return NULL; }
+public:
+s1777( s269* s307 )
+: s502( s307, s1505, NULL, NULL ) {}
+void s1838( s502* obj ) { pobj = obj; }
+virtual s278* s623( size_t off ) override 
+{ return pobj->s623( off ); }
+virtual void s365() override {}
+virtual s1172 s402( const std::wstring& s358 ) const override { return 0; }
+virtual s502* s371( s502* s613, const std::vector<s278*>& l =
+std::vector<s278*>(), const s270* ast_ = NULL ) const override { return NULL;	}
+virtual void s372( s278* p ) const override {}
+virtual s502* s1711( const s502* p ) const override { return NULL; }
+virtual const s502* s524() const override { return NULL; }
+virtual size_t s331() const override { return 0;  }
+virtual bool operator==( const s502* p ) const override { return false; }
+virtual bool operator<( const s502* p ) const override { return false; }
+virtual void s311( std::wostream* pd, int s202 = 0 ) const override {}
+};
 typedef s1::s9<s387> s508;
 template<class s1479, class Der>
 class s1471 :
@@ -1581,7 +1658,7 @@ static void s422( s502** s281, size_t n );
 static void s423( s502** s281, size_t n );
 static void s424( s502** s281, size_t n );
 static void s428( s502** s281, size_t n );
-static void s1774( s502** s281, size_t n );
+static void s1773( s502** s281, size_t n );
 static void s1722( s502** s281, size_t n );
 static void s1723( s502** s281, size_t n );
 static void s1676( s502** s281, size_t n );
@@ -1791,6 +1868,7 @@ class s279
 protected:
 const s279* s653;
 const s279* s654;
+s387 s1840;
 const std::wstring& s362;
 std::wstring s285;
 std::wstring s655;
@@ -1798,11 +1876,9 @@ s501 s656;
 s575* s657;
 std::vector<s504> s658;
 std::vector<std::wstring> s659;
-const uint32_t s1531;
-static uint32_t s1532;
 virtual void s365() override { }
 public:
-s279( const s279& s661, const s270* ast_=NULL );
+s279( const s279& s661, std::vector<s504>& s281, const s270* ast_=NULL );
 s279( s269* s307, s1172 s355, s490 pc/* = s491*/, const s270* ast_ = NULL );
 s279( const std::wstring& s285, s269* s307, s490 pc, const s270* ast_ = NULL );
 s279( const std::wstring& s362, const std::wstring& s285, s269* s307, s501& s662,
@@ -1813,7 +1889,6 @@ const std::wstring& s369() const { return s362; }
 virtual const std::wstring& s306() const { return s285; }
 std::wstring s305() const;
 virtual std::wstring s900() const override { return ns->s305(); }
-uint32_t s1526() const { return s1531; }
 static s278* s663( const s6::s147& obj, const std::wstring& s285, s269* s307 );
 static s278* s663( std::multimap<std::wstring, s503*>& v, s503* s612 );
 s502* s664( const s270& s737, s502* s613, const std::wstring& s347 );
@@ -1822,7 +1897,9 @@ virtual s1172 s402( const std::wstring& s358 ) const override;
 virtual bool s522( const s502* s523 ) const override;
 virtual const s1014& s1104() const override { return s1092; }
 bool s770( const std::wstring& f ) const;
-void s922( const std::wstring& s78, s502* s364 );
+void s922( const std::wstring& s78, s502* s364, s501::s149 ap = s501::s150 );
+void s1834( const std::wstring& s78, s502* s364 );
+void s1817( const s1779* ob );
 virtual s502* s370( const s270& s737, s502* s613, const std::wstring& s347 ) override;
 virtual const s502* s524() const override { return s653; }
 const s279* s665() const { return s654; }
@@ -1845,6 +1922,7 @@ bool s556( const std::wstring& sym );
 virtual void s520( s502* s962 ) override;
 void s674( const s501& s281 ); 
 void s158( s270& s737 );
+void s1826();
 virtual s278* s350() const  override;
 virtual void s372( s278* p ) const override;
 void s673( s279* s676 ) const;
@@ -1902,15 +1980,19 @@ s505 s611;
 s505 s613;
 s507 s612;
 const s270* past;
+s1777 s1831;
+s504 subject;
 s278* s918( s278* par );
 void s614(const std::wstring& s347);
 void s615(const std::wstring& s347);
+void s1788( s502** s741, size_t s518 );
 public:
 s616( s269* s307, s502* s617, s616* s618, s587 ct,
 const std::wstring& s709, const s270* s737 )
 : s279( s709, s307, s494, s737 ), s599( ct ),  
-s611( NULL ),	s613( s617 ), s612( s618 ), past( s737 ) {}
-s616( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s611( NULL ),	s613( s617 ), s612( s618 ), past( s737 ), s1831(s307) {}
+s616( s269* s307, s502* s613, s616* s612, s587 ct, 
+const std::vector<s278*>& l, const s270* s737 );
 s616( const s616& right, s502* s613, s616* s612, const std::vector<s278*>& s281,
 const s270* s737 );
 virtual ~s616();
@@ -1945,32 +2027,35 @@ class s911
 s643 s586;
 bool s1309;
 public:
-s911( s269* s307, s616* s612, const std::vector<s278*>& l, /*s643 s586,*/
+s911( s269* s307, s616* s612, s587 ct, const std::vector<s278*>& l, /*s643 s586,*/
 s1172 s513, const std::wstring& s1728, const s270* s737 );
 virtual void s520( const std::wstring& s347, bool proc ) override;
 virtual s505 s517( s502** s281 = NULL, size_t s518 = 0 ) override;
 bool s580( const std::wstring& s285, s387* ref,
 const std::wstring& s347 ) const override;
+virtual s278* s350() const override;
 };
 class s912
 : public s616{
+protected:
 public:
-s912( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 )
-: s616( s307, s613, s612, l, s737 ) {}
+s912( s269* s307, s502* s613, s616* s612, s587 ct,
+const std::vector<s278*>& l, const s270* s737 );
 s912( const s912& right, s502* s613, s616* s612, const std::vector<s278*>& s281,
-const s270* s737 );
+s587 ct, const s270* s737 );
 virtual void s520( const std::wstring& s347, bool proc ) override;
 virtual s505 s517( s502** s281 = NULL, size_t s518 = 0 ) override;
+virtual s278* s350() const override;
 };
 class s1527
 : public s912{
 public:
-s1527( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 )
-: s912( s307, s613, s612, l, s737 ) {}
+s1527( s269* s307, s502* s613, s616* s612, const s270* s737 );
 s1527( const s1527& right, s502* s613, s616* s612, const std::vector<s278*>& s281,
 const s270* s737 );
 virtual void s520( const std::wstring& s347, bool proc ) override;
 virtual s505 s517( s502** s281 = NULL, size_t s518 = 0 ) override;
+virtual s278* s350() const override;
 };
 namespace s1687 {
 extern s1172 s1680;
@@ -2397,6 +2482,7 @@ s504 start;
 s504 end;
 s504 incr;
 s504 s1088;
+s504 s1836;
 bool s1156;
 std::wstring s519;
 static s356 s363;
@@ -2435,9 +2521,11 @@ extern s1::s9<s401> s865;
 extern s1::s9<s1257> s1259;
 extern s1::s9<s1041> s1469;
 typedef int HPROG;
-enum s1541{ s1604=1, s1605, s1606, s1607, s1608, s1609, s1610, s1611, s1614, 
-s1612, s1613, s1615, s1616, s1617, s1618, s1619, s1738, s1620, 
-s1621, s1622, s1623,	s1624, s1625 };
+enum s1541{ s1604=1, s1605, s1606, s1607, s1799, s1608, s1609, s1610, s1611, s1614, s1612, 
+s1613, s1800, s1615, s1801, s1616, s1617, s1803, s1804, 
+s1618, s1802,
+s1619, s1738, s1620, 
+s1621, s1622, s1805, s1623,	s1624, s1625 };
 extern std::map<std::wstring, int> s1542;
 extern std::vector<int> BIFuncs1v;
 extern std::vector<std::wstring> s1543;
@@ -2476,6 +2564,7 @@ s502* run( const std::vector<std::wstring>& s724 );
 s502* callFunc( const std::wstring& s626, std::vector<std::wstring>& l );
 s507 getProc( const std::wstring& s626 );
 bool s1497() const { return s1486; }
+void s1827( const std::wstring& s703 );
 s510& TR() { return s208; }
 s616* s219( int s1632, std::vector<s278*>& s281,
 s502* s613, s616* s220,	const s270* s737 );
@@ -2491,6 +2580,7 @@ s278* s228( const std::wstring& sym, const std::wstring& s519,
 bool s544 = true );
 void* s229( const std::wstring& s285 );
 void s1520( const std::wstring& s703 );
+void s1842( const std::wstring& s1810 );
 virtual void s311( std::wostream* pd, int s202 = 0 ) const;
 };
 typedef s1::s9<s269> s758;
@@ -2640,7 +2730,7 @@ protected:
 typedef Der s1308;
 _Cont s364;
 s1460<s1478> s1492;
-s1750<s1478> s1761;
+s1750<s1478> s1760;
 typedef s351::s356 s356;
 static s356 s363;
 static void s340( s502** s281, size_t n );
@@ -2668,15 +2758,17 @@ public s321<_Cont, s1478, Der>{
 protected:
 typedef s351::s356 s356;
 typedef s351::s352 s352;
-s1751<s1478, s1758> s1762;
-static void s1760( s502** s281, size_t n );
-static void s1763( s502** s281, size_t n );
+s1751<s1478, s1758> s1761;
+static void s1759( s502** s281, size_t n );
+static void s1762( s502** s281, size_t n );
+static void s1812( s502** s281, size_t n );
+static void s1798( s502** s281, size_t n );
 static void s1357( s502** s281, size_t n );
 static void s1356( s502** s281, size_t n );
 static void s1406( s502** s281, size_t n );
 static void s1419( s502** s281, size_t n );
-static void s1771( s502** s281, size_t n );
-static void s1765( s502** s281, size_t n );
+static void s1770( s502** s281, size_t n );
+static void s1764( s502** s281, size_t n );
 static void s1668( s502** s281, size_t n );
 static s356 s363;
 virtual void s365() override;
@@ -2696,6 +2788,8 @@ public s1573<_Cont, s1478, Der, s1478>{
 protected:
 typedef s351::s356 s356;
 typedef s351::s352 s352;
+static void s1812( s502** s281, size_t n );
+static void s1798( s502** s281, size_t n );
 static void s1419( s502** s281, size_t n );
 static void s1639( s502** s281, size_t n );
 static s356 s363;
@@ -2837,7 +2931,7 @@ s1694 = rp.first.s16<s1028*>()->s1270();
 s1695 = rp.second.s16<s1028*>()->s1270();
 std::reverse( s1694, s1695 );}
 template <class _Cont, class s1478, class Der, class s1758>
-void s1573<_Cont, s1478, Der, s1758>::s1771( s502** s281, size_t s518 ){
+void s1573<_Cont, s1478, Der, s1758>::s1770( s502** s281, size_t s518 ){
 using s1248 = Der;
 using s1028 = typename Der::s1263;
 s1248* pv;
@@ -2857,8 +2951,8 @@ rp = pv->s1338();
 typename _Cont::iterator s1694, s1695;
 s1694 = rp.first.s16<s1028*>()->s1270();
 s1695 = rp.second.s16<s1028*>()->s1270();
-std::mt19937 randomSeed(std::random_device{}());
-std::shuffle( s1694, s1695, randomSeed );}
+std::mt19937 s1833(std::random_device{}());
+std::shuffle( s1694, s1695, s1833 );}
 template<class _Cont, class s1478, class Der, class s1758>
 void s1573<_Cont, s1478, Der, s1758>::s1357( s502** s281, size_t s518 ){
 using s1028 = typename Der::s1263;
@@ -2938,12 +3032,12 @@ static s356 s363;
 std::vector<s504> s281;
 static void s1385( s502** s281, size_t n );
 static void s403( s502** s281, size_t n );
-static void s1770( s502** s281, size_t n );
+static void s1769( s502** s281, size_t n );
 static void s340( s502** s281, size_t n );
 static void s404( s502** s281, size_t n );
 static void s846( s502** s281, size_t n );
-static void s1773( s502** s281, size_t n );
-static void s1766( s502** s281, size_t n );
+static void s1772( s502** s281, size_t n );
+static void s1765( s502** s281, size_t n );
 static void s977( s502** s281, size_t n );
 static void s978( s502** s281, size_t n );
 static void s830( s502** s281, size_t n );
@@ -2954,6 +3048,7 @@ static void s416( s502** s281, size_t n );
 static void s417( s502** s281, size_t n );
 static void s418( s502** s281, size_t n );
 static void s419( s502** s281, size_t n );
+static void s429( s502** s281, size_t n );
 static void s425( s502** s281, size_t n );
 static void s1658( s502** s281, size_t n );
 static void s1143( s502** s281, size_t n );
@@ -3190,7 +3285,7 @@ static s356 s363;
 virtual void s365() override;
 virtual const s356& s357() const override { return s363; }
 static void s414( s502** s281, size_t n );
-static void s1767( s502** s281, size_t n );
+static void s1766( s502** s281, size_t n );
 static void s419( s502** s281, size_t n );
 static void s403( s502** s281, size_t n );
 public:
@@ -3448,11 +3543,13 @@ typedef s333 s1308;
 static s356 s363;
 s1558::iterator s326;
 std::wstring s519;
+static void s1807( s502** s281, size_t n );
 static void s344( s502** s281, size_t n );
 static void s830( s502** s281, size_t n );
 static void s338( s502** s281, size_t n );
 static void s1638( s502** s281, size_t n );
 static void s403( s502** s281, size_t n );
+static void s1769( s502** s281, size_t n );
 static void s345( s502** s281, size_t n );
 static void s340( s502** s281, size_t n );
 static void s343( s502** s281, size_t n );
@@ -3460,21 +3557,29 @@ virtual void s365() override;
 virtual const s356& s357() const override { return s363; }
 virtual void s1300( const std::wstring& s79, std::wstring& s1428, std::wstring& s674,
 std::vector<std::pair<std::wstring, s6::s146>> s148, const s270* ast_ );
+void s1298( const std::wstring& s1428, s1172& pt, s1172& et,
+s1172& kt, s1172& vt );
+void s1480( const std::vector<s278*>& v, s502* s613 );
 public:
 typedef s1027 s1263;
 s333( s269* s307 ) : s1540( s307, NULL, NULL ) {}
 s333( s269* s307, s1172 s1344, s1172 s335, s502* s613, const s270* ast_ = NULL );
 s333( s269* s307, s502* s613, const std::wstring& s79, const s270* ast_ = NULL );
 s333( const s333& right, const s270* ast_ = NULL );
+s333( s269* s307, const std::vector<s278*>& l, s502* s613,
+const s270* ast_ = NULL, s1172 s745 = 0, s1172 s1324 = 0,
+s1172 s1815 = 0, s1172 s1431 = 0);
 virtual s502* s370( const s270& s737, s502* s613, const std::wstring& s347 ) override;
 virtual s502* s371( s502* s613, const std::vector<s278*>& l, const s270* ast_ ) const override;
 virtual s502* s371( s502* s613, const std::vector<s1172>& vt ) const override;
-s1172 s1339( const std::wstring& s1428, s869::Cont& s613 );
+s1172 s1339( const std::wstring& s1428, s869::Cont& s613,
+s1172& et,	s1172& kt, s1172& vt );
 virtual bool s522( const s502* s523 ) const override;
 virtual void* addr() override { return (void*)&s364; }
 virtual s1172 s1332( const std::wstring& s1728, const std::vector<s504>& l ) const override;
 virtual size_t s1262() const override { return 1; }
 virtual void s520( s502* s962 ) override;
+void load( const std::wstring& s79, s502* s613, const std::wstring& s74 );
 virtual s278* s350() const override;
 virtual void s372( s278* p ) const override;
 virtual size_t s331() const;
@@ -3543,7 +3648,8 @@ class s629
 std::vector<s1172> types;
 std::vector<s507> s679;
 public:
-s629( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s629( s269* s307, s502* s613, s616* s612, s587 ct,
+const std::vector<s278*>& l, const s270* s737 );
 void s678( s1172 type, s616* pOvr );
 virtual s505 s517( s502** s281, size_t s518 ) override;
 };
@@ -3633,7 +3739,7 @@ class s635
 s504 s43;
 bool lout;
 public:
-enum s1266{ s1381, s1644, s1768, s1747, s1745, s1746 };
+enum s1266{ s1381, s1644, s1767, s1747, s1745, s1746 };
 s635( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
 s635( s269* s307 );
 virtual const std::wstring& s306() const override { return s257; }
@@ -3684,6 +3790,54 @@ virtual void s520( const std::wstring& s347, bool proc ) override;
 virtual s505 s517( s502** s281, size_t s518 ) override;
 virtual s278* s350() const override;
 };
+class s1786
+: public s616{
+s505 cmd;
+std::thread s881;
+public:
+s1786( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s1786( const s1786& );
+virtual const std::wstring& s306() const override { return s796; }
+virtual void s520( const std::wstring& s347, bool proc ) override;
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
+class s1784
+: public s616{
+public:
+s1784( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s1784( const s1784& );
+virtual void s520( const std::wstring& s347, bool proc ) override;
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
+class s1781
+: public s616{
+public:
+s1781( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s1781( const s1781& );
+virtual void s520( const std::wstring& s347, bool proc ) override;
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
+class s1785
+: public s616{
+public:
+s1785( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s1785( const s1785& );
+virtual void s520( const std::wstring& s347, bool proc ) override;
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
+class s1780
+: public s616{
+public:
+s1780( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s1780( const s1780& );
+virtual void s520( const std::wstring& s347, bool proc ) override;
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
 template <class _Cont, class s1478, class Der>
 void s321<_Cont, s1478, Der>::s365(){
 s307->TR().s1302( s513, s7::s1583, s1687::s1682 );
@@ -3703,18 +3857,24 @@ s363.insert( std::make_pair( L"sort", new s352( L"sort", &s1573<_Cont, s1478, De
 { s1240(), s1240( { s1587 } ) }, 0, 1 ) ) );
 s363.insert( std::make_pair( L"reverse", new s352( L"reverse", &s1573<_Cont, s1478, Der, s1758>::s1406, s1287,
 { s1240(), s1240( { s1587 } ) }, 0, 1 ) ) );
-s363.insert( std::make_pair( L"shuffle", new s352( L"shuffle", &s1573<_Cont, s1478, Der, s1758>::s1771, s1287,
+s363.insert( std::make_pair( L"shuffle", new s352( L"shuffle", &s1573<_Cont, s1478, Der, s1758>::s1770, s1287,
 { s1240(), s1240( { s1587 } ) }, 0, 1 ) ) );
-s363.insert( std::make_pair( L"find-adjacent", new s352( L"findAdjacent", &s1573<_Cont, s1478, Der, s1758>::s1765, 0,
+s363.insert( std::make_pair( L"find-adjacent", new s352( L"findAdjacent", &s1573<_Cont, s1478, Der, s1758>::s1764, 0,
 { s1240() }, 0, 0 ) ) );
 s363.insert( std::make_pair( L"subseq", new s352( L"subseq", &s1573<_Cont, s1478, Der, s1758>::s1668,
 s1587, { s1240( {s1285} ), s1240( { s1285, s1285 } ) }, 1, 2 ) ) );
-s363.insert( std::make_pair( L"begin", new s352( L"begin", &s1573<_Cont, s1478, Der, s1758>::s1760, 0,
+s363.insert( std::make_pair( L"begin", new s352( L"begin", &s1573<_Cont, s1478, Der, s1758>::s1759, 0,
 { s1240() }, 0, 0 ) ) );
-s363.insert( std::make_pair( L"end", new s352( L"end", &s1573<_Cont, s1478, Der, s1758>::s1763, 0,
+s363.insert( std::make_pair( L"end", new s352( L"end", &s1573<_Cont, s1478, Der, s1758>::s1762, 0,
+{ s1240() }, 0, 0 ) ) );
+s363.insert( std::make_pair( L"front", new s352( L"front", &s1573<_Cont, s1478, Der, s1758>::s1812, 0,
+{ s1240() }, 0, 0 ) ) );
+s363.insert( std::make_pair( L"back", new s352( L"back", &s1573<_Cont, s1478, Der, s1758>::s1798, 0,
 { s1240() }, 0, 0 ) ) );
 s363.equal_range( L"begin" ).first->second->s1413( true );
 s363.equal_range( L"end" ).first->second->s1413( true );
+s363.equal_range( L"front" ).first->second->s1413( true );
+s363.equal_range( L"back" ).first->second->s1413( true );
 s363.equal_range( L"max-element" ).first->second->s1413( true );
 s363.equal_range( L"max-element-idx" ).first->second->s1413( true );
 s363.equal_range( L"reverse" ).first->second->s1413( true );
@@ -3731,6 +3891,12 @@ s363.insert( std::make_pair( L"sort", new s352( L"sort", &s1752<_Cont, s1478, De
 s1240( { tp } ), s1240() }, 0, 2/*, {L":asc", L":desc"}*/ ) ) );
 s363.insert( std::make_pair( L"group-by", new s352( L"group-by", &s1752::s1639, 0,
 { s1240( { tp } ) }, 1, 1 ) ) );
+s363.insert( std::make_pair( L"front", new s352( L"front", &s1752<_Cont, s1478, Der>::s1812, 0,
+{ s1240() }, 0, 0 ) ) );
+s363.insert( std::make_pair( L"back", new s352( L"back", &s1752<_Cont, s1478, Der>::s1798, 0,
+{ s1240() }, 0, 0 ) ) );
+s363.equal_range( L"front" ).first->second->s1413( true );
+s363.equal_range( L"back" ).first->second->s1413( true );
 s363.equal_range( L"sort" ).first->second->s1413( true );
 s363.equal_range( L"group-by" ).first->second->s1413( true );
 this->s307->TR().s1302( this->s513, s7::s1583, s1687::s1682 );}
@@ -3758,7 +3924,9 @@ if( s1728 == L"begin" || s1728 == L"end" ) {
 s869::Cont s1434;
 s1172 s1217 = this->ValType();
 s718 = this->s307->TR().s1155( std::vector<s1172>(
-{ s1756, s1217 } ) );}
+{ s1756, 1, s1217, 0 } ) );}
+else if( s1728 == L"front" || s1728 == L"back" )
+s718 = this->ValType();
 else if( s1728 == L"max-element" )
 s718 = this->ValType();
 else if( s1728 == L"max-element-idx" )
@@ -3771,7 +3939,7 @@ else if( s1728 == L"find-adjacent" ) {
 s869::Cont s1434;
 s1172 s1217 = this->ValType();
 s718 = this->s307->TR().s1155( std::vector<s1172>( 
-{ s1756, s1217 } ) );}
+{ s1756, 1, s1217, 0 } ) );}
 else
 s718 = s321<_Cont, s1478, Der>::s1332( s1728, l );
 return s718;}
@@ -3779,7 +3947,9 @@ template <class _Cont, class s1478, class Der>
 s1172 s1752<_Cont, s1478, Der>::
 s1332( const std::wstring& s1728, const std::vector<s504>& l ) const{
 s1172 s718 = 0;
-if( s1728 == L"sort" )
+if( s1728 == L"front" || s1728 == L"back" )
+s718 = this->ValType();
+else if( s1728 == L"sort" )
 s718 = this->ValType();
 else if( s1728 == L"group-by" ) {
 s869::Cont s1434;
@@ -3788,8 +3958,10 @@ std::wstring ts = s765->s369() + L"<" +
 this->s307->TR().s1521( this->s307->TR().s856( s1217 ) ) + L">";
 s1172 s1691 = s765->s1339( ts, s1434 );
 s1172 s1642 = l[0].s16<s907*>()->s1495();
-s1172 s1631 = this->s307->TR().s1155( std::vector<s1172>( { s1051->s367(), s1642, s1691 } ) );
-s718 = this->s307->TR().s1155( std::vector<s1172>( { s771->s367(), s1631 } ) );}
+s1172 s1631 = this->s307->TR().s1155( std::vector<s1172>( 
+{ s1051->s367(), 2, s1642, 0, s1691, 0 } ) );
+s718 = this->s307->TR().s1155( std::vector<s1172>( 
+{ s771->s367(), 1, s1631, 0 } ) );}
 else
 s718 = s1573<_Cont, s1478, Der, s1478>::s1332( s1728, l );
 return s718;}
@@ -3803,8 +3975,10 @@ else if( s1728 == L"regroup-by" ) {
 s869::Cont s1434;
 s1172 s1217 = this->s335;
 s1172 s1642 = l[0].s16<s907*>()->s1495();
-s1172 s1631 = this->s307->TR().s1155( std::vector<s1172>( { s1051->s367(), s1642, s1217 } ) );
-s718 = this->s307->TR().s1155( std::vector<s1172>( { s771->s367(), s1631 } ) );}
+s1172 s1631 = this->s307->TR().s1155( std::vector<s1172>( 
+{ s1051->s367(), 2, s1642, 0, s1217, 0 } ) );
+s718 = this->s307->TR().s1155( std::vector<s1172>( 
+{ s771->s367(), 1, s1631, 0 } ) );}
 else
 s718 = s321<_Cont, s1593, Der>::s1332( s1728, l );
 return s718;}
@@ -3821,11 +3995,11 @@ if( it != end( this->s364 ) )
 return it->second;
 return NULL;}
 template<class _Cont, class s1478, class Der, class s1758>
-void s1573<_Cont, s1478, Der, s1758>::s1760( s502** s281, size_t n ){
+void s1573<_Cont, s1478, Der, s1758>::s1759( s502** s281, size_t n ){
 Der* pv = ( (Der*)s281[1] );
 *s281 = new s1268( pv->s307, pv->ns, pv->s1329(), NULL );}
 template<class _Cont, class s1478, class Der, class s1758>
-void s1573<_Cont, s1478, Der, s1758>::s1763( s502** s281, size_t n ){
+void s1573<_Cont, s1478, Der, s1758>::s1762( s502** s281, size_t n ){
 Der* pv = ( (Der*)s281[1] );
 *s281 = new s1268( pv->s307, pv->ns, pv->s1333(), NULL );}
 template <class _Cont, class s1478, class Der, class s1758>
@@ -3881,7 +4055,7 @@ std::sort( s1694, s1695, /*cmp_*/pv->s1492 );
 }
 *s281 = pv;}
 template <class _Cont, class s1478, class Der, class s1758>
-void s1573<_Cont, s1478, Der, s1758>::s1765( s502** s281, size_t s518 ){
+void s1573<_Cont, s1478, Der, s1758>::s1764( s502** s281, size_t s518 ){
 using s1248 = Der;
 using s1028 = typename Der::s1263;
 s1248* pv;
@@ -3899,12 +4073,30 @@ rp = pv->s1338();
 typename _Cont::iterator s1694, s1695;
 s1694 = rp.first.s16<s1028*>()->s1270();
 s1695 = rp.second.s16<s1028*>()->s1270();
-typename _Cont::iterator s1358 = std::adjacent_find( s1694, s1695, pv->s1761 );
-typename _Cont::iterator s1769 = s1358;
+typename _Cont::iterator s1358 = std::adjacent_find( s1694, s1695, pv->s1760 );
+typename _Cont::iterator s1768 = s1358;
 if( s1358 != pv->s364.end() )
-++s1769;
+++s1768;
 *s281 = new s1268( pv->s307, pv->ns,
-new s1028( pv, s1358, s1769 ), NULL );}
+new s1028( pv, s1358, s1768 ), NULL );}
+template<class _Cont, class s1478, class Der, class s1758>
+void s1573<_Cont, s1478, Der, s1758>::s1812( s502** s281, size_t n ){
+Der* pv = ( (Der*)s281[1] );
+*s281 = (s502*)pv->s1503( pv->s364.front() );}
+template<class _Cont, class s1478, class Der, class s1758>
+void s1573<_Cont, s1478, Der, s1758>::s1798( s502** s281, size_t n ){
+Der* pv = ( (Der*)s281[1] );
+*s281 = (s502*)pv->s1503( pv->s364.back() );}
+template<class _Cont, class s1478, class Der>
+void s1752<_Cont, s1478, Der>::s1812( s502** s281, size_t n ){
+Der* pv = ( (Der*)s281[1] );
+s504 s1171 = pv->s364[0];
+*s281 = s1171.s16<s502*>();}
+template<class _Cont, class s1478, class Der>
+void s1752<_Cont, s1478, Der>::s1798( s502** s281, size_t n ){
+Der* pv = ( (Der*)s281[1] );
+s504 s1171 = pv->s364[pv->s364.size() - 1];
+*s281 = s1171.s16<s502*>();}
 template <class _Cont, class s1478, class Der>
 void s1752<_Cont, s1478, Der>::s1419( s502** s281, size_t s518 ){
 using s1028 = typename Der::s1263;
@@ -3986,6 +4178,7 @@ std::wstring path;
 std::wstring s548;
 s324 s799;
 s324 s862;
+static void s1385( s502** s281, size_t n );
 static void s425( s502** s281, size_t n );
 static void s432( s502** s281, size_t n );
 static void s433( s502** s281, size_t n );
@@ -4051,6 +4244,16 @@ s504 s215;
 s504 mode;
 public:
 s1472( s269* s307, s502* s617, s616* s618, 
+const std::vector<s278*>& l, const s270* s737 );
+virtual const std::wstring& s306() const override { return s1483; }
+virtual void s520( const std::wstring& s347, bool proc ) override;
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
+class s1782
+: public s616{
+public:
+s1782( s269* s307, s502* s617, s616* s618,
 const std::vector<s278*>& l, const s270* s737 );
 virtual const std::wstring& s306() const override { return s1483; }
 virtual void s520( const std::wstring& s347, bool proc ) override;
@@ -4158,6 +4361,15 @@ public:
 s1474( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
 s1474( s269* s307 );
 virtual const std::wstring& s306() const override { return s1484; }
+virtual s505 s517( s502** s281, size_t s518 ) override;
+virtual s278* s350() const override;
+};
+class s1787
+: public s616{
+public:
+s1787( s269* s307, s502* s613, s616* s612, const std::vector<s278*>& l, const s270* s737 );
+s1787( s269* s307 );
+virtual const std::wstring& s306() const override { return s1797; }
 virtual s505 s517( s502** s281, size_t s518 ) override;
 virtual s278* s350() const override;
 };
