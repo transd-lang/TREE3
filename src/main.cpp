@@ -36,7 +36,8 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.1";
-wstring buildnum = L"110";
+// 211019
+wstring buildnum = L"111";
 wstring copyright = L"FREND: a command line REPL application (front end) for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
@@ -199,6 +200,7 @@ int main( int argc, char* argv[] )
 #ifdef WIN32
 	_setmode( _fileno( stdout ), _O_U16TEXT );
 	_setmode( _fileno( stdin ), _O_U16TEXT );
+	std::locale::global ( std::locale ( "" ) );
 #else
 	std::locale::global( std::locale( "en_US.UTF-8" ) );
 #endif
