@@ -1,49 +1,70 @@
-# FREND
-### The FRont END (command line interpreter) for Transd programming language
+# TREE3
+### The Transd Expression Evaluator (3rd revision)
 
-This interpreter serves for two purposes: to serve as a companion tool in studying
-the Transd language, and for executing Transd programs.
+This program is an implementation of Transd programming language. It can be used for two purposes: 
+ 
+ 1. For running Transd programs from the command line;
+ 2. For evaluating Transd expressions from the command line.
 
-The interpreter allows you to evaluate Transd expressions by simply typing them in
-the command line:
+## Usage
+
+### Evaluating Transd expressions (REPL mode)
+
+The TREE3 allows you to evaluate Transd expressions by simply typing them in the command line. Which is called REPL or "Read-Evaluate-Print-Loop" mode. This can be useful in studying Tranѕd language, for testing purposes, or for practical applications (e.g. as a command line calculator).
 
 ```
 D-: (+ 1 1)
 2
+D-: (sqrt (* (+ 17 15) 2))
+8
 ```
 
-Frend can also be used for running Transd programs. This can be done in
-two ways:
+To use TREE3 in REPL mode, do the following:
 
-1. Start the interpreter and at the command prompt type "run" and the name of a
-Transd assembly file:
+ 1. Start TREE3 from the command line of your OS by typing the `tree3` (possibly with
+ the full path to the 'tree3' executable) and press `Return`.
+ 2. Type your Transd expression on the command line and press `Return`.
+ 3. To quit, type `q` and press `Return`.
 
-`D : run C:\path\to\assembly\asm.td`
+### Running Transd programs (Launcher mode)
 
-2. To run Transd programs without starting interactive interpreter session, you can start
-them from the OS's command line:
+TREE3 can also be used as a launcher and executor of Transd programs. Starting a Transd program with the help of TREE3 can be done in one of two ways: from TREE3's command line or from your OS's command line.
 
-`C:>frend C:\path\to\assembly\asm.td`
+#### Starting Transd program from TREE3
 
-To quit the shell, type 'q' + Return.
+Transd programs can be started during interactive REPL sessions:
 
-## Obtaining FREND
+ 1. Start TREE3 from the command line of your OS by typing the `tree3` (possibly with
+ the full path to the 'tree3' executable) and press `Return`.
+ 2. At the TREE3's command prompt type "run", followed by the name of a Transd program file:
+
+`D-: run C:\path\to\program\someprog.td`
+
+#### Starting Transd program from OS's command line
+
+To run Transd programs without starting interactive REPL session, you can start
+them right from the OS's command line:
+
+ At the OS command prompt type "tree3", followed by the name of a Transd program file:
+
+`$ tree3 C:\path\to\program\someprog.td`
+
+
+## Obtaining TREE3
 
 ### Windows
 
 Windows users can choose from two options: either download a binary executable file
-of Frend interpreter or download the source code and compile it in Visual Studio.
+of TREE3 interpreter or download the source code and compile it in Visual Studio.
 
-##### Downloading Frend's executable
+##### Downloading TREE3 executable
 
-Choose the latest release here: https://github.com/transd-lang/frend/releases and
-download the `frend.exe` file. After downloading the executable you can use it 
-right away, without an additional installation procedure.
+Choose the latest release here: [TREE3 Releases](https://github.com/transd-lang/TREE3/releases) and download the `tree3.exe` file. After downloading the executable you can use it right away, without an additional installation procedure.
 
-##### Compiling Frend from source code
+##### Compiling TREE3 from source code
 
-Obtain the Frend's source code either by downloading an archive or by cloning the
-project with git onto your computer. Open the `frend.sln` solution file in Visual
+Obtain the TREE3's source code either by downloading an archive or by cloning the
+project with git onto your computer. Open the `tree3.sln` solution file in Visual
 Studio (2017 and above) and build the solution. After building, the `frend.exe`
 file contains the compiled REPL program and is ready to use.
 
