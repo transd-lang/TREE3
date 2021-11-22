@@ -4,7 +4,7 @@ Copyright (c) 2020-2021 Albert Berger
 This file is licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may view the text of the License in the 'LICENSE' file
-shipped with the distribution of FREND shell.
+shipped with the distribution of TREE3 interpreter.
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,14 +31,14 @@ using namespace transd;
 
 
 wstring exprPrompt = L"D-: ";
-wstring shellModuleName = L"_frend__";
+wstring shellModuleName = L"_tree3__";
 wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.1";
-// 211019
-wstring buildnum = L"111";
-wstring copyright = L"FREND: a command line REPL application (front end) for TransD programming language."
+// 211122
+wstring buildnum = L"112";
+wstring copyright = L"TREE (TransD Embedded Executor)\nA virtual compiler (interpreter) for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
 L"\n\nThe program uses Tourbillon virtual compiler as a back-end for Transd programming language."
@@ -70,7 +70,7 @@ wstring getStringVal_( const wstring& prompt, bool endLn = false )
 	return val;
 }
 
-void showFrendInfo()
+void showTree3Info()
 {
 	wcout << copyright << endl;
 }
@@ -139,7 +139,7 @@ void parseArgs( int argc, KCHAR* argv[] )
 			opts.exit = true;
 		}
 		else if( arg == L"-version" ) {
-			showFrendInfo();
+			showTree3Info();
 			opts.exit = true;
 		}
 		return;
@@ -148,7 +148,7 @@ void parseArgs( int argc, KCHAR* argv[] )
 	for( int i = 1; i < argc; ++i ) {
 		wstring arg = FROMTERM( argv[i] );
 		if( arg == L"-version" )
-			showFrendInfo();
+			showTree3Info();
 		else
 			throw TransDException( L"unknown command line argument: " + arg );
 	}
