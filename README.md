@@ -63,21 +63,18 @@ Choose the latest release here: [TREE3 Releases](https://github.com/transd-lang/
 
 ##### Compiling TREE3 from source code
 
-Obtain the TREE3's source code either by downloading an archive or by cloning the
-project with git onto your computer. Open the `tree3.sln` solution file in Visual
-Studio (2017 and above) and build the solution. After building, the `frend.exe`
-file contains the compiled REPL program and is ready to use.
+Obtain the TREE3's source code either by cloning the repo or by downloading an archive from GitHub repository. Open the `tree3.sln` solution file in Visual Studio (2017 and above) and build the solution. After building, the `tree3.exe` file contains the compiled TREE3 program and is ready to use.
 
 
 ### Linux
 
-1. Obtain the Frend's source code either by downloading from GitHub an archive or 
+1. Obtain the TREE3's source code either by downloading from GitHub an archive or 
 by cloning the git project onto your computer.
 
-2. In the shell go to the directory of the downloaded project and run the 'make'
+2. On the command line go to the directory of the downloaded project and run the 'make'
 command:
 
 `$ make`
 
-After compiling, the `frend` executable contains the compiled REPL program and is
+After compiling, the `tree3` executable contains the compiled TREE3 program and is
 ready to use.
