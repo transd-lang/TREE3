@@ -1,6 +1,6 @@
-This license only covers FREND interpreter project and doesn't cover the distribution 
-files of Tourbillon compiler library: transd.hpp and transd.cpp included in the FREND
-project. Tourbillon compiler is a separate product used in FREND and covered by a
+This license only covers TREE3 interpreter project and doesn't cover the distribution 
+files of Tourbillon compiler library: transd.hpp and transd.cpp included in the TREE3
+project. Tourbillon compiler is a separate product used in TREE3 and covered by a
 separate license.
 
                                  Apache License
