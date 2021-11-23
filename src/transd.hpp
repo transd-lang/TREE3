@@ -5,8 +5,8 @@ library.
 Copyright (c) 2020-2021 Albert Berger [alberger at gmail com].
 All rights reserved.
 Redistribution and use of this file in source and binary forms, 
-without modification, are permitted. Any modifications to this file
-are explicitly forbidden.
+without modification, are permitted for commercial and non-commercial
+use.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -14,10 +14,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 /*
 transd.hpp
 ----------
-The minimized distributed header file for C++ binding embeddable
+The minimized[1] distributed header file for C++ embeddable
 library of Tourbillon virtual compiler.
+
 Transd Project Website: https://github.com/transd-lang
-*/
+
+*[1] - https://transd.org/doc/articles/minimalism.html*/
+
 #include <vector>
 #include <map>
 #include <list>

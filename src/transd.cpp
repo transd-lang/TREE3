@@ -5,8 +5,8 @@ library.
 Copyright (c) 2020-2021 Albert Berger [alberger at gmail com].
 All rights reserved.
 Redistribution and use of this file in source and binary forms, 
-without modification, are permitted. Any modifications to this file
-are explicitly forbidden.
+without modification, are permitted for commercial and non-commercial
+use.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -14,10 +14,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 /*
 transd.cpp
 ----------
-The minimized distributed source file for C++ binding embeddable
+The minimized[1] distributed source file for C++ embeddable
 library of Tourbillon virtual compiler.
+
 Transd Project website: https://github.com/transd-lang
-*/
+
+*[1] - https://transd.org/doc/articles/minimalism.html */
+
 #ifdef __LINUX__
 #include <unistd.h>
 #include <errno.h>
@@ -418,7 +421,7 @@ wstring s717( s78.size() + 100, L'\0' );
 while( pl != string::npos ) { 
 s2023 = pl - s2029;
 if( s717.size() < s2000 + s2023 + 2 )
-s717.resize( std::max((size_t)(s717.size()*1.1), s717.size()+100) );
+s717.resize( (std::max)((size_t)(s717.size()*1.1), s717.size()+100) );
 memcpy( (void*)(s717.c_str() + s2000), s78.c_str() + s2029, s2023 * sizeof(wchar_t) );
 s717[s2000 + s2023] = L'\\';
 s717[s2000 + s2023 + 1] = s78[pl];
