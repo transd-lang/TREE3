@@ -36,8 +36,8 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.1";
-// 211122
-wstring buildnum = L"112";
+// 211124
+wstring buildnum = L"113";
 wstring copyright = L"TREE (TransD Embedded Executor)\nA virtual compiler (interpreter) for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 

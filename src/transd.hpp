@@ -16,11 +16,9 @@ transd.hpp
 ----------
 The minimized[1] distributed header file for C++ embeddable
 library of Tourbillon virtual compiler.
-
 Transd Project Website: https://github.com/transd-lang
-
-*[1] - https://transd.org/doc/articles/minimalism.html*/
-
+*[1] - https://transd.org/doc/articles/minimalism.html
+*/
 #include <vector>
 #include <map>
 #include <list>
@@ -652,7 +650,7 @@ std::vector<s1::s9<s144>>& s156, const s1873& s1937 );
 void s182( const s1032* pf, const std::wstring& s78,
 std::vector<s1::s9<s144>>& s156, const s1873& s1937 );
 } // namespace s6
-#define TRANSD_VERSION L"0.421"
+#define TRANSD_VERSION L"0.422"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1014 extern const uint32_t
@@ -2851,8 +2849,8 @@ public s336{
 protected:
 typedef Der s1307;
 _Cont s363;
-s1459<s1477> s1491;
-s1749<s1477> s1759;
+static s1459<s1477> s1491;
+static s1749<s1477> s1759;
 typedef s350::s355 s355;
 static s355 s362;
 static void s339( s501** s280, size_t n );
@@ -2874,13 +2872,17 @@ virtual s1267 s1337() override;
 };
 template<class _Cont, class s1477, class Der>
 s350::s355 s320<_Cont, s1477, Der>::s362;
+template<class _Cont, class s1477, class Der>
+s1459<s1477> s320<_Cont, s1477, Der>::s1491;
+template<class _Cont, class s1477, class Der>
+s1749<s1477> s320<_Cont, s1477, Der>::s1759;
 template<class _Cont, class s1477, class Der, class s1757>
 class s1572 :
 public s320<_Cont, s1477, Der>{
 protected:
 typedef s350::s355 s355;
 typedef s350::s351 s351;
-s1750<s1477, s1757> s1760;
+static s1750<s1477, s1757> s1760;
 static void s1758( s501** s280, size_t n );
 static void s1761( s501** s280, size_t n );
 static void s1811( s501** s280, size_t n );
@@ -2906,6 +2908,8 @@ virtual s1170 s1331( const std::wstring& s1727, const std::vector<s503>& l ) con
 };
 template<class _Cont, class s1477, class Der, class s1757>
 s350::s355 s1572<_Cont, s1477, Der, s1757>::s362;
+template<class _Cont, class s1477, class Der, class s1757>
+s1750<s1477, s1757> s1572<_Cont, s1477, Der, s1757>::s1760;
 template<class _Cont, class s1477, class Der>
 class s1751 :
 public s1572<_Cont, s1477, Der, s1477>{
@@ -4217,18 +4221,19 @@ throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation"
 s615* s1351 = NULL;
 if( s517 == 3 )
 s1351 = (s615*)s280[2];
-pv->s1491.s930 = s1351;
+s1459<s1477> qqq;
+qqq.s930 = s1351;
 if( pv->s1260() >= 1 && pr.first.s15<s1241*>()->Reversed() ) {
 typename _Cont::reverse_iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1269();
 s1694 = pr.second.s15<s1026*>()->s1269();
-std::sort( s1693, s1694, /*cmp_*/pv->s1491 );
+std::sort( s1693, s1694, /*pv->s1491*/qqq );
 }
 else {
 typename _Cont::iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1268();
 s1694 = pr.second.s15<s1026*>()->s1268();
-std::sort( s1693, s1694, /*cmp_*/pv->s1491 );
+std::sort( s1693, s1694, /*pv->s1491*/ qqq );
 }
 *s280 = pv;}
 template <class _Cont, class s1477, class Der, class s1757>
@@ -4317,18 +4322,19 @@ throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation"
 s615* s1351 = NULL;
 if( s517 == 3 )
 s1351 = (s615*)s280[2];
-pv->s1491.s930 = s1351;
+s1459<s1477> qqq;
+qqq.s930 = s1351;
 if( pv->s1260() >= 1 && pr.first.s15<s1241*>()->Reversed() ) {
 typename _Cont::reverse_iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1269();
 s1694 = pr.second.s15<s1026*>()->s1269();
-std::sort( s1693, s1694, /*cmp_*/pv->s1491 );
+std::sort( s1693, s1694, /*pv->s1491*/ qqq );
 }
 else {
 typename _Cont::iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1268();
 s1694 = pr.second.s15<s1026*>()->s1268();
-std::sort( s1693, s1694, /*cmp_*/pv->s1491 );
+std::sort( s1693, s1694, /*pv->s1491*/ qqq );
 }
 *s280 = pv;}
 template<class _Cont, class s1477, class Der>

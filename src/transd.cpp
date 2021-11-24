@@ -16,11 +16,9 @@ transd.cpp
 ----------
 The minimized[1] distributed source file for C++ embeddable
 library of Tourbillon virtual compiler.
-
 Transd Project website: https://github.com/transd-lang
-
-*[1] - https://transd.org/doc/articles/minimalism.html */
-
+*[1] - https://transd.org/doc/articles/minimalism.html
+*/
 #ifdef __LINUX__
 #include <unistd.h>
 #include <errno.h>
@@ -293,7 +291,27 @@ end = n;
 return;}
 if( s[n] != L'\\' )
 s925 = false;}}
-void s1098( const std::wstring& s, size_t& s66, const std::wstring& s1509 ){
+void s1098( const std::wstring& s, size_t& s66, const std::wstring& s2061 ){
+size_t s2059 = s66, s2060;
+wstring s1509 = s2061 + L"\"";
+s66 = string::npos;
+bool s2062 = false;
+while( true ) {
+s2060 = s2059;
+s2059 = s.find_first_of( s1509, s2059 );
+if( s2059 == string::npos ) {
+if( s2062 )
+throw new s2::s16( L"no closing parenthesis: " + s.substr(s2060, 20) );
+return;}
+if( s[s2059] == L'\"' ) {
+if( ! (s2059 && s[s2059-1] == '\\' ))
+s2062 = !s2062;}
+else{
+if( !s2062 ) {
+s66 = s2059;
+return;}}
+++s2059;}
+return;
 size_t pl = s.find_first_of( s1509, s66 );
 if( pl == s66 )
 return;
@@ -12860,7 +12878,7 @@ s717->s519( ps->ns, true );
 *s280 = (s501*)s717;}
 inline void s1980::s852( s501** s280, size_t s517 ){
 s1980* dr = ( (s1980*)DR );
-const wstring& s880 = PARN( 2 )->to_wstring();
+const wstring& s880 = ((s374*)PARN( 2 ))->s328();
 s1898 tbfr( L",", L"\n", L"", L".", false, false, false );
 size_t n = 3;
 while( n < s517 ) {
@@ -13001,9 +13019,6 @@ using namespace chrono;
 size_t s1998 = pl, /*s70,*/ s2043, s1999, s2006;
 vector<s504> s2008( types.size() );
 s1034 s212 = new s269( L"", L"" );
-double profSum1=0.0,profSum2=0.0,profSum3=0.0;
-auto profSt2 = system_clock::now();
-std::chrono::duration<double> delta;
 while( s1998 != string::npos ) {
 s2043 = s1998;
 s4::s1098( s880, s2043, tbfr.rowSep );
@@ -13011,7 +13026,6 @@ wstring s2001 = s880.substr( s1998, s2043 - s1998 );
 s2006 = s1999 = 0;
 for( size_t n = 0; n < types.size(); ++n ) {
 s2006 = s1999;
-auto profSt1 = system_clock::now();
 s4::s1098( s2001, s2006, tbfr.s1875 );
 if( types[n].s14() ) {
 s212->s300( L"" );
@@ -13020,25 +13034,15 @@ if( types[n]->s366() == s1288 && ( s212->s297().front() != L'"' ||
 s212->s297().back() != L'"' ) ) {
 wstring dqu = L"\"\"";
 s212->s1947( dqu.insert( 1, s4::s2007(  s4::s53( s212->s297(), s4::s49 ) , L'"' )));}
-profSt2 = system_clock::now();
 s2008[n] = types[n]->s369( *s212, ns, ns->s304() );}
 else {
 s2008[n] = s380.s15<s501*>();}
 s1999 = s2006 + 1;
 if( s2006 == string::npos )
-break;
-auto profSt3 = system_clock::now();
-delta = profSt2 - profSt1;
-profSum1 += delta.count();
-delta = profSt3 - profSt2;
-profSum2 += delta.count();}
+break;}
 s1998 = s2043 + 1;
-auto profSt4 = system_clock::now();
 s1962* s1988 = new s1979( s2008, this );
 rows.push_back( s1988 );
-auto profSt5 = system_clock::now();
-delta = profSt5 - profSt4;
-profSum3 += delta.count();
 if( s2043 == string::npos || s1998 == s880.size() )
 break;}}
 void s1980::s926( const wstring& s929 ){
