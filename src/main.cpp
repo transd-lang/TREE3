@@ -30,15 +30,15 @@ using namespace std;
 using namespace transd;
 
 
-wstring exprPrompt = L"D-: ";
+wstring exprPrompt = L"D-> ";
 wstring shellModuleName = L"_tree3__";
 wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
-wstring version = L"0.1";
-// 211124
-wstring buildnum = L"113";
-wstring copyright = L"TREE (TransD Embedded Executor)\nA virtual compiler (interpreter) for TransD programming language."
+wstring version = L"0.2";
+// 211125
+wstring buildnum = L"1";
+wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nA virtual compiler (interpreter) for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
 L"\n\nThe program uses Tourbillon virtual compiler as a back-end for Transd programming language."
@@ -104,7 +104,7 @@ void parseArgs( const wstring& sf, vector<wstring>& res )
 		if( c == L'\"' || c == L'\'' ) {
 			findPairedBlock( sf, stPos, c, _frStart, _frEnd );
 			if( _frEnd == string::npos )
-				throw TransDException( L"Quotes don't match near \'" + sf.substr( stPos, 40 ) + L"...\'" );
+				throw new TransdException( L"Quotes don't match near \'" + sf.substr( stPos, 40 ) + L"...\'" );
 			arg = sf.substr( stPos, _frEnd - stPos + 1 );
 			stPos = sf.find_first_not_of( whitespace, ++_frEnd );
 		}
@@ -150,7 +150,7 @@ void parseArgs( int argc, KCHAR* argv[] )
 		if( arg == L"-version" )
 			showTree3Info();
 		else
-			throw TransDException( L"unknown command line argument: " + arg );
+			throw new TransdException( L"unknown command line argument: " + arg );
 	}
 }
 
@@ -169,8 +169,9 @@ void runFile( const wstring& args_ )
 		HPROG prog = createAssembly();
 		loadProgram( prog, args[0] );
 		transd::run( prog, args );
+		deleteAssembly( prog );
 	}
-	catch( TransDException* e ) {
+	catch( TransdException* e ) {
 		wcout << L"An exception has occured: \n\n" << e->Msg() << endl;
 	}
 	catch( std::exception& e ) {
@@ -205,7 +206,13 @@ int main( int argc, char* argv[] )
 	std::locale::global( std::locale( "en_US.UTF-8" ) );
 #endif
 
-	parseArgs( argc, argv );
+	try {
+		parseArgs( argc, argv );
+	}
+	catch( TransdException* e ) {
+		wcout << "Error: " << e->Msg() << endl;
+		return -1;
+	}
 	if( opts.cmd == CMD_RUNFILE )
 		runFile( clearAll( opts.fileToRun, L" " ) );
 
@@ -231,7 +238,7 @@ int main( int argc, char* argv[] )
 				evaluateExpression( sf );
 		}
 	}
-	catch( TransDException* e ) {
+	catch( TransdException* e ) {
 		wcout << L"Unhandled exception: \n\n" << e->Msg() << endl;
 	}
 	catch( std::exception& e ) {

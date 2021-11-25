@@ -2,22 +2,28 @@
 /*
 This is a distributed file for Tourbillon virtual compiler embedding
 library.
+
 Copyright (c) 2020-2021 Albert Berger [alberger at gmail com].
 All rights reserved.
+
 Redistribution and use of this file in source and binary forms, 
 without modification, are permitted for commercial and non-commercial
 use.
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
 /*
 transd.cpp
 ----------
-The minimized[1] distributed source file for C++ embeddable
-library of Tourbillon virtual compiler.
-Transd Project website: https://github.com/transd-lang
-*[1] - https://transd.org/doc/articles/minimalism.html
+    The minimized[1] distributed source file for C++ embeddable
+    library of Tourbillon virtual compiler.
+    
+    Transd Project website: https://github.com/transd-lang
+
+    *[1] - https://transd.org/doc/articles/minimalism.html
 */
 #ifdef __LINUX__
 #include <unistd.h>
@@ -812,66 +818,67 @@ s121 += s120;
 wcout << '\r' << s121 << '\r' << s121.substr( 0, s1227 );}}
 return s121;}
 wstring getStringValHist( const wstring& s95, const vector<wstring>& s105 ){
-wcout << s95 << endl;
+wcout << s95;// << endl;
 int s120 = 0;
 size_t s716 = s105.size();
 bool s612 = true;
-wstring s121;
-size_t s1227 = 0;
+wstring s121 = s95;
+size_t prsize = s95.size();
+size_t s1227 = prsize;
 while( s612 ) {
 s120 = _getch();
 #ifdef __LINUX__
-if(s120 == 27) {
+if( s120 == 27 ) {
 _getch();
 s120 = _getch();
 if( s120 == L'A' ) s120 = s111;
-else if(s120 == L'B') s120 = s112;
-else if(s120 == L'C') s120 = s114;
-else if(s120 == L'D') s120 = s113;}
+else if( s120 == L'B' ) s120 = s112;
+else if( s120 == L'C' ) s120 = s114;
+else if( s120 == L'D' ) s120 = s113;}
 else if( s120 == 10 )
 s120 = 13;
 else if( s120 == 127 )
 s120 = 8;
 #else			
-if(s120 == 224) {
+if( s120 == 224 ) {
 s120 = _getch();
 if( s120 == L'H' ) s120 = s111;
-else if(s120 == L'P') s120 = s112;
-else if(s120 == L'M') s120 = s114;
-else if(s120 == L'K') s120 = s113;}
+else if( s120 == L'P' ) s120 = s112;
+else if( s120 == L'M' ) s120 = s114;
+else if( s120 == L'K' ) s120 = s113;}
 else if( s120 == 0 ) {
 s120 = _getch();
-if( s120 = 83 ) s120 = s118; // S
-else if( s120 = 71 ) s120 = s1732; // G
-else if( s120 = 79 ) s120 = s1731; // O
+if( s120 == 83 ) s120 = s118; // S
+else if( s120 == 71 ) s120 = s1732; // G
+else if( s120 == 79 ) s120 = s1731; // O
 }
 #endif			
 switch( s120 ) {
 case s113:
-if( s1227 > 0 ) {
+if( s1227 > prsize ) {
 wcout << '\r' << s121.substr( 0, --s1227 );}
 break;
 case s114:
 if( s1227 < s121.size() )
-wcout << s121[s1227++];
+wcout << s95 << s121[s1227++];
 break;
 case s111:
 if( s716 > 0 ) {
 if( s716 < s105.size() )
 wcout << '\r' << wstring( s121.size(), L' ' );
-s121 = s105[--s716];
+s121 = s95 + s105[--s716];
 wcout << '\r' << s121;
 s1227 = s121.size();}
 break;
 case s112:
 if( !s105.empty() && s716 < s105.size() - 1 ) {
-wcout << '\r' << wstring( s121.size(), L' ');
-s121 = s105[++s716];
+wcout << '\r' << wstring( s121.size(), L' ' );
+s121 = s95 + s105[++s716];
 wcout << '\r' << s121;
 s1227 = s121.size();}
 break;
 case s117:
-if( s1227 > 0 && s121.size() ) {
+if( s1227 > prsize && s121.size() > prsize ) {
 s121.erase( --s1227, 1 );
 wcout << '\r' << wstring( s121.size() + 1, L' ' );
 wcout << '\r' << s121 << '\r' << s121.substr( 0, s1227 );}
@@ -884,8 +891,8 @@ wcout << '\r' << s121 << '\r' << s121.substr( 0, s1227 );}
 break;
 case s1732:
 if( s1227 > 0 ) {
-wcout << '\r';
-s1227 = 0;}
+wcout << '\r' << s95;
+s1227 = prsize;}
 break;
 case s1731:
 if( s1227 < s121.size() ) {
@@ -904,7 +911,7 @@ else
 s121 += s120;
 ++s1227;
 wcout << '\r' << s121 << '\r' << s121.substr( 0, s1227 );}}
-return s121;}
+return s121.substr( prsize );}
 int s106( const std::wstring & s95 ){
 int s717;
 while( true ) {
@@ -7347,20 +7354,7 @@ return s370( s612, s280, &s736 );
 if( s306->TR().s1639( s280[0]->s366(), s1686::s1681 ) )
 return new s1255( s306, s612, s280 );
 else
-return new s1039( s306, s612, s280 );
-/*if( s732 == 1 ) {
-s269::s281::const_iterator it = s737.find( L"0" );
-la = s277::s524( *it->second, s306, s612, s346 );}
-else {
-s269::s281::const_iterator it = s737.find( L"0" );
-fi = s277::s524( *it->second, s306, s612, s346 );
-it = s737.find( L"1" );
-la = s277::s524( *it->second, s306, s612, s346 );
-if( s732 == 3 ) {
-it = s737.find( L"2" );
-in = s277::s524( *it->second, s306, s612, s346 );}
-}*/
-}
+return new s1039( s306, s612, s280 );}
 else
 return NULL;}
 void s1255::s519( const s278* s960, bool ){
@@ -13575,13 +13569,18 @@ std::wostream& buf = *pd;
 buf << endl << s4::fill_n_ch( L' ', s201 ) << s284 << L" : " << L"Assembly" << endl;
 s207.s310( pd, s201 + s434 );
 s655.s310( pd, s201 + s434 );}
-map<int, s268*> handles;
+map<int, s1::s9<s268>> handles;
 HPROG createAssembly(){
 static int s716 = 0;
-s268* p = new s268();
+s1::s9<s268> p = new s268();
 handles[++s716] = p;
 p->s519( false );
 return s716;}
+void deleteAssembly( int n ){
+auto it = handles.find( n );
+if( it == end( handles ) )
+throw new s2::s16( L"no assembly with such handle" );
+handles.erase( it );}
 void loadProgram( HPROG handle, const wstring& s193 ){
 s268* p = handles[handle];
 p->s213( s193 );}
@@ -13621,10 +13620,10 @@ ob->s578( s687, s346 );}}
 HPROG initShell( const std::wstring& s1228, const std::wstring& modText ){
 s1::s9<s6::s146> ob = new s6::s146(NULL);
 size_t pos = 0;
-s6::s1032 s1158( L"" );
-s6::s1876( L".", L",", true, true, true );
+s6::s1873 s1949( L".", L",", true, true, true );
+s6::s1032 s1158( L"", true, s1949 );
 s1158.s174( modText, pos, ob );
-ob->s162( L"name", new s6::s144( s1228 ) );
+ob->s162( s7::s480, new s6::s144( s1228 ) );
 HPROG prog = createAssembly();
 s215( prog, *ob );
 return prog;}

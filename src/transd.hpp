@@ -2,22 +2,28 @@
 /*
 This is a distributed file for Tourbillon virtual compiler embedding
 library.
+
 Copyright (c) 2020-2021 Albert Berger [alberger at gmail com].
 All rights reserved.
+
 Redistribution and use of this file in source and binary forms, 
 without modification, are permitted for commercial and non-commercial
 use.
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
 /*
 transd.hpp
 ----------
-The minimized[1] distributed header file for C++ embeddable
-library of Tourbillon virtual compiler.
-Transd Project Website: https://github.com/transd-lang
-*[1] - https://transd.org/doc/articles/minimalism.html
+    The minimized[1] distributed header file for C++ embeddable
+    library of Tourbillon virtual compiler.
+
+    Transd Project Website: https://github.com/transd-lang
+
+    *[1] - https://transd.org/doc/articles/minimalism.html
 */
 #include <vector>
 #include <map>
@@ -650,7 +656,7 @@ std::vector<s1::s9<s144>>& s156, const s1873& s1937 );
 void s182( const s1032* pf, const std::wstring& s78,
 std::vector<s1::s9<s144>>& s156, const s1873& s1937 );
 } // namespace s6
-#define TRANSD_VERSION L"0.422"
+#define TRANSD_VERSION L"0.423"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1014 extern const uint32_t
@@ -4986,6 +4992,7 @@ virtual void s310( std::wostream* pd, int s201 = 0 ) const override;
 };
 void evaluateExpression( const std::wstring& s78 );
 HPROG createAssembly();
+void deleteAssembly( int n );
 void loadProgram( HPROG handle, const std::wstring& s193 );
 void s215( HPROG handle, s6::s146& obj );
 TDType* run( HPROG handle, const std::vector<std::wstring>& s723 );
@@ -4998,5 +5005,5 @@ const std::wstring& s346 );
 void importFile( HPROG handle, const std::wstring& s1228, const std::wstring& s44,
 const std::wstring& s346 );
 HPROG initShell( const std::wstring& s1228, const std::wstring& modText );
-typedef s2::s16 TransDException;
+typedef s2::s16 TransdException;
 } // namespace transd
