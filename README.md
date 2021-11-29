@@ -1,21 +1,69 @@
 # TREE3
-### The Transd Expression Evaluator (3rd revision)
+### Transd Expression Evaluator (3rd revision)
 
 This program is an implementation of Transd programming language. It can be used for two purposes: 
  
  1. For running Transd programs from the command line;
  2. For evaluating Transd expressions from the command line.
 
+## Obtaining TREE3
+
+### Windows
+
+Windows users can choose from two options: 
+* download a binary executable file of TREE3 compiler;
+* download the TREE3's source code and compile it in Visual Studio or with Clang.
+
+##### Downloading TREE3 executable
+
+Choose the latest release here: [TREE3 Releases](https://github.com/transd-lang/TREE3/releases) and download the `tree3.exe` file. After downloading the executable you can use it right away, without an installation procedure.
+
+##### Building TREE3 from source code
+
+For building TREE3 on Windows OS you need to have on your computer one of the two building tools: MS Visual Studio 2017 and newer, or Clang compiler v6.0 and newer.
+
+Obtain the TREE3's source code either by cloning the repo or by downloading an archive from the GitHub repository. Unpack the archive and open the `TREE3` directory in the console or in Windows Explorer. Then do one of the following: 
+
+* Open the `tree3.sln` solution file in Visual Studio and build the solution.
+* Issue the following command on the command line of your console:
+
+```
+clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -DWIN32 -o tree3.exe
+```
+
+After building, the `tree3.exe` file contains the TREE3 compiler and is ready to use.
+
+
+### Linux
+
+1. Obtain the TREE3's source code either by downloading from GitHub an archive or 
+by cloning the git project onto your computer.
+
+2. On the command line go to the directory of the downloaded project and run the 'make'
+command:
+
+`$ make`
+
+Alternatively, you can do the building with the following command:
+
+```
+clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -D__LINUX__ -lpthread -o tree3
+```
+
+After compiling, the `tree3` executable contains the TREE3 compiler and is
+ready to use.
+
+
 ## Usage
 
 ### Evaluating Transd expressions (REPL mode)
 
-The TREE3 allows you to evaluate Transd expressions by simply typing them in the command line. Which is called REPL or "Read-Evaluate-Print-Loop" mode. This can be useful in studying Tranѕd language, for testing purposes, or for practical applications (e.g. as a command line calculator).
+The TREE3 allows you to evaluate Transd expressions by simply typing them on the command line. Which is called REPL or "Read-Evaluate-Print-Loop" mode. This can be useful in studying Tranѕd language, for testing purposes, or for practical applications (e.g. as a command line calculator).
 
 ```
-D-: (+ 1 1)
+_) (+ 1 1)
 2
-D-: (sqrt (* (+ 17 15) 2))
+_) (sqrt (* (+ 17 15) 2))
 8
 ```
 
@@ -38,7 +86,7 @@ Transd programs can be started during interactive REPL sessions:
  the full path to the 'tree3' executable) and press `Return`.
  2. At the TREE3's command prompt type "run", followed by the name of a Transd program file:
 
-`D-: run C:\path\to\program\someprog.td`
+`_) run C:\path\to\program\someprog.td`
 
 #### Starting Transd program from OS's command line
 
@@ -50,31 +98,3 @@ them right from the OS's command line:
 `$ tree3 C:\path\to\program\someprog.td`
 
 
-## Obtaining TREE3
-
-### Windows
-
-Windows users can choose from two options: either download a binary executable file
-of TREE3 interpreter or download the source code and compile it in Visual Studio.
-
-##### Downloading TREE3 executable
-
-Choose the latest release here: [TREE3 Releases](https://github.com/transd-lang/TREE3/releases) and download the `tree3.exe` file. After downloading the executable you can use it right away, without an additional installation procedure.
-
-##### Compiling TREE3 from source code
-
-Obtain the TREE3's source code either by cloning the repo or by downloading an archive from GitHub repository. Open the `tree3.sln` solution file in Visual Studio (2017 and above) and build the solution. After building, the `tree3.exe` file contains the compiled TREE3 program and is ready to use.
-
-
-### Linux
-
-1. Obtain the TREE3's source code either by downloading from GitHub an archive or 
-by cloning the git project onto your computer.
-
-2. On the command line go to the directory of the downloaded project and run the 'make'
-command:
-
-`$ make`
-
-After compiling, the `tree3` executable contains the compiled TREE3 program and is
-ready to use.
