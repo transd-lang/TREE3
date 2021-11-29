@@ -2,28 +2,22 @@
 /*
 This is a distributed file for Tourbillon virtual compiler embedding
 library.
-
 Copyright (c) 2020-2021 Albert Berger [alberger at gmail com].
 All rights reserved.
-
 Redistribution and use of this file in source and binary forms, 
 without modification, are permitted for commercial and non-commercial
 use.
-
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
-
 /*
-transd.cpp
-----------
-    The minimized[1] distributed source file for C++ embeddable
+    transd.cpp
+    ----------
+    The minimized distributed source file for C++ embeddable
     library of Tourbillon virtual compiler.
-    
-    Transd Project website: https://github.com/transd-lang
 
-    *[1] - https://transd.org/doc/articles/minimalism.html
+    Transd project website: https://github.com/transd-lang
 */
 #ifdef __LINUX__
 #include <unistd.h>
@@ -131,6 +125,11 @@ s717 = L"";
 else
 s717 = s717.substr( 0, pl );
 return s717;}
+wstring s2063(){
+char buf[2000];
+memset( buf, 0, 2000 );
+getcwd( buf, 2000 );
+return wstring( conv.from_bytes( buf ) );}
 bool s31( const wstring& s46, const wstring& s547, wstring& s156 ){
 struct dirent *entry;
 DIR *dp;
@@ -188,6 +187,11 @@ wchar_t s42[1024];
 DWORD length = GetModuleFileNameW( NULL, s42, 1024 );
 PathRemoveFileSpecW( s42 );
 return s42;}
+wstring s2063(){
+wchar_t buf[2000];
+memset( buf, 0, 4000 );
+_wgetcwd( buf, 2000 );
+return wstring( buf );}
 bool s31( const wstring& _dir, const wstring& s547, wstring& s156 ){
 HANDLE s48;
 WIN32_FIND_DATAW s43;
@@ -562,6 +566,12 @@ if( path.front() == L'\'' || path.front() == L'"' ) {
 if( path.back() != path.front() )
 throw new s2::s16( L"opening and closing quotes don't match" );
 path = path.substr( 1, path.size() - 2 );}
+pl = path.find( L"/../" );
+while( pl != string::npos ) {
+size_t pl1 = path.rfind( L"/", pl - 1 );
+path.erase( pl1, pl - pl1 + 3 );
+pl = path.find( L"/../" );
+}
 return path;}
 void s65( const std::wstring& s79 ){}
 void s55( const string& s, size_t s66, char left, char right,
@@ -823,8 +833,8 @@ int s120 = 0;
 size_t s716 = s105.size();
 bool s612 = true;
 wstring s121 = s95;
-size_t prsize = s95.size();
-size_t s1227 = prsize;
+size_t s2067 = s95.size();
+size_t s1227 = s2067;
 while( s612 ) {
 s120 = _getch();
 #ifdef __LINUX__
@@ -855,7 +865,7 @@ else if( s120 == 79 ) s120 = s1731; // O
 #endif			
 switch( s120 ) {
 case s113:
-if( s1227 > prsize ) {
+if( s1227 > s2067 ) {
 wcout << '\r' << s121.substr( 0, --s1227 );}
 break;
 case s114:
@@ -878,7 +888,7 @@ wcout << '\r' << s121;
 s1227 = s121.size();}
 break;
 case s117:
-if( s1227 > prsize && s121.size() > prsize ) {
+if( s1227 > s2067 && s121.size() > s2067 ) {
 s121.erase( --s1227, 1 );
 wcout << '\r' << wstring( s121.size() + 1, L' ' );
 wcout << '\r' << s121 << '\r' << s121.substr( 0, s1227 );}
@@ -892,7 +902,7 @@ break;
 case s1732:
 if( s1227 > 0 ) {
 wcout << '\r' << s95;
-s1227 = prsize;}
+s1227 = s2067;}
 break;
 case s1731:
 if( s1227 < s121.size() ) {
@@ -911,7 +921,7 @@ else
 s121 += s120;
 ++s1227;
 wcout << '\r' << s121 << '\r' << s121.substr( 0, s1227 );}}
-return s121.substr( prsize );}
+return s121.substr( s2067 );}
 int s106( const std::wstring & s95 ){
 int s717;
 while( true ) {
@@ -1861,6 +1871,7 @@ const wstring s1795 = L"start-process";
 const wstring s1793 = L"rebind";
 const wstring s1794 = L"sleep";
 const wstring s1790 = L"diag";
+const wstring s2065 = L"rand";
 const std::wstring s271 = L"AttrNA";
 s269::s269( const std::wstring& s, const s144* s6 )
 : s1160( (s144*)s6 ){
@@ -4094,7 +4105,11 @@ inline void s1884::s2052( s501** s280, size_t s517 ){
 s1884* p = (s1884*)DR;
 p->s2054 = s1974::now();
 time_t t = s1974::to_time_t( p->s2054 );
-p->s363 = *std::localtime( &t );
+#ifdef WIN32
+localtime_s( &p->s363, &t );
+#else
+p->s363 = *localtime( &t );
+#endif
 p->s1921 = s1918;}
 inline void s1884::s2028( s501** s280, size_t s517 ){
 s1884* p = (s1884*)DR;
@@ -4348,6 +4363,9 @@ std::wostream& buf = *pd;
 buf << s4::fill_n_ch( L' ', s201 ) << L"DataRef : " << s387;}
 template<class s1478, class Der>
 s350::s355 s1470<s1478, Der>::s362;
+template<class s1478, class Der>
+const s350::s355& s1470<s1478, Der>::s356() const{
+return s362; }
 template<class s1478, class Der>template <class s1704, class s1705>
 void s1470<s1478, Der>::s1706( s501* src, s501* s826 ){
 *((s1704*)s826)->s372() = (s1705) ( (Der*)src )->s363;}
@@ -8343,9 +8361,13 @@ s362.emplace( make_pair( L"get", new s351( L"get", &s323::s337, 0,
 s362.emplace( make_pair( L"append", new s351( L"append", &s323::s1480, s1286,
 { s1238( { s7::s1568 } ) }, 1, 1, false ) ) );
 s362.emplace( make_pair( L"resize", new s351( L"resize", &s323::s340, s1286,
-{ s1238( { s1701 } ) }, 1, 1, false ) ) );
+{ s1238( { s1686::s1723 } ) }, 1, 1, false ) ) );
+s362.emplace( make_pair( L"reserve", new s351( L"reserve", &s323::s2069, s1286,
+{ s1238( { s1686::s1723 } ) }, 1, 1, false ) ) );
 s362.emplace( make_pair( L"eq", new s351( L"eq", &s323::s413, s1284,
 { s1238( { s7::s1565 } ) }, 1, 1, true ) ) );
+s362.emplace( make_pair( L"for-each", new s351( L"for-each", &s323::s1923, s1286,
+{ s1238( { s7::s1569 } ) }, 1, 1, false ) ) );
 s362.emplace( make_pair( L"load-table", new s351( L"load-table", &s323::s852,
 s1284, { s1238( { s7::s1564, s7::s1570 } ) }, 0, 0, false, { L":mixedTypes", 
 L":stringsQuoted", L":promInts", L"colNames", L"fieldSep:", L"rowSep:", L":emptyElements" } ) ) );
@@ -8466,13 +8488,40 @@ inline void s323::s1480( s501** s280, size_t s517 ){
 s323* pv = (s323*)DR;
 const s501* s1726 = pv->s306->TR().s1106( pv->s334 );
 ( (s323*)DR )->s363.push_back( (s277*)s1726->s1710( s280[2] ) );}
+inline void s323::s1923( s501** s280, size_t s517 ){
+using s1246 = s323;
+using s1026 = s1055;
+s1246* pv;
+s400* pr = NULL;
+if( s280[1]->s366() == s1586 ) {
+pr = (s400*)s280[1];
+pv = (s1246*)pr->s875();}
+else
+pv = ( (s1246*)s280[1] );
+s905* s1941 = (s905*)s280[2];
+s1267 rp;
+if( pr ) {
+rp = pr->s1337( pv );}
+else
+rp = pv->s1337();
+typename s1557::iterator s1693, s1694;
+s1693 = rp.first.s15<s1026*>()->s1268();
+s1694 = rp.second.s15<s1026*>()->s1268();
+while( s1693 != s1694 ) {
+s1941->s620( vector<s503>( { *s1693 } ) );
+s1941->s516( 0, 0 );
+++s1693;}}
+inline void s323::s2069( s501** s280, size_t s517 ){
+s323* pv = (s323*)DR;
+pv->s363.reserve( (int)*s280[2] );}
 inline void s323::s340( s501** s280, size_t s517 ){
 int size = (int)*s280[2];
+s323* pv = ( (s323*)DR );
 int oldsize = (int)( (s323*)DR )->s363.size();
-( (s323*)DR )->s363.resize( size );
-for( int i = oldsize; i < size; ++i )
-( (s323*)DR )->s363[i] = ( (s323*)DR )->s306->TR().s541(
-( (s323*)DR )->s324, ( (s323*)DR )->s306, ( (s323*)DR )->s518 );}
+pv->s363.resize( size );
+for( int i = oldsize; i < size; ++i ) {
+pv->s363[i] = pv->s306->TR().s541( pv->s334, pv->s306, pv->s518 );
+pv->s363[i]->s519( pv->ns, true );}}
 inline void s323::s413( s501** s280, size_t s517 ){
 size_t size = ( (s323*)DR )->s363.size();
 s323* right = (s323*)s280[2];
@@ -10248,6 +10297,7 @@ s504 s1781::s516( s501** s723, size_t s732 ){
 s1787( s723, s732 );
 s323* pv = s610.s15<s323*>();
 wstring s198 = s607[1]->to_wstring();
+s198 = s4::s787( s198 );
 vector<s9<s146>> s692;
 s1035 s1158 = new s1032( s198 );
 s1158->read( s692, /*s7::s1222*/ L"" );
@@ -11028,9 +11078,9 @@ throw new s16( actmsg );
 p = l[idx];
 if( p->s513() != s492 )
 throw new s16( actmsg );
-if( ((s386*)p)->s643() == L"select" ) {
+if( ((s386*)p)->s643() == L"project" ) {
 if( l.size()  )
-select = l[idx+1];}
+s1169 = l[idx+1];}
 else {
 if( ((s386*)p)->s643() != L"do" )
 throw new s16( actmsg );
@@ -11066,14 +11116,23 @@ if( pc == s495 ) {
 where = s624( where.s15<s584*>(), s306, s612, this, s304(), proc );
 where.s15<Transd*>()->s519( s1848, false );}
 else
-throw s1059.s1097( L"WHERE clause must be a function." );}
-if( select ) {
-pc = select->s513();
+throw s1059.s1097( L"WHERE clause must be a lambda" );}
+if( s1169 ) {
+pc = s1169->s513();
 if( pc == s495 ) {
-select = s624( select.s15<s584*>(), s306, s612, this, s304(), proc );
-select.s15<Transd*>()->s519( s1848, false );}
+s1169 = s624( s1169.s15<s584*>(), s306, s612, this, s304(), proc );
+s1169.s15<Transd*>()->s519( s1848, false );}
+else if( pc == s492 ){
+s1169.s15<s386*>()->s519( this );}
+else if( pc == s491 )
+(void)0;
 else
-throw s1059.s1097( L"DO clause must be a function." );}
+throw s1059.s1097( L"PROJECT clause must be a lambda." );
+s867::Cont s1433;
+wstring ts = s323::proto->s368() + L"<" + 
+s306->TR().s854( s1169->s366() ) + L">";
+ts = s306->TR().s1520( ts );
+s512 = s323::proto.s15<s323*>()->s1338( ts, s1433 );}
 s615::s519( s1848, proc );}
 s504 s640::s516( s501** s723, size_t s732 ){
 s504 s717 = s610;
@@ -11085,6 +11144,8 @@ else if( pc == s492 )
 s612 = ((s336*)s315.s15<s386*>()->s392());
 else
 s612 = s315.s15<s336*>();
+if( s1169.s14() )
+s610.s15<s323*>()->clear();
 Iterator* s1123 = s612->s321( NULL );
 while( 1 ) {
 s503 p = s1123->s322();
@@ -11095,8 +11156,9 @@ s657[1] = p.s15<s502*>();
 if( where ) {
 if( ((bool)*(s501*)where->s516( 0, 0 )) != true )
 continue;}
-if( select ) {
-select->s516( 0, 0 );}
+if( s1169 ) {
+s610.s15<s323*>()->add( 
+s1169->s516( 0, 0 ).s15<s502*>()->s349() );}
 else {
 for( size_t n = 0; n < s608.size(); ++n ) {
 s717 = s608[n]->s516( s723, s732 );
@@ -11185,7 +11247,7 @@ s717 = s608[n]->s516( s603, s517 );
 if( s717->s644() < 0 )
 break;}
 return s717;}
-s501* s905::s370( s278* s612, const std::vector<s1170>& vt ) const{
+s501* s905::s370( s278* s612, const vector<s1170>& vt ) const{
 return new s905( *this );}
 s277* s905::s349()const{
 return new s905( *this );}
@@ -11697,6 +11759,24 @@ wstringstream buf;
 dr->s310( &buf );
 *s610.s15<s374*>()->s372() = buf.str();
 return s610;}
+s2064::s2064( s268* s306, s278* s616, s615* s617, const std::vector<s277*>& l, const s269* s736 )
+: s615( s306, s616, s617, s588, s2065, s736 ){
+if( l.size() > 2 )
+throw new s16( s2065 + L"(): wrong numbers of arguments" );
+s280.assign( l.begin(), l.end() );}
+s2064::s2064( const s2064& right )
+: s615( right ){}
+void
+s2064::s519( const s278* s1848, bool proc ){
+s512 = s1283;
+s615::s519( s1848, proc );}
+s504 s2064::s516( s501** s723, size_t s732 ){
+s1787( s723, s732 );
+std::random_device rd;
+std::mt19937 mt(rd());
+std::uniform_real_distribution<double> dist(0.0, 1.0);
+*s610.s15<s373*>()->s372() = dist( mt );
+return s610;}
 s277* s633::s349() const{
 return new s633( *this );}
 s277* s631::s349() const{
@@ -11727,6 +11807,8 @@ s277* s1784::s349() const{
 return new s1784( *this );}
 s277* s1779::s349() const{
 return new s1779( *this );}
+s277* s2064::s349() const{
+return new s2064( *this );}
 s635::s635( s268* s306, s278* s616, s615* s617, const std::vector<s277*>& l, const s269* s736 )
 : s615( s306, s616, s617, s588, s261, s736 ){
 if( l.size() != 1 )
@@ -11788,7 +11870,7 @@ for( size_t n = 0; n < s280.size(); ++n ) {
 s997.push_back( s280[n]->s516( 0, 0 )->to_wstring() );}
 if( !s992 ) {
 s992 = new s268();
-s992->s519( true );}
+s992->initAssembly( true );}
 else
 s992->reset();
 s992->s213( s997[0] );
@@ -11803,8 +11885,8 @@ throw new s16( s817 + L"(): wrong number of arguments" );
 s280.assign( l.begin(), l.end() );
 s512 = s779->s366();}
 s504 s847::s516( s501** s740, size_t s517 ){
-s504 s198 = s280[0]->s516( s740, s517 );
-s306->s213( s198->to_wstring() );
+wstring s198 = s280[0]->s516( s740, s517 )->to_wstring();
+s306->s213( s198 );
 return s380;}
 s277* s847::s349()const{
 return new s847( *this );}
@@ -13076,7 +13158,7 @@ s262, s873, s1483, s260,
 s238 }*/;
 vector<int> BIFuncs1v = {
 0, 0, 0, s1605, s1606, 0, 0, s1608, s1609, 0, 0, 0,
-s1612, s1799, 0, 0, s1615, 0, 0, 0, s1617, s1801, 0, 0, 0, s1620, s1621,
+s1612, s1799, 0, 0, s1615, 0, 0, 0, s1617, s2066, s1801, 0, 0, 0, s1620, s1621,
 0, 0, s1623, s1624
 };
 std::map<std::wstring, int> s1541;
@@ -13090,7 +13172,7 @@ s207.s839();
 s203.clear();
 s736.reset();
 s1485 = false;}
-void s268::s519( bool soft /*=false*/ )
+void s268::initAssembly( bool soft /*=false*/ )
 {
 s350::s833( this, soft );
 s207.s296();
@@ -13120,10 +13202,8 @@ s263, s1790, s261,
 s986, s265, s235, s817,
 s877, s257, s1791, s249,
 s1792, s923,
-s267, s1794, s1795, s803, s1793,
-s256, 
-s1736, 
-s264,
+s267, s1794, s1795, s803, s2065,
+s1793, s256, s1736, s264,
 s262, s873, s1796, 
 s1483, s260, s238 };
 for( size_t n = 1; n < s1542.size(); ++n )
@@ -13226,13 +13306,21 @@ s687 = s720[2];}
 it->second->s300( s687 );}
 s278* ob = new s278( *it->second, s306, pc, s306, am, cl, cnl, al );
 s689.s564( ob->s305(), ob );}}
-void s268::s213( const wstring& s691 ){
+void s268::s213( const wstring& s691, bool rootCur ){
 s757 s675;
 s269* s212 = new s269();
 wstring s193 = s4::s787( s691 );
-if( s812.size() ) {
+if( !s3::s759( s193 )) {
+wstring _root;
+if( rootCur ) {
+if( curDir.empty() )
+throw new s16( L"can't find the file: " + s691 );
+_root = curDir;}
+else
+_root = s812;
+s4::s62( _root );
 wstring file = s193.substr( s193.rfind( L"/" ) + 1 );
-s193 = s752( s812, s193.substr(0, s193.rfind( L"/" ) + 1 )) + file;
+s193 = s752( _root, s193.substr(0, s193.rfind( L"/" ) + 1 )) + file;
 }
 int isf = s3::s34( s193 );
 if( isf == 2 ) {
@@ -13518,6 +13606,8 @@ else if( s1631 == s1608 )
 s717 = new s982( this, s612, s219, s740, s736 );
 else if( s1631 == s1798 )
 s717 = new s1779( this, s612, s219, s740, s736 );
+else if( s1631 == s2066 )
+s717 = new s2064( this, s612, s219, s740, s736 );
 return s717;}
 s277*
 s268::s227( const wstring& s77, const wstring& s518, bool s543 /*= true*/ )
@@ -13574,7 +13664,7 @@ HPROG createAssembly(){
 static int s716 = 0;
 s1::s9<s268> p = new s268();
 handles[++s716] = p;
-p->s519( false );
+p->initAssembly( false );
 return s716;}
 void deleteAssembly( int n ){
 auto it = handles.find( n );
@@ -13583,7 +13673,8 @@ throw new s2::s16( L"no assembly with such handle" );
 handles.erase( it );}
 void loadProgram( HPROG handle, const wstring& s193 ){
 s268* p = handles[handle];
-p->s213( s193 );}
+p->s2071( s3::s2063() );
+p->s213( s193, true );}
 TDType* getProc( HPROG handle, const std::wstring& s625 ){
 s268* p = handles[handle];
 return (TDType*)p->getProc( s625 );}

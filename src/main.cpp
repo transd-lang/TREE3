@@ -30,24 +30,39 @@ using namespace std;
 using namespace transd;
 
 
-wstring exprPrompt = L"D-> ";
+wstring exprPrompt = L"_) ";
 wstring shellModuleName = L"_tree3__";
 wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.2";
-// 211125
-wstring buildnum = L"1";
-wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nA virtual compiler (interpreter) for TransD programming language."
+// 211129
+wstring buildnum = L"2";
+wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nVirtual compiler (interpreter) for TransD programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
 L"\n\nThe program uses Tourbillon virtual compiler as a back-end for Transd programming language."
 "\nTourbillon compiler version: " + TRANSD_VERSION;
 
+wstring usage = 
+L"Usage: tree3 <PROGRAM_FILE_NAME> [ARGUMENTS] \n"
+ "   or: tree3 <COMMAND> [ARGUMENTS] \n"
+ "   or: tree3 <OPTION> \n"
+ "   or: tree3\n\n"
+ "The 1st form launches a Transd program with optional arguments.\n"
+ "The 2nd form runs a command with optional arguments.\n"
+ "The 3rd form starts TREE3 with an option.\n"
+ "The 4th form starts an interactive REPL session.\n\n"
+ "OPTIONS:\n"
+ "   -h, -help:        show this info.\n"
+ "   -v, -version:     show the version of TREE3.\n"
+ "\n"
+ "COMMANDS:\n"
+ "   run <FILE_NAME>:  run a Transd program.\n"
+;
+
+#define CMD_NONE 0
 #define CMD_RUNFILE 1
-
-wstring whitespace = L"\n\r\t ";
-
 
 wstring clearAll( const std::wstring& s, const std::wstring& c )
 {
@@ -75,47 +90,9 @@ void showTree3Info()
 	wcout << copyright << endl;
 }
 
-void findPairedBlock( const wstring& s, size_t startFrom, wchar_t c, size_t& start, size_t& end )
+void showUsage()
 {
-	end = string::npos;
-	start = s.find( c, startFrom );
-	if( start == string::npos || start == s.size() - 1 )
-		return;
-	bool backslash = false;
-	for( size_t n = start + 1; n < s.size(); ++n ) {
-		if( s[n] == L'\\' )
-			backslash = !backslash;
-		else
-			backslash = false;
-		if( s[n] == c && !backslash ) {
-			end = n;
-			return;
-		}
-	}
-}
-
-void parseArgs( const wstring& sf, vector<wstring>& res )
-{
-	size_t stPos = sf.find_first_not_of( whitespace );
-	size_t _frStart, _frEnd;
-	while( stPos != string::npos ) {
-		wchar_t c = sf[stPos];
-		wstring arg;
-		if( c == L'\"' || c == L'\'' ) {
-			findPairedBlock( sf, stPos, c, _frStart, _frEnd );
-			if( _frEnd == string::npos )
-				throw new TransdException( L"Quotes don't match near \'" + sf.substr( stPos, 40 ) + L"...\'" );
-			arg = sf.substr( stPos, _frEnd - stPos + 1 );
-			stPos = sf.find_first_not_of( whitespace, ++_frEnd );
-		}
-		else {
-			_frEnd = sf.find_first_of( whitespace );
-			arg = sf.substr( stPos, _frEnd - stPos );
-			stPos = _frEnd;
-		}
-
-		res.push_back( arg );
-	}
+	wcout << usage << endl;
 }
 
 struct OPTIONS
@@ -123,6 +100,7 @@ struct OPTIONS
 	uint32_t cmd;
 	wstring fileToRun;
 	bool exit;
+	vector<wstring> args;
 }opts;
 
 void parseArgs( int argc, KCHAR* argv[] )
@@ -131,26 +109,41 @@ void parseArgs( int argc, KCHAR* argv[] )
 	if( argc == 1 )
 		return;
 
-	if( argc == 2 ) {
-		wstring arg = FROMTERM( argv[1] );
-		if( arg[0] != L'-' ) {
-			opts.cmd = CMD_RUNFILE;
-			opts.fileToRun = arg;
-			opts.exit = true;
-		}
-		else if( arg == L"-version" ) {
-			showTree3Info();
-			opts.exit = true;
-		}
-		return;
-	}
+	opts.cmd = CMD_NONE;
 
 	for( int i = 1; i < argc; ++i ) {
 		wstring arg = FROMTERM( argv[i] );
-		if( arg == L"-version" )
+		if( arg == L"-v" || arg == L"-version" ) {
 			showTree3Info();
-		else
-			throw new TransdException( L"unknown command line argument: " + arg );
+			opts.exit = true;
+			return;
+		}
+		if( arg == L"-h" || arg == L"-help" ) {
+			showUsage();
+			opts.exit = true;
+			return;
+		}
+		else if( arg == L"run" ) {
+			if( opts.cmd != CMD_NONE )
+				throw new TransdException( L"multiple commands in arguments" );
+			opts.cmd = CMD_RUNFILE;
+			opts.fileToRun = clearAll( FROMTERM( argv[++i] ), L" " );
+			opts.args.push_back( opts.fileToRun );
+			opts.exit = true;			
+		}
+		else {
+			if( i == 1 ) {
+				opts.cmd = CMD_RUNFILE;
+				opts.fileToRun = clearAll( arg, L" " );
+				opts.args.push_back( opts.fileToRun );
+				opts.exit = true;			
+			}
+			else {
+				if( arg == L"-args" )
+					arg = FROMTERM( argv[++i] );
+				opts.args.push_back( arg );
+			}
+		}
 	}
 }
 
@@ -159,23 +152,19 @@ void importFile( const wstring& fpath )
 	transd::importFile( prog, shellModuleName, fpath, shellModuleName );
 }
 
-void runFile( const wstring& args_ )
+void runFile()
 {
-	vector<wstring> args;
-	parseArgs( args_, args );
-	if( args.empty() )
-		return;
 	try {
 		HPROG prog = createAssembly();
-		loadProgram( prog, args[0] );
-		transd::run( prog, args );
+		loadProgram( prog, opts.args[0] );
+		transd::run( prog, opts.args );
 		deleteAssembly( prog );
 	}
 	catch( TransdException* e ) {
-		wcout << L"An exception has occured: \n\n" << e->Msg() << endl;
+		wcout << L"Exception was raised: \n\n" << e->Msg() << endl;
 	}
 	catch( std::exception& e ) {
-		wcout << L"std::exception has occured: \n\n" << U16( e.what() ) << endl;
+		wcout << L"std::exception was raised: \n\n" << U16( e.what() ) << endl;
 	}
 }
 
@@ -214,7 +203,7 @@ int main( int argc, char* argv[] )
 		return -1;
 	}
 	if( opts.cmd == CMD_RUNFILE )
-		runFile( clearAll( opts.fileToRun, L" " ) );
+		runFile( /*clearAll( opts.fileToRun, L" " )*/ );
 
 	if( opts.exit )
 		return 0;
@@ -230,8 +219,10 @@ int main( int argc, char* argv[] )
 				runCommand( sf );
 			else if( sf.find( L"import" ) == 0 )
 				importFile( clearAll( sf.substr( 7 ), L" " ) );
-			else if( sf.find( L"run " ) == 0 )
-				runFile( clearAll( sf.substr( 4 ), L" " ) );
+			else if( sf.find( L"run " ) == 0 ) {
+				opts.args.push_back( clearAll( sf.substr( 4 ), L" " ) );
+				runFile();
+			}
 			else if( sf == L"q" )
 				break;
 			else 

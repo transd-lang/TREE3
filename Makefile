@@ -20,4 +20,4 @@ endif
 CPPFILES := src/transd.cpp src/main.cpp
 
 all: $(CPPFILES)
-	$(CC) -static -std=c++14 -O2 $(CPPFILES) -D__LINUX__ -lpthread -o tree3
+	$(CC) -static -std=c++14 -O3 $(CPPFILES) -D__LINUX__ -lpthread -o tree3
