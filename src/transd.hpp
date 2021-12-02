@@ -12,12 +12,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 /*
-    transd.hpp
-    ----------
-    The minimized distributed header file for C++ embeddable
-    library of Tourbillon virtual compiler.
+	transd.hpp
+	----------
 
-    Transd project website: https://github.com/transd-lang
+	The minimized[1] distributed header file for C++ embeddable
+	library of Tourbillon virtual compiler.
+
+	Transd Project Website: https://github.com/transd-lang
 */
 #include <vector>
 #include <map>
@@ -652,7 +653,7 @@ std::vector<s1::s9<s144>>& s156, const s1873& s1937 );
 void s182( const s1032* pf, const std::wstring& s78,
 std::vector<s1::s9<s144>>& s156, const s1873& s1937 );
 } // namespace s6
-#define TRANSD_VERSION L"0.424"
+#define TRANSD_VERSION L"0.425"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s1014 extern const uint32_t
@@ -809,6 +810,7 @@ s1014 s1775;
 s1014 s1774;
 s1014 s1865;
 s1014 s1880;
+s1014 s2071;
 extern std::set<std::wstring> s1239;
 } // namespace s7
 enum s229 { s230, s231, s232, s233 };
@@ -1086,9 +1088,10 @@ class s386;
 class s501
 : public s277{
 protected:
-std::wstring s387; // DEBUG
 s278* ns;
 s501* s1881( s501** s280, size_t s517 );
+s501* s2073( s501** s280, size_t s517 );
+virtual s501* s2075( s501** s280, size_t s517 );
 public:
 s501( s268* s306, s489 pc, const s269* ast_, s278* ns_ ) 
 : s277( s306, pc, ast_ ), ns( ns_ ) { }
@@ -1109,11 +1112,12 @@ std::vector<s277*>& s740 ) const;
 virtual void s371( s277* p ) const = 0;
 virtual s501* s1710( const s501* p ) const;
 virtual const s501* s523() const override = 0;
-void s526( const std::wstring& s ) { s387 = s; }
-std::wstring s1849( ) { return s387; }
+void s526( const std::wstring& s ) { }//{ s387 = s; }
+std::wstring s1849() { return L""; }// s387;}
 virtual size_t s330() const = 0;
 virtual bool operator==( const s501* p ) const = 0;
 virtual bool operator<( const s501* p ) const = 0;
+s501* s2074( s501** s280, size_t s517 );
 virtual s504 s516( s501** s280, size_t s517 ) override { return this; }
 virtual s501* s515() override;
 virtual bool s579( const std::wstring& s284, s386* s156,
@@ -1329,7 +1333,8 @@ bool s1308;
 s1265()
 : s352( 0 ), s353( NULL ), s1308( true ) {}
 s1265( s1170 pt, s642 fp, bool s1309 = true )
-: s352( pt ), s353( fp ), s1308( s1309 ) {}
+: s352( pt ), s353( fp ), 
+s1308( s1309 ) {}
 };
 class s350
 : public s501{
@@ -2111,6 +2116,7 @@ virtual ~s615();
 s586 s937() const { return s598; }
 void s618( s593 vt ) { s599 = vt; }
 s593 s619() const { return s599; }
+const std::wstring& s368() const override { return s277::s368(); }
 std::wstring s898() const override;
 const s269* s627() const { return past; }
 s501* s515() override { return s610; }
@@ -2142,7 +2148,6 @@ public:
 s909( s268* s306, s615* s611, s586 ct, const std::vector<s277*>& l, /*s642 s585,*/
 s1170 s512, const std::wstring& s1727, const s269* s736 );
 virtual ~s909();
-const std::wstring& s368() const override { return s277::s368(); }
 virtual void s519( const s278* s1848, bool proc ) override;
 virtual s504 s516( s501** s280 = NULL, size_t s517 = 0 ) override;
 bool s579( const std::wstring& s284, s386* ref,
@@ -2658,7 +2663,7 @@ std::vector<std::wstring> s203;
 s269 s736;
 std::wstring s204;
 std::wstring s812;
-std::wstring curDir;
+std::wstring s2077;
 void s205( const std::wstring& s284 );
 void s206( const s6::s146& obj, s757& s156 );
 void s217( const std::wstring& s198, const s6::s146& obj );
@@ -2672,15 +2677,15 @@ public:
 s268();
 ~s268();
 const std::wstring& s751() const { return s812; }
-void s2070( const std::wstring& s ) { s812 = s; }
-const std::wstring& CurDir() const { return curDir; }
-void s2071( const std::wstring& s ) { curDir = s; }
+void s2069( const std::wstring& s ) { s812 = s; }
+const std::wstring& s2072() const { return s2077; }
+void s2070( const std::wstring& s ) { s2077 = s; }
 virtual std::wstring s898() const override { return L"::"; }
 virtual std::wstring s304() const override { return L"::"; }
-void initAssembly( bool soft = false );
+void s2079( bool soft = false );
 void reset();
 void s211( s269& s212 );
-void s213( const std::wstring& s214, bool rootCur = false );
+void s213( const std::wstring& s214, bool s2081 = false );
 void s215( s6::s146& obj );
 void s216( const std::wstring& s214 );
 s501* run( const std::vector<std::wstring>& s723 );
@@ -3469,7 +3474,7 @@ static void s337( s501** s280, size_t n );
 static void s1480( s501** s280, size_t n );
 static void s852( s501** s280, size_t n );
 static void s340( s501** s280, size_t n );
-static void s2069( s501** s280, size_t n );
+static void s2068( s501** s280, size_t n );
 static void s413( s501** s280, size_t n );
 static void s1923( s501** s280, size_t n );
 void s1060( const std::wstring& s880, const s1898& tbfr, s278* s612, 
@@ -3809,18 +3814,29 @@ virtual s504 s516( s501** s280, size_t s517 ) override;
 };
 class s905
 : public s615{
+std::vector<s1170> s2082;
+s501* s2075( s501** s280, size_t s517 ) override;
 public:
 s905( s268* s306 );
-s905( s268* s306, s278* s616, s615* s617, const std::vector<s277*>& l, const s269* s736 );
+s905( s268* s306, s278* s616, s615* s617, 
+const std::vector<s277*>& l, const s269* s736 );
+s905( s268* s306, s278* s616, const std::vector<s1170>& l, 
+s1170 pt, const s269* s736 );
+s905( s905& s2080, const std::vector<s503>& l, const s269* s736 );
 static s504 proto;
+s501* s369( const s269& s736, s278* s612, 
+const std::wstring& s346 ) override;
 const std::wstring& s305() const override { return s257; }
 s504 s516( s501** s280, size_t s517 ) override;
 void s519( const s278* s1848, bool proc ) override;
 s501* s515() override { return this; }
-s1170 s1494() const { return s610->s366(); }
+s1170 s1494() const { return s2082.back(); }
 s277* s349() const override;
 using s501::s370;
+using s501::s2074;
 s501* s370( s278* s612, const std::vector<s1170>& vt ) const override;
+s615* s1862( const std::wstring& s284, s615* s219,
+std::vector<s277*>& s740 ) const override;
 void s310( std::wostream* pd, int s201 = 0 ) const override;
 };
 class s906
@@ -3969,7 +3985,7 @@ s1859 s1860;
 s503 subject;
 public:
 s1857( s268* s306, s278* s612, s615* s611, s1859 _ptr,
-const std::vector<s277*>& l, const s269* s736 );
+const std::vector<s277*>& l, const std::wstring& s708, const s269* s736 );
 virtual const std::wstring& s305() const override { return s794; }
 virtual void s519( const s278* s1848, bool proc ) override;
 virtual s504 s516( s501** s280, size_t s517 ) override;
@@ -4236,19 +4252,19 @@ throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation"
 s615* s1351 = NULL;
 if( s517 == 3 )
 s1351 = (s615*)s280[2];
-s1459<s1477> s2068;
-s2068.s930 = s1351;
+s1459<s1477> qqq;
+qqq.s930 = s1351;
 if( pv->s1260() >= 1 && pr.first.s15<s1241*>()->Reversed() ) {
 typename _Cont::reverse_iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1269();
 s1694 = pr.second.s15<s1026*>()->s1269();
-std::sort( s1693, s1694, /*pv->s1491*/s2068 );
+std::sort( s1693, s1694, /*pv->s1491*/qqq );
 }
 else {
 typename _Cont::iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1268();
 s1694 = pr.second.s15<s1026*>()->s1268();
-std::sort( s1693, s1694, /*pv->s1491*/ s2068 );
+std::sort( s1693, s1694, /*pv->s1491*/ qqq );
 }
 *s280 = pv;}
 template <class _Cont, class s1477, class Der, class s1757>
@@ -4337,19 +4353,19 @@ throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation"
 s615* s1351 = NULL;
 if( s517 == 3 )
 s1351 = (s615*)s280[2];
-s1459<s1477> s2068;
-s2068.s930 = s1351;
+s1459<s1477> qqq;
+qqq.s930 = s1351;
 if( pv->s1260() >= 1 && pr.first.s15<s1241*>()->Reversed() ) {
 typename _Cont::reverse_iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1269();
 s1694 = pr.second.s15<s1026*>()->s1269();
-std::sort( s1693, s1694, /*pv->s1491*/ s2068 );
+std::sort( s1693, s1694, /*pv->s1491*/ qqq );
 }
 else {
 typename _Cont::iterator s1693, s1694;
 s1693 = pr.first.s15<s1026*>()->s1268();
 s1694 = pr.second.s15<s1026*>()->s1268();
-std::sort( s1693, s1694, /*pv->s1491*/ s2068 );
+std::sort( s1693, s1694, /*pv->s1491*/ qqq );
 }
 *s280 = pv;}
 template<class _Cont, class s1477, class Der>
