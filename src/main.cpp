@@ -37,8 +37,8 @@ HPROG prog = 0;
 
 wstring version = L"0.2";
 // 211202
-wstring buildnum = L"3";
-wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nVirtual compiler (interpreter) for TransD programming language."
+wstring buildnum = L"4";
+wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nVirtual compiler (interpreter) for Transd programming language."
 "\n\nCopyright (c) 2020-2021 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
 L"\n\nThe program uses Tourbillon virtual compiler as a back-end for Transd programming language."
@@ -64,6 +64,8 @@ L"Usage: tree3 <PROGRAM_FILE_NAME> [ARGUMENTS] \n"
 #define CMD_NONE 0
 #define CMD_RUNFILE 1
 
+vector<wstring> hist;
+
 wstring clearAll( const std::wstring& s, const std::wstring& c )
 {
 	size_t pl = s.find_first_not_of( c );
@@ -77,9 +79,9 @@ wstring getStringVal_( const wstring& prompt, bool endLn = false )
 {
 	if( endLn ) wcout << endl;
 	wstring val;
-	vector<wstring> h;
 
-	val = consutils::getStringValHist( prompt, h );
+	val = consutils::getStringValHist( prompt, hist );
+	hist.push_back( val );
 
 	wcout << endl;
 	return val;
@@ -177,8 +179,13 @@ void runCommand( const wstring& cmd_ )
 	wstring cmd = L"(textout " + cmd_ + L")";
 	vector<wstring> pars;
 	pars.push_back( cmd );
-	transd::callFunc( prog, shellModuleName + L"::" + shellCallSite, pars );
-	wcout << endl;
+	try {
+		transd::callFunc( prog, shellModuleName + L"::" + shellCallSite, pars );
+		wcout << endl;
+	}
+	catch( TransdException* e ) {
+		wcout << endl << e->Msg() << endl;
+	}
 }
 
 #ifdef _WIN32
