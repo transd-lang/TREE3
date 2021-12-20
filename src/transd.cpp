@@ -33,6 +33,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
+#include <float.h>
 #include <cassert>
 #include <regex>
 #include <climits>
