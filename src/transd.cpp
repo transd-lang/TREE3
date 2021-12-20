@@ -15,7 +15,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 *    transd.cpp
 *    ----------
 *
-*    The minimized[1] distributed source file for C++ embeddable
+*    The minimized distributed source file for C++ embeddable
 *    library of Tourbillon virtual compiler.
 *
 *    Transd Project website: https://transd.org
@@ -3619,6 +3619,10 @@ s362.insert( make_pair( L"dcmpr", new s351( L"dcmpr", &s373::s426, s1284,
 { s1238( { s1283, s1283 } ) }, 2, 2 )));
 s362.insert( make_pair( L"to-Int", new s351( L"to-Int", &s373::s427, s1284,
 { s1238(), s1238( { s1284 } ) }, 0, 1 )));
+s362.insert( make_pair( L"incr", new s351( L"incr", &s373::s2157, s1283,
+{ s1238( ) }, 0, 0 )));
+s362.insert( make_pair( L"decr", new s351( L"decr", &s373::s2156, s1283,
+{ s1238( ) }, 0, 0 )));
 s306->TR().s1301( s512, s7::s1584, s1686::s1425 );}
 s277* s373::s349() const{
 return new s373( *this );}
@@ -3694,6 +3698,32 @@ if( t >= 0 )
 s733->s363 = t;
 else
 s733->s363 = -t;}
+void s373::s2157( s501** s280, size_t s517 ){
+double s717 = (double)*DR;
+if (isnan( s717 ) || s717 == -INFINITY || s717 == INFINITY) (void)0;
+else if ( s717 == 0.0 ) s717 = DBL_EPSILON;
+else {
+union s2153 {
+int64_t i;
+double f;
+}conv;
+conv.f = s717;
+conv.i++;
+s717 = conv.f;}
+s733->s363 = s717;}
+void s373::s2156( s501** s280, size_t s517 ){
+double s717 = (double)*DR;
+if (isnan( s717 ) || s717 == -INFINITY || s717 == INFINITY) (void)0;
+else if ( s717 == 0.0 ) s717 = DBL_EPSILON;
+else {
+union s2153 {
+int64_t i;
+double f;
+}conv;
+conv.f = s717;
+conv.i--;
+s717 = conv.f;}
+s733->s363 = s717;}
 inline void s373::s405( s501** s280, size_t s517 ){
 s733->s363 = ( (double)*DR ) * (double)*PARN( 2 );
 for( size_t n = 3; n < s517; ++n )
@@ -4522,9 +4552,9 @@ s362.insert( make_pair( L"geq", new s351( L"geq", &s1470<s1478, Der>::s417, s127
 s362.insert( make_pair( L"neq", new s351( L"neq", &s1470<s1478, Der>::s418, s1274,
 { s1238( { s1686::s1723 } ) }, 1, 1 ) ) );
 s362.insert( make_pair( L"max", new s351( L"max", &s1470<s1478, Der>::s2144, s1699,
-{ s1238( { s1686::s1723 } ) }, 1, 1 ) ) );
+{ s1238( { s1686::s1723, s7::s1570 } ) }, 1, 1 ) ) );
 s362.insert( make_pair( L"min", new s351( L"min", &s1470<s1478, Der>::s2145, s1699,
-{ s1238( { s1686::s1723 } ) }, 1, 1 ) ) );
+{ s1238( { s1686::s1723, s7::s1570 } ) }, 1, 1 ) ) );
 s362.insert( make_pair( L"mod", new s351( L"mod", &s1470<s1478, Der>::s420, s1699,
 { s1238( { s1686::s1723 } ) }, 1, 1 ) ) );
 s362.insert( make_pair( L"sqrt", new s351( L"sqrt", &s1470<s1478, Der>::s421, s1283,
@@ -4557,7 +4587,8 @@ return s717;}
 #define PARN(n)((s502*)*(s280 + n))
 template<class s1478, class Der>
 inline void s1470<s1478, Der>::s402( s501** s280, size_t n ){
-s280[2]->s371( s280[1] );}
+s280[2]->s371( s280[1] );
+s280[1]->s1413();}
 template<class s1478, class Der>
 inline void s1470<s1478, Der>::s419( s501** s280, size_t s517 ){
 s1478 t = ( (Der*)DR )->s363;
@@ -4679,19 +4710,19 @@ else
 template<class s1478, class Der>
 inline void s1470<s1478, Der>::s2144( s501** s280, size_t s517 ){
 Der tmp;
-s280[2]->s371( &tmp );
-if( ( (Der*)DR )->s363 >= tmp.s363 )
 *s733->s372() = ( (Der*)DR )->s363;
-else
-*s733->s372() = tmp.s363;}
+for( size_t n = 2; n < s517; ++n ) {
+s280[n]->s371( &tmp );
+if( *s733->s372() < tmp.s363 )
+*s733->s372() = tmp.s363;}}
 template<class s1478, class Der>
 inline void s1470<s1478, Der>::s2145( s501** s280, size_t s517 ){
 Der tmp;
-s280[2]->s371( &tmp );
-if( ( (Der*)DR )->s363 <= tmp.s363 )
 *s733->s372() = ( (Der*)DR )->s363;
-else
-*s733->s372() = tmp.s363;}
+for( size_t n = 2; n < s517; ++n ) {
+s280[n]->s371( &tmp );
+if( *s733->s372() > tmp.s363 )
+*s733->s372() = tmp.s363;}}
 template<class s1478, class Der>
 inline void s1470<s1478, Der>::s420( s501** s280, size_t s517 ){
 Der tmp;
@@ -4803,7 +4834,8 @@ s306->TR().s1707( s512, s1464::proto->s366() );}
 s501* s360::s370( s278* s612, const std::vector<s277*>& l, const s269* ast_ ) const{
 size_t pos = 0;
 return new s360( s306, L"", pos );}
-void s360::s519( const s278* s960, bool ){}
+void s360::s519( const s278* s960, bool ){
+s1413();}
 inline bool
 s360::s1715( s1170 s646 ) const{
 if( ( s646 == s1701 && s363 >= 0 ) ||
@@ -4861,12 +4893,8 @@ else
 s717 += std::to_wstring( s363 ); 
 return s717;}
 void s360::s2114( Stream* s2113 ) const{
-auto flags = s2113->s2109();
-wstringstream ss;
-ss.imbue(std::locale("C"));
-ss.flags( flags );
-ss << s363;
-s2113->s1654( ss.str() );}
+s1674& ss = s2113->s2143();
+ss << s363;}
 void s360::to_null(){
 s277::to_null();
 s363 = 0;}
@@ -4922,7 +4950,8 @@ s306->TR().s1301( s512, s7::s1698, s1686::s1723 );}
 s501* s1464::s370( s278* s612, const std::vector<s277*>& l, const s269* ast_ ) const{
 size_t pos = 0;
 return new s1464( s306, L"", pos );}
-void s1464::s519( const s278* s960, bool ){}
+void s1464::s519( const s278* s960, bool ){
+s1413();}
 s277* s1464::s349() const{
 return new s1464( *this );}
 void s1464::s371( s277* p ) const{
@@ -4979,12 +5008,8 @@ else
 s717 += std::to_wstring( s363 );
 return s717;}
 void s1464::s2114( Stream* s2113 ) const{
-auto flags = s2113->s2109();
-wstringstream ss;
-ss.imbue( std::locale( "C" ) );
-ss.flags( flags );
-ss << s363;
-s2113->s1654( ss.str() );}
+s1674& ss = s2113->s2143();
+ss << s363;}
 s1703::s1703( s268* s306 )
 : s1470( s306, NULL, NULL ){
 if( proto.s13() )
@@ -5037,7 +5062,8 @@ s306->TR().s1301( s512, s7::s1698, s1686::s1723 );}
 s501* s1703::s370( s278* s612, const std::vector<s277*>& l, const s269* ast_ ) const{
 size_t pos = 0;
 return new s1703( s306, L"", pos );}
-void s1703::s519( const s278* s960, bool ){}
+void s1703::s519( const s278* s960, bool ){
+s1413();}
 s277* s1703::s349() const{
 return new s1703( *this );}
 void s1703::s371( s277* p ) const{
@@ -5096,12 +5122,8 @@ else
 s717 += std::to_wstring( s363 );
 return s717;}
 void s1703::s2114( Stream* s2113 ) const{
-auto flags = s2113->s2109();
-wstringstream ss;
-ss.imbue( std::locale( "C" ) );
-ss.flags( flags );
-ss << s363;
-s2113->s1654( ss.str() );}
+s1674& ss = s2113->s2143();
+ss << s363;}
 s1452::s1452( s268* s306 )
 : s1470( s306, NULL, NULL ){
 if( proto.s13() )
@@ -5149,7 +5171,8 @@ s306->TR().s1301( s512, s7::s1698, s1686::s1723 );}
 s501* s1452::s370( s278* s612, const std::vector<s277*>& l, const s269* ast_ ) const{
 size_t pos = 0;
 return new s1452( s306, L"", pos );}
-void s1452::s519( const s278* s960, bool ){}
+void s1452::s519( const s278* s960, bool ){
+s1413();}
 s277* s1452::s349() const{
 return new s1452( *this );}
 void s1452::s371( s277* p ) const{
@@ -5237,11 +5260,14 @@ pos = pend ? ( pend - pst ) : string::npos;
 s512 = proto->s366();}
 void s1748::s364(){
 s1470<wchar_t, s1748>::s364();
-s362 = s1470<wchar_t, s1748>::s356();}
+s362 = s1470<wchar_t, s1748>::s356();
+s306->TR().s1301( s512, s7::s1584, s1686::s1425 );
+s306->TR().s1301( s512, s7::s1698, s1686::s1723 );}
 s501* s1748::s370( s278* s612, const std::vector<s277*>& l, const s269* ast_ ) const{
 size_t pos = 0;
 return new s1748( s306, L"", pos );}
-void s1748::s519( const s278* s960, bool ){}
+void s1748::s519( const s278* s960, bool ){
+s1413();}
 s277* s1748::s349() const{
 return new s1748( *this );}
 void s1748::s371( s277* p ) const{
@@ -5487,16 +5513,18 @@ s656 = s652->s656;
 s655.s519( /*s960*/this, (s511 == s496));
 }
 else {
-if( s306->s1496() && s655.s159( s7::s444 ) ) {
+if( s306->s1496()) {
+if( s655.s159( s7::s444 ) ) {
 vector<s502*> s280;
 s280.push_back( this );
-s910* p = (s910*) s655.get( s7::s444 );
+s910* p = (s910*)s655.get( s7::s444 );
 if( p->s644() == s7::s941 )
 p->s519( s960, true );
 else
 p->s621( s960 );
 if( s513() == s498 )
 p->s516( (s501**)&s280[0], 1 );}
+s655.s519( this, true);}
 s656 = s652->s656;}
 ns = (s278*)s960;}
 void s278::s1825(){
@@ -6035,7 +6063,7 @@ for( size_t n = 0; n < right.s608.size(); ++n ) {
 s608.push_back( right.s608[n]->s349() );}}
 s909::s909( s268* s306, s615* s617, s586 ct, const vector<s277*>& l,
 /*s642 s743,*/ s1170 s744, const wstring& s1727, const s269* s736 )
-: s615( s306, s617, s617, ct, L"", s736 ), s1308( true )/*,
+: s615( s306, s617, s617, ct, L"", s736 ), s2155( false )/*,
 s585( s743 )*/
 {
 s284 = s1727;
@@ -6082,7 +6110,8 @@ std::to_wstring( s740.size() ));
 s655.s564( s658[n], s280[n].s15<s501*>(), s500::s150 );
 s657[n] = s280[n];
 }*/
-s608 = right.s608;}
+for( size_t n = 0; n < right.s608.size(); ++n ) {
+s608.push_back( right.s608[n]->s349() );}}
 s615::~s615(){
 /*	for( size_t n = 0; n < s280.size(); ++n ) {
 delete s280[n].s15<s502*>();
@@ -6233,13 +6262,13 @@ throw s1059.s1097( L"method is not resolved: " + par->s368() + L"::" + s284 +
 ap.s1495( s306 ) );
 s512 = s1385.s352;
 s585 = s1385.s353;
-s1308 = s1385.s1308;
-bool s1940 = false;
-if( s280[0]->s513() == s492 )
+s2155 = s1385.s1308;
+bool s1940;
+if( s280[0]->s513() != s493 /*==s492*/ )
 s1940 = s280[0]->s1347();
-else
+else //if( s280[0]->s513() == s493 )
 s1940 = s280[0]->s515()->s1347();
-if( !s1308 && s1940 )
+if( !s2155 && s1940 )
 throw s1059.s1097( L"non-constant function is applied to a constant variable" );
 if( s284 == L"new" )
 s610 = s280[0].s15<s501*>();
@@ -6257,7 +6286,9 @@ s604 = NULL;
 s603 = NULL;
 nlocs = s517 = 0;}}
 s1075.resize( s607.size() );
-s1413();}
+s1413();
+s610->s1413();
+s610->s1411( s1940 );}
 void s910::s519( const s278* s1848, bool proc/*=false*/ )
 {
 TDException s1059( s7::s1696, s1730, s627() );
@@ -6287,7 +6318,7 @@ s606[n]->s368() + L"', received - '" + par->s368() + L"'" );}}
 for( size_t n = 0; n < s280.size(); ++n ) {
 if( s280[n]->s644() < 0 )
 throw s1059.s1097( L"uninitialized function parameter: " + s658[n].s643() );
-if( s280[n]->s1347() && !s658[n].s1347() )
+if( s280[n]->s515()->s1347() && !s658[n].s1347() )
 throw s1059.s1097( L"constant argument is passed to non-constant function: " + s658[n].s643() );
 s657[n] = s280[n];}
 s506 s1532 = s611;
@@ -6386,44 +6417,10 @@ s1059.s1097( L"parameter is not provided" );}}
 void s615::s868( s899& s156 ) const{
 for( size_t n = 0; n < s606.size(); ++n )
 s156.push_back( make_pair( s658[n].s643(), s606[n] ) );}
-void s615::s1787( s501** s723, size_t s732 ){
+s501* s615::s1787( s501** s723, size_t s732 ){
 int shift = 0;
-if( s598 == s588 )
+if( s598 == s588 || s598 == s589 )
 shift = 1;
-for( size_t n = 0; n < nlocs; ++n ) {
-if( *( s604 + n ) ) {
-s489 pc = ( ( s502* )*( s604 + n ) )->s513();
-if( pc == s492 || pc == s1504 )
-*( s603 + n + shift ) =
-(s501*)( ( s386* )*( s604 + n ) )->s392();
-else if( pc == s493 ) {
-s1075[n] = (s501*)( ( s615* )*( s604 + n ) )->s516( s723, s732 );
-*( s603 + n + shift ) = s1075[n];}}}}
-s504 s615::s516( s501** s723, size_t s732 ){
-s504 s717;
-size_t shift = 0;
-if( s598 == s591 || s598 == s589 || s598 == s588 )
-shift = 1;
-for( size_t n = 0; n < nlocs; ++n ) {
-if( *( s604 + n ) ) {
-s489 pc = ( ( s502* )*( s604 + n ) )->s513();
-if( pc == s492 )
-*( s603 + n + shift ) =
-(s501*)( ( s386* )*( s604 + n ) )->s392();
-else if( pc == s493 ) {
-s1075[n+shift] = (s501*)( ( s615* )*( s604 + n ) )->s516( s723, s732 );
-*( s603 + n + shift ) = s1075[n + shift];}
-else if( pc == s491 )
-*( s603 + n + shift ) = (s501*)*( s604 + n );}}
-for( size_t n = 0; n < s608.size(); ++n ) {
-s717 = s608[n]->s516( s603, s517 );
-if( s717->s644() < 0 )
-break;}
-s610 = s717;
-return s717;}
-s504 s909::s516( s501** s723, size_t s732 ){
-s501* s717 = NULL;
-size_t shift = 1;
 for( size_t n = 0; n < nlocs; ++n ) {
 if( *( s604 + n ) ) {
 s489 pc = ( ( s502* )*( s604 + n ) )->s513();
@@ -6432,19 +6429,43 @@ if( pc == s492 || pc == s1504 )
 (s501*)( ( s386* )*( s604 + n ) )->s392();
 else if( pc == s493 ) {
 s1075[n + shift] = (s501*)( ( s615* )*( s604 + n ) )->s516( s723, s732 );
+if( s1075[n + shift]->s644() < 0 ) {
+if( s1075[n + shift]->s644() == s7::s939 )
+s1075[n + shift]->s1855( 0 );
+else if( s1075[n + shift]->s644() != s7::s1925 )
+return s1075[n + shift];}
 *( s603 + n + shift ) = s1075[n + shift];}
+else if( pc == s491 )
+*( s603 + n + shift ) = ( s501* )*( s604 + n );
 else if( pc == s1395 )
 (void)0;}}
-if( !s1308 && s607[1]->s1347() )
+return NULL;}
+s504 s615::s516( s501** s723, size_t s732 ){
+s504 s717;
+s717 = s1787( s723, s732 );
+if( s717.s14() )
+return s717;
+for( size_t n = 0; n < s608.size(); ++n ) {
+s717 = s608[n]->s516( s603, s517 );
+if( s717->s644() < 0 )
+break;}
+s610 = s717;
+return s717;}
+s504 s909::s516( s501** s723, size_t s732 ){
+s501* s717 = NULL;
+s717 = s1787( s723, s732 );
+if( s717 )
+return s717;
+if( !s2155 && s607[1]->s1347() )
 throw new s16( L"non-constant function is applied to a constant variable" );
 try {
-s585( s603, s517 );}
+s585( s603, s517 );
+s717 = s607[0];}
 catch( s16* e ) {
-TDException* s1059 = new TDException( TDException::Stage::s1136, s7::s1243, 
+TDException s1059( TDException::Stage::s1136, s7::s1243, 
 s1252, past,	*e );
 delete e;
-throw s1059;}
-s717 = s607[0];
+s717 = new s376( s306, s1059.Msg() );}
 return s717;}
 s504 s910::s516( s501** s723, size_t s732 ){
 s501* s717 = s380;
@@ -6490,11 +6511,11 @@ s512 = s610->s366();}
 s504 s1526::s516( s501** s723, size_t s732 ){
 s621( s612 );
 s501* s717 = NULL;
-if( s612->s366() == s1894 )
+if( s612->s366() == s1894 ) {
 s717 = new s905( *s612.s15<s905*>(), s280, s627() );
-else
+s717->s519( s611 );}
+else 
 s717 = new s278( *s612, s280, s627() );
-s717->s519( s611 );
 s717->s1413();
 return s717;
 wstring s193 = s627()->s297();
@@ -7068,7 +7089,9 @@ s501* s374::s1333( Iterator* it ){
 size_t n = std::distance( begin( s363 ), ( (s1753*)it )->s1268() );
 return new s360( s306, (int)n );}
 Iterator* s374::s1328() {
-return new s1753( this, s363.begin(), s363.begin() + 1 ); }
+if( s363.size() )
+return new s1753( this, s363.begin(), s363.begin() + 1 ); 
+return new s1753( this, s363.end(), s363.end() );}
 Iterator* s374::s1332() {
 return new s1753( this, s363.end(), s363.end() ); }
 Iterator* s374::s321( s400* rv ){
@@ -7344,17 +7367,17 @@ void s400::s364(){
 s362.insert( make_pair( L"new", new s351( L"new", &s400::s1384, s1586,
 { s1238( { s1686::s1723 } ), s1238( { s1284, s1284 } ),
 s1238( { s1686::s1681, s1284 } ),
-s1238( { s1686::s1681, s1284, s1284 } ) }, 1, 3 ) ) );
+s1238( { s1686::s1681, s1284, s1284 } ) }, 1, 3, true ) ) );
 s362.insert( make_pair( L"size", new s351( L"size", NULL, s1284,
 { s1238() }, 0, 0 ) ) );
 s362.insert( make_pair( L"max-element", new s351( L"resize", NULL, s1286,
 { s1238() }, 0, 0 ) ) );
 s362.insert( make_pair( L"clear", new s351( L"clear", NULL, s1286,
-{ s1238() }, 0, 0 ) ) );
+{ s1238() }, 0, 0, false ) ) );
 s362.insert( make_pair( L"eq", new s351( L"eq", NULL, s1284,
 { s1238() }, 0, 0 ) ) );
 s362.insert( make_pair( L"reverse", new s351( L"reverse", NULL, s1286,
-{ s1238() }, 0, 0 ) ) );
+{ s1238() }, 0, 0, false ) ) );
 s306->TR().s1301( s512, s7::s1582, s1686::s1681 );}
 s1265 s400::s1340( const std::wstring& s357 ) const{
 if( s1081.s14() ) 
@@ -7453,6 +7476,8 @@ bool s400::operator==( const s501* p ) const{
 return ( this == p );}
 bool s400::operator<( const s501* p ) const{
 return false;}
+bool s400::s2158() const{
+return s1085 == s1720;}
 Iterator* s400::s321( s400* r ){
 if( s1393.s14() ) {
 s489 pc = s1393->s513();
@@ -7781,6 +7806,10 @@ s1267 pr = s1081.s15<s336*>()->s1337();
 s325 = pr.first;
 s1663 = pr.second;}
 return this;}
+bool s1255::s2158() const{
+if( !s1085 || s325->operator==( s1663 ) )
+return true;
+return false;}
 s277* s1255::s322(){
 while( 1 ) {
 s1085 = s325->s322();
@@ -7887,11 +7916,16 @@ s584 cs2( s306, L"eq", pl2, NULL );
 eq = s615::s624( &cs2, s306, (s278*)s960, (s615*)s960, s960->s304(), false );
 eq->s519( s960, false );
 s1343 = s1284;
-s334 = start->s366();}
+s334 = start->s366();
+s1413();}
 s1267 s1039::s1337(){
 s1::s1444<Iterator> it = this;
 s1::s1444<Iterator> it1 = it;
 return make_pair( it, it1 );}
+bool s1039::s2158() const{
+if( (bool)*eq.s15<s615*>()->s516( 0, 0 ) )
+return true;
+return false;}
 Iterator* s1039::s321( s400* r ){
 set->s516( 0, 0 );
 s1154 = true;
@@ -8039,6 +8073,8 @@ s867 s646( vt );
 s717->s512 = s306->TR().s1110( vt );
 return s717;}
 void s1266::s364(){
+s362.insert( std::make_pair( L"is-end", new s351( L"is-end", &s1266::s2159, s1274,
+{ s1238( {s7::s1565} ) }, 1, 1 ) ) );
 s362.insert( std::make_pair( L"eq", new s351( L"eq", &s1266::s413, s1274,
 { s1238( {s7::s1565} ) }, 1, 1 ) ) );
 s362.insert( std::make_pair( L"get-el", new s351( L"get-el", &s1266::s1765, 0,
@@ -8068,6 +8104,8 @@ return s363->operator<( ((s1266*)p)->s363 );}
 #undef s733
 #define s733 ((s1266*)(s502*)*s280)
 #define s734 ((s375*)(s502*)*s280)
+inline void s1266::s2159( s501** s280, size_t s517 ){
+*((s375*)*s280)->s372() = ((s1266*)DR )->s363->s2158();}
 inline void s1266::s1765( s501** s280, size_t s517 ){
 *s280 = (s501*)((s1266*)DR )->s363->s1052();}
 inline void s1266::s1924( s501** s280, size_t s517 ){
@@ -8134,6 +8172,10 @@ else {
 if( s1409 == v->s328().rend() )
 throw new s16( (uint32_t)s16::s17::s24 );
 return *s1409;}}
+bool s1055::s2158() const{
+if( !s967 )
+return s1359 == v->s328().end();
+return s1409 == v->s328().rend();}
 s277* s1055::Idx(){
 *s1314->s372() = s1358 - 1;
 return s1314;}
@@ -8170,6 +8212,8 @@ s1358 = std::distance( v->s328().begin(), it );
 assert( s1358 >= 0 );}}
 s1051::s1051( s1051* it )
 : v( it->v ), s1359( it->s1359 ), s1358( it->s1358 ), s1314( new s1703( NULL, 0 ) ){}
+bool s1051::s2158() const{
+return s1359 == v->s328().end();}
 s277* s1051::s322(){
 s277* s717 = NULL;
 if( s1359 != v->s328().end() ) {
@@ -8195,6 +8239,10 @@ vector<s277*>(	{ s1314, s380 } ) ) ){}
 s1025::s1025( s1025* it )
 : v( it->v ), s1359( it->s1359 ), s1314( s380 ), s1313( new s1048( NULL, 
 vector<s277*>(	{ s1314, s380 } ) ) ){}
+bool s1025::s2158() const{
+if( !s967 )
+return s1359 == v->s328().end();
+return s1409 == v->s328().rend();}
 s277* s1025::s322(){
 s277* s717 = NULL;
 if( s1359 != v->s328().end() ) {
@@ -8231,6 +8279,8 @@ vector<s277*>( { s1314, s1359->second } ) ) ){}
 s1553::s1553( s1553* it )
 : v( it->v ), s1359( it->s1359 ), s1314( s380 ), s1313( new s1048( NULL,
 vector<s277*>( { s1314, s1359->second } ) ) ){}
+bool s1553::s2158() const{
+return s1359 == v->s328().end();}
 s277* s1553::s322(){
 s277* s717 = NULL;
 if( s1359 != v->s328().end() ) {
@@ -8275,6 +8325,10 @@ s967 = it->s967;}
 void s1449::reverse(){
 s967 = true;
 s1409 = std::make_reverse_iterator( s1359 );}
+bool s1449::s2158() const{
+if( !s967 )
+return s1359 == v->s328().end();
+return s1409 == v->s328().rend();}
 s277* s1449::s322(){
 s277* s717 = NULL;
 if( !s967 ) {
@@ -8326,6 +8380,10 @@ s967 = it->s967;}
 void s1753::reverse(){
 s967 = true;
 s1409 = std::make_reverse_iterator( s1359 );}
+bool s1753::s2158() const{
+if( !s967 )
+return s1359 == v->s328().end();
+return s1409 == v->s328().rend();}
 s277* s1753::s322(){
 s277* s717 = NULL;
 if( !s967 ) {
@@ -8692,7 +8750,9 @@ size_t idx = (size_t)(int)*s280[2];
 if( idx >= v->size() )
 throw new s16( L"vector index is out of range",
 (uint32_t)s16::s17::s24 );
-s280[3]->s371( v->s363[idx] );}
+s277* el = v->s363[idx];
+s280[3]->s371( el );
+el->s1413();}
 inline void s323::s337( s501** s280, size_t s517 ){
 s323* pv = (s323*)DR;
 int idx = (int)*s280[2];
@@ -11815,13 +11875,14 @@ s637::s637( s268* s306, s278* s616, s615* s617, const std::vector<s277*>& l, con
 s77( s7::s476, s306 ), s646( s306 ){
 if( l.size() < 2 )
 throw new s16( s262 + L"(): wrong numbers of arguments" );
+if( l.back()->s513() != s495 ||
+((s584*)l.back())->s305() != s263 )
+throw new s16( L"the catch clause must be the last statement in the try block" );
 s655.s564( s77.s643(), &s646 );
 s606.push_back( (s501*)&s646 );
 s657.push_back( (s501*)&s646 );
 s658.push_back( s386( s77.s643(), s306 ) );
-s608.assign( l.begin(), l.end() );
-if( ((s584*)l.back())->s305() != s263 )
-throw new s16( L"the catch clause must be the last statement in the try block" );}
+s608.assign( l.begin(), l.end() );}
 s637::s637( s268* s306 )
 : s615( s306, NULL, NULL, s588, s262, NULL, true ), 
 s77( s7::s476, s306 ), s646( s306 ){}
@@ -11958,8 +12019,8 @@ if( s607.size() > 3 )
 s1822 = ( (s374*)s607[3] )->s372();
 else
 s1822 = &s1823;
-if( s879.joinable() )
-s879.join();
+if( s879.joinable() ) {
+s879.join();}
 s879 = thread( s1788, cmd_, s1822, pdone );
 return s610;}
 s1783::s1783( s268* s306, s278* s616, s615* s617, const std::vector<s277*>& l, const s269* s736 )
@@ -12133,16 +12194,9 @@ s280[n + 1]->s366(), s1686::s1723 ) )
 s1059.s1097( L"'fill:' formatting marker should have a char (one symbol string) parameter" );}}
 s1413();}
 s504 s634::s516( s501** s723, size_t s732 ){
-size_t shift = 1;
-for( size_t n = 0; n < nlocs; ++n ) {
-if( *( s604 + n ) ) {
-s489 pc = ( ( s502* )*( s604 + n ) )->s513();
-if( pc == s492 || pc == s1504 )
-*( s603 + n + shift ) =
-(s501*)( ( s386* )*( s604 + n ) )->s392();
-else if( pc == s493 ) {
-s1075[n + shift] = (s501*)( ( s615* )*( s604 + n ) )->s516( s723, s732 );
-*( s603 + n + shift ) = s1075[n + shift];}}}
+s501* s717 = s1787( s723, s732 );
+if( s717 )
+return s717;
 s1::s9<Stream> s826;
 if( s42.s14() ) {
 s489 pc = s42->s513();
@@ -12317,8 +12371,12 @@ s998.push_back( cs );
 s506 s996 = s615::s624( cs, s306, s612, this, s304(), false );
 s996->s519( s612, true );
 s504 res1 = s996->s516( 0, 0 );
+if( !res1 || res1->s644() != s7::s455 ) {
 s717->s328().push_back( s384 );
 s717->s328().push_back( new s374( s306, res1 ? res1->to_wstring() : L"" ) );}
+else {
+s717->s328().push_back( s385 );
+s717->s328().push_back( new s374(s306, res1.s15<s376*>()->Msg() ) );}}
 else {
 vector<wstring> l;
 s504 res1 = s306->callFunc( f, l );
@@ -13930,6 +13988,8 @@ throw e->s30( L"\nwhile linking '" + s704->s305() + L"' function " );}
 s1485 = true;
 mod->s1825();
 s501* s717 = s704->s516();
+if( s717->s644() == s7::s455 )
+throw new s16( ( (s376*)s717 )->Msg() );
 s1485 = false;
 return s717;}
 s506 s268::getProc( const std::wstring& s ){
