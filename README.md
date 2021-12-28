@@ -1,7 +1,14 @@
 # TREE3
 ### Transd Expression Evaluator (3rd revision)
 
-This program is an implementation of Transd programming language. It can be used for two purposes: 
+## Table of Contents
+* [Introduction](#introduction)
+* [Obtaining TREE3](#obtaining-tree3)
+* [Testing TREE3](#testing-tree3)
+* [Using TREE3](#using-tree3)
+
+## Introduction
+TREE3 is an implementation of Transd programming language. It can be used for two purposes: 
  
  1. For running Transd programs from the command line;
  2. For evaluating Transd expressions from the command line.
@@ -53,8 +60,15 @@ clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -D__LINUX__ -lpthread -o tree
 After compiling, the `tree3` executable contains the TREE3 compiler and is
 ready to use.
 
+## Testing TREE3
 
-## Usage
+TREE3 uses Tourbillon virtual compiler as an implementation of Transd programming language. Correctness of implementation can be checked by running the Tourbillon Compiler Test Suit, containing a comprehensive set of tests of all language parts.
+
+The Test Suit and the instructions how to run it can be found here:
+
+[Tourbillon Compiler Test Suit](https://github.com/transd-lang/Tourbillon-test-suite)
+
+## Using TREE3
 
 ### Evaluating Transd expressions (REPL mode)
 
