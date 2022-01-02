@@ -36,10 +36,10 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.2";
-// 211228
-wstring buildnum = L"7";
+// 220102
+wstring buildnum = L"8";
 wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nVirtual compiler (interpreter) for Transd programming language."
-"\n\nCopyright (c) 2020-2021 Albert Berger."
+"\n\nCopyright (c) 2020-2022 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
 L"\n\nThe program uses Tourbillon virtual compiler as a back-end for Transd programming language."
 "\nTourbillon compiler version: " + TRANSD_VERSION;
