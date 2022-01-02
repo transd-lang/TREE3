@@ -2673,7 +2673,6 @@ s1274.push_back( s1274[vt.s352( 0 )] );
 s1551.push_back( vector<s1061>() );
 return s1091;}
 s1061 s491::s1046( const s813::Cont& v_ ){
-assert( all_of( begin( v_ ), end( v_ ), [this]( s1061 t ) { return ( t <= s1101.size() ); } ) );
 s813 vt( v_ );
 s1061 s685 = 0;
 auto it = s1102.find( vt );
