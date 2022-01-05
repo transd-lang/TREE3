@@ -641,7 +641,7 @@ std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 void s178( const s945* pf, const std::wstring& s77,
 std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 } // namespace s6
-#define TRANSD_VERSION L"0.431"
+#define TRANSD_VERSION L"0.432"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s928 extern const uint32_t
@@ -829,7 +829,7 @@ s260,	 s818,			s759, s852, 	s772,
 s853,  s1317, s1620, s1316, s1428, 
 s1944,	 s1886,    s1945, s1943,
 s1562,  s1616,  s1615, s1614,
-s1619, s1617, s1618, s1427, astFuncName_First;
+s1619, s1617, s1618, s1427, s2078;
 class s262;
 class s263;
 class s270;
@@ -1839,6 +1839,7 @@ static void s400( s483** s274, size_t n );
 static void s401( s483** s274, size_t n );
 static void s402( s483** s274, size_t n );
 static void s403( s483** s274, size_t n );
+static void s2097( s483** s274, size_t n );
 static void s1966( s483** s274, size_t n );
 static void s1965( s483** s274, size_t n );
 static void s405( s483** s274, size_t n );
@@ -2758,7 +2759,7 @@ void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 typedef int HPROG;
 enum s1370{ s1429=1, s1430, s1431, s1432, s1622, 
-s1433, s1434, bfFirst, s1435, s1436, s1439, 
+s1433, s1434, s2079, s1435, s1436, s1439, 
 s1437, s1438, s1623, s1440, s1947, s1624, 
 s1441, s1442, s1626, s1627, s1443,
 s1887, s1625,	s1948, s1946, s1444,
@@ -3031,6 +3032,9 @@ static void s1635( s483** s274, size_t n );
 static void s1621( s483** s274, size_t n );
 static void s1211( s483** s274, size_t n );
 static void s1210( s483** s274, size_t n );
+static void s2090( s483** s274, size_t n );
+static void s2089( s483** s274, size_t n );
+static void s2088( s483** s274, size_t n );
 static void s1254( s483** s274, size_t n );
 static void s1267( s483** s274, size_t n );
 static void s1593( s483** s274, size_t n );
@@ -3038,6 +3042,7 @@ static void s1587( s483** s274, size_t n );
 static void s1493( s483** s274, size_t n );
 static void s1745( s483** s274, size_t n );
 static void s1950( s483** s274, size_t n );
+static void s2094( s483** s274, size_t n );
 static s341 s348;
 virtual void s350() override;
 virtual const s341& s342() const override { return s348; }
@@ -3103,6 +3108,8 @@ typedef s336::s341 s341;
 typedef s336::s337 s337;
 s1380<std::pair<s1421, s1423>> s1455;
 static void s1211( s483** s274, size_t n );
+static void s2090( s483** s274, size_t n );
+static void s2088( s483** s274, size_t n );
 static void s1485( s483** s274, size_t n );
 static s341 s348;
 virtual void s350() override;
@@ -3225,7 +3232,31 @@ typename _Cont::iterator s1519, s1520;
 s1519 = rp.first.s15<s939*>()->s1145();
 s1520 = rp.second.s15<s939*>()->s1145();
 std::mt19937 s1656(std::random_device{}());
-std::shuffle( s1519, s1520, s1656 );}
+std::shuffle( s1519, s1520, s1656 );
+*s274 = pv;}
+template <class _Cont, class s1311, class Der, class s1582>
+void s1401<_Cont, s1311, Der, s1582>::s2094( s483** s274, size_t s498 ){
+using s1130 = Der;
+using s939 = typename Der::s1139;
+s1130* pv;
+s385* pr = NULL;
+if( s274[1]->s352() == s1415 ) {
+pr = (s385*)s274[1];
+pv = (s1130*)pr->s819();}
+else
+pv = ( (s1130*)s274[1] );
+if( ( (s326*)pv )->s1138() < 1 )
+throw new s2::s16( L"this type of iterable doesn't support the 'unique' operation" );
+s1144 rp;
+if( pr ) {
+rp = pr->s1194( pv );}
+else
+rp = pv->s1194();
+typename _Cont::iterator s1519, s1520;
+s1519 = rp.first.s15<s939*>()->s1145();
+s1520 = rp.second.s15<s939*>()->s1145();
+std::unique( s1519, s1520 );
+*s274 = pv;}
 template<class _Cont, class s1311, class Der, class s1582>
 void s1401<_Cont, s1311, Der, s1582>::s1950( s483** s274, size_t s498 ){
 using s939 = typename Der::s1139;
@@ -3245,6 +3276,20 @@ else {
 s939 it( pv->s300, pv, s1949.first, s1949.first + 1 );
 s274[0] = pv->s1190( &it );}}
 template<class _Cont, class s1311, class Der, class s1582>
+void s1401<_Cont, s1311, Der, s1582>::s2088( s483** s274, size_t s498 ){
+using s939 = typename Der::s1139;
+Der *pv = NULL, *pv1 = NULL;
+s1144 rp = s313<_Cont, s1311, Der>::s1426( s274[1], &pv );
+s1144 rp1 = s313<_Cont, s1311, Der>::s1426( s274[2], &pv1 );
+s1301<s1311> s2091;
+typename _Cont::iterator s1519, s1520, vbeg1, vend1;
+s1519 = rp.first.s15<s939*>()->s1145();
+s1520 = rp.second.s15<s939*>()->s1145();
+vbeg1 = rp1.first.s15<s939*>()->s1145();
+vend1 = rp1.second.s15<s939*>()->s1145();
+bool s153 = std::includes( s1519, s1520, vbeg1, vend1, s2091 );
+*((s360*)*s274)->s357() = s153;}
+template<class _Cont, class s1311, class Der, class s1582>
 void s1401<_Cont, s1311, Der, s1582>::s1211( s483** s274, size_t s498 ){
 using s939 = typename Der::s1139;
 Der* pv = ( (Der*)s274[1] );
@@ -3257,8 +3302,7 @@ if( s498 == 3 )
 s1206 = (s591*)s274[2];
 s1301<s1311> s1969;
 s1969.s859 = s1206;
-typename _Cont::iterator s1212 = std::max_element( s1519, s1520, 
-/*pv->s1325*/ s1969);
+typename _Cont::iterator s1212 = std::max_element( s1519, s1520, s1969);
 *s274 = (s483*)pv->s1975( &pv, s1212 );}
 template<class _Cont, class s1311, class Der, class s1582>
 void s1401<_Cont, s1311, Der, s1582>::s1210( s483** s274, size_t s498 ){
@@ -3272,6 +3316,35 @@ if( s1519 == s1520 )
 s274[0] = new s346( pv->s300, -1 );
 else {
 auto s1212 = std::max_element( s1519, s1520, pv->s1325 );
+s939 it( pv->s300, pv, s1212, s1212 + 1 );
+s274[0] = pv->s1190( &it );}}
+template<class _Cont, class s1311, class Der, class s1582>
+void s1401<_Cont, s1311, Der, s1582>::s2090( s483** s274, size_t s498 ){
+using s939 = typename Der::s1139;
+Der* pv = ( (Der*)s274[1] );
+s1144 rp = s313<_Cont, s1311, Der>::s1426( s274[1], &pv );
+typename _Cont::iterator s1519, s1520;
+s1519 = rp.first.s15<s939*>()->s1145();
+s1520 = rp.second.s15<s939*>()->s1145();
+s591* s1206 = NULL;
+if( s498 == 3 )
+s1206 = (s591*)s274[2];
+s1301<s1311> s1969;
+s1969.s859 = s1206;
+typename _Cont::iterator s1212 = std::min_element( s1519, s1520, s1969);
+*s274 = (s483*)pv->s1975( &pv, s1212 );}
+template<class _Cont, class s1311, class Der, class s1582>
+void s1401<_Cont, s1311, Der, s1582>::s2089( s483** s274, size_t s498 ){
+using s939 = typename Der::s1139;
+Der* pv = NULL;
+s1144 rp = s313<_Cont, s1311, Der>::s1426( s274[1], &pv );
+typename _Cont::iterator s1519, s1520;
+s1519 = rp.first.s15<s939*>()->s1145();
+s1520 = rp.second.s15<s939*>()->s1145();
+if( s1519 == s1520 )
+s274[0] = new s346( pv->s300, -1 );
+else {
+auto s1212 = std::min_element( s1519, s1520, pv->s1325 );
 s939 it( pv->s300, pv, s1212, s1212 + 1 );
 s274[0] = pv->s1190( &it );}}
 template<class _Cont, class s1421, class s1423, class Der>
@@ -3296,6 +3369,69 @@ s1520 = rp.second.s15<s939*>()->s1145();
 typename _Cont::iterator s1212 = std::max_element( s1519, s1520, pv->s1455 );
 auto tmp = std::make_pair( s1212->first, s1212->second );
 *s274 = (s483*)pv->s1335( tmp );}
+template<class _Cont, class s1421, class s1423, class Der>
+void s1369<_Cont, s1421, s1423, Der>::s2090( s483** s274, size_t s498 ){
+using s1130 = Der;
+using s939 = typename Der::s1139;
+s1130* pv;
+s385* pr = NULL;
+if( s274[1]->s352() == s1415 ) {
+pr = (s385*)s274[1];
+pv = (s1130*)pr->s819();}
+else
+pv = ( (s1130*)s274[1] );
+s1144 rp;
+if( pr ) {
+rp = pr->s1194( pv );}
+else
+rp = pv->s1194();
+typename _Cont::iterator s1519, s1520;
+s1519 = rp.first.s15<s939*>()->s1145();
+s1520 = rp.second.s15<s939*>()->s1145();
+typename _Cont::iterator s1212 = std::min_element( s1519, s1520, pv->s1455 );
+auto tmp = std::make_pair( s1212->first, s1212->second );
+*s274 = (s483*)pv->s1335( tmp );}
+template<class _Cont, class s1421, class s1423, class Der>
+void s1369<_Cont, s1421, s1423, Der>::s2088( s483** s274, size_t s498 ){
+using s1130 = Der;
+using s939 = typename Der::s1139;
+s1130 *pv, *s2092;
+s385* pr = NULL;
+if( s274[1]->s352() == s1415 ) {
+pr = (s385*)s274[1];
+pv = (s1130*)pr->s819();}
+else
+pv = ( (s1130*)s274[1] );
+s1144 rp;
+if( pr )
+rp = pr->s1194( pv );
+else
+rp = pv->s1194();
+if( s274[2]->s352() == s1415 ) {
+pr = (s385*)s274[2];
+s2092 = (s1130*)pr->s819();}
+else
+s2092 = ( (s1130*)s274[2] );
+s1144 s2093;
+if( pr )
+s2093 = pr->s1194( s2092 );
+else
+s2093 = s2092->s1194();
+typename _Cont::iterator s1519, s1520, s2095, s2096, cur;
+s1519 = rp.first.s15<s939*>()->s1145();
+s1520 = rp.second.s15<s939*>()->s1145();
+s2095 = s2093.first.s15<s939*>()->s1145();
+s2096 = s2093.second.s15<s939*>()->s1145();
+cur = s2095;
+/*bool s153 = true;
+for( ; cur < s2096; ++cur ) {
+auto it = pv->s349.find( cur->first );
+if( it != pv->s349.end() || it->second != cur->second ) {
+s153 = false;
+break;}
+}*/
+bool s153 = std::includes( s1519, s1520, s2095, s2096 );
+*((s360*)*s274)->s357() = s153;}
 struct s840{
 std::vector<s485>s861;
 s488 s859;
@@ -4015,10 +4151,10 @@ s606( s262* s300, s272* s588, s591* s587, const std::vector<s271*>& l, const s26
 s486 s497( s483** s274, size_t s498 ) override;
 s271* s335() const override;
 };
-class TDFirst
+class s2077
 : public s591{
 public:
-TDFirst( s262* s300, s272* s588, s591* s587, const std::vector<s271*>& l, const s263* s701 );
+s2077( s262* s300, s272* s588, s591* s587, const std::vector<s271*>& l, const s263* s701 );
 void s500( const s272* s1672, bool proc ) override;
 s486 s497( s483** s274, size_t s498 ) override;
 s271* s335() const override;
@@ -4246,12 +4382,22 @@ s1122( { s1415, s7::s1398 } ),
 s1122( { s7::s1398 } ) }, 0, 1 ) ) );
 s348.insert( std::make_pair( L"max-element-idx", new s337( L"max-element-idx", &s1401<_Cont, s1311, Der, s1582>::s1210,
 s1152, { s1122(), s1122( { s1415 } ) }, 0, 1 ) ) );
+s348.insert( std::make_pair( L"min-element", new s337( L"min-element", &s1401<_Cont, s1311, Der, s1582>::s2090,
+0, { s1122(), s1122( { s1415 } ), 
+s1122( { s1415, s7::s1398 } ),
+s1122( { s7::s1398 } ) }, 0, 1 ) ) );
+s348.insert( std::make_pair( L"min-element-idx", new s337( L"min-element-idx", &s1401<_Cont, s1311, Der, s1582>::s2089,
+s1152, { s1122(), s1122( { s1415 } ) }, 0, 1 ) ) );
+s348.insert( std::make_pair( L"is-subset", new s337( L"is-subset", &s1401<_Cont, s1311, Der, s1582>::s2088, s1148,
+{ s1122(), s1122( { s1415 } ), s1122( { s7::s1394 } ) }, 0, 1, true ) ) );
 s348.insert( std::make_pair( L"sort", new s337( L"sort", &s1401<_Cont, s1311, Der, s1582>::s1267, 0,
 { s1122(), s1122( { s1415 } ) }, 0, 1, false ) ) );
 s348.insert( std::make_pair( L"reverse", new s337( L"reverse", &s1401<_Cont, s1311, Der, s1582>::s1254, 0,
 { s1122(), s1122( { s1415 } ) }, 0, 1, false ) ) );
 s348.insert( std::make_pair( L"shuffle", new s337( L"shuffle", &s1401<_Cont, s1311, Der, s1582>::s1593, 0,
 { s1122(), s1122( { s1415 } ) }, 0, 1, false ) ) );
+s348.insert( std::make_pair( L"unique", new s337( L"unique", &s1401<_Cont, s1311, Der, s1582>::s2094, 0,
+{ s1122(), s1122( { s1415 } ) }, 0, 1, true ) ) );
 s348.insert( std::make_pair( L"for-each", new s337( L"for-each", &s1401<_Cont, s1311, Der, s1582>::s1745, s1152,
 { s1122(), s1122( { s1415 } ) }, 0, 1, false ) ) );
 s348.insert( std::make_pair( L"find-adjacent", new s337( L"find-adjacent", &s1401<_Cont, s1311, Der, s1582>::s1587, 0,
@@ -4272,10 +4418,13 @@ s348.equal_range( L"front" ).first->second->s1261( true );
 s348.equal_range( L"back" ).first->second->s1261( true );
 s348.equal_range( L"max-element" ).first->second->s1261( true );
 s348.equal_range( L"max-element-idx" ).first->second->s1261( true );
+s348.equal_range( L"min-element" ).first->second->s1261( true );
+s348.equal_range( L"min-element-idx" ).first->second->s1261( true );
 s348.equal_range( L"reverse" ).first->second->s1261( true );
 s348.equal_range( L"find-adjacent" ).first->second->s1261( true );
 s348.equal_range( L"sort" ).first->second->s1261( true );
 s348.equal_range( L"shuffle" ).first->second->s1261( true );
+s348.equal_range( L"unique" ).first->second->s1261( true );
 this->s300->TR().s1162( this->s493, s7::s1411, s1512::s1507 );}
 template <class _Cont, class s1311, class Der>
 void s1576<_Cont, s1311, Der>::s350(){
@@ -4304,9 +4453,14 @@ s313<_Cont, s1421, Der>::s350();
 s348 = s313<_Cont, s1421, Der>::s342();
 s348.insert( std::make_pair( L"max-element", new s337( L"max-element", &s1369::s1211,
 0, { s1122() }, 0, 0 ) ) );
+s348.insert( std::make_pair( L"min-element", new s337( L"min-element", &s1369::s2090,
+0, { s1122() }, 0, 0 ) ) );
+s348.insert( std::make_pair( L"is-subset", new s337( L"is-subset", &s1369::s2088, s1148,
+{ s1122( { s7::s1394 } ) }, 1, 1 ) ) );
 s348.insert( std::make_pair( L"regroup-by", new s337( L"regroup-by", &s1369::s1485, 0,
 { s1122( { s7::s1398 } ) }, 1, 1 ) ) );
 s348.equal_range( L"max-element" ).first->second->s1261( true );
+s348.equal_range( L"min-element" ).first->second->s1261( true );
 s348.equal_range( L"regroup-by" ).first->second->s1261( true );
 this->s300->TR().s1162( this->s493, s7::s1411, s1512::s1507 );}
 template <class _Cont, class s1311, class Der>
@@ -4325,13 +4479,12 @@ s685 = this->s300->TR().s1046( std::vector<s1061>(
 { s1580, 1, s1099, 0 } ) );}
 else if( s1553 == L"front" || s1553 == L"back" )
 s685 = this->ValType();
-else if( s1553 == L"max-element-idx" )
+else if( s1553 == L"max-element-idx" || s1553 == L"min-element-idx" )
 s685 = this->s937();
-else if( s1553 == L"reverse" )
+else if( s1553 == L"sort" || s1553 == L"reverse" || s1553 == L"unique" )
 s685 = this->s352();
-else if( s1553 == L"sort" )
-s685 = this->s352();
-else if( s1553 == L"find-adjacent" || s1553 == L"max-element") {
+else if( s1553 == L"find-adjacent" || s1553 == L"max-element" || 
+s1553 == L"min-element") {
 s813::Cont s1279;
 s1061 s1099 = this->ValType();
 s685 = this->s300->TR().s1046( std::vector<s1061>( 
@@ -5207,13 +5360,13 @@ std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 class s1801;
-class DatasetRecord
+class s2076
 : public s1783{
 private:
 s486 rec;
 public:
-DatasetRecord( s486 d );
-virtual ~DatasetRecord();
+s2076( s486 d );
+virtual ~s2076();
 s486 s760( s1905& s76, bool s714 = true ) const override;
 void s863( s750& s153 ) const override;
 void s863( s959& s153 ) const override;
@@ -5224,15 +5377,15 @@ bool operator<( const s776* p ) const{  return 0; }
 std::wstring to_wstring( uint32_t s1565 = 0 ) const{ return L""; }
 void s304( std::wostream* pd, int s197 = 0 ) const{ }
 };
-class DatasetInt : 
+class s2075 : 
 public s1782{
-Iterator* mit;
-s326* pcont;
+Iterator* s2081;
+s326* s2083;
 bool started;
 public:
-DatasetInt( const DatasetInt& r );
-DatasetInt( s1781* pdb );
-virtual ~DatasetInt();
+s2075( const s2075& r );
+s2075( s1781* pdb );
+virtual ~s2075();
 void s1871( void* f, void* s ) override;
 void s1874() override;
 bool s1835() override;
@@ -5243,7 +5396,7 @@ class s2062
 : public s1781{
 private:
 static s341 s348;
-std::wstring colName;
+std::wstring s2080;
 s326* pv;
 s1061 s2042;
 std::wstring s499;
@@ -5275,7 +5428,7 @@ void intersect( const s1787& fi1, const s1787& fi2,
 s1784& s153 ) override;
 void intersect( const s1787& fi, s1782* s153 ) override;
 size_t s1833( s1905& s1816 ) const;
-void s1832( std::vector<std::wstring>& s153 ) const override { s153.push_back( colName ); }
+void s1832( std::vector<std::wstring>& s153 ) const override { s153.push_back( s2080 ); }
 bool s2010( s1905& s ) const override;
 s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
