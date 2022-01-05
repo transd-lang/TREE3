@@ -641,7 +641,7 @@ std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 void s178( const s945* pf, const std::wstring& s77,
 std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 } // namespace s6
-#define TRANSD_VERSION L"0.430"
+#define TRANSD_VERSION L"0.431"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s928 extern const uint32_t
@@ -829,7 +829,7 @@ s260,	 s818,			s759, s852, 	s772,
 s853,  s1317, s1620, s1316, s1428, 
 s1944,	 s1886,    s1945, s1943,
 s1562,  s1616,  s1615, s1614,
-s1619, s1617, s1618, s1427;
+s1619, s1617, s1618, s1427, astFuncName_First;
 class s262;
 class s263;
 class s270;
@@ -2758,7 +2758,7 @@ void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 typedef int HPROG;
 enum s1370{ s1429=1, s1430, s1431, s1432, s1622, 
-s1433, s1434, s1435, s1436, s1439, 
+s1433, s1434, bfFirst, s1435, s1436, s1439, 
 s1437, s1438, s1623, s1440, s1947, s1624, 
 s1441, s1442, s1626, s1627, s1443,
 s1887, s1625,	s1948, s1946, s1444,
@@ -4012,6 +4012,14 @@ class s606
 : public s591{
 public:
 s606( s262* s300, s272* s588, s591* s587, const std::vector<s271*>& l, const s263* s701 );
+s486 s497( s483** s274, size_t s498 ) override;
+s271* s335() const override;
+};
+class TDFirst
+: public s591{
+public:
+TDFirst( s262* s300, s272* s588, s591* s587, const std::vector<s271*>& l, const s263* s701 );
+void s500( const s272* s1672, bool proc ) override;
 s486 s497( s483** s274, size_t s498 ) override;
 s271* s335() const override;
 };
