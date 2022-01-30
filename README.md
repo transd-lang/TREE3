@@ -8,9 +8,9 @@
 
 ## Table of Contents
 * [Introduction](#introduction)
-* [Obtaining TREE3](#obtaining-tree3)
-* [Testing TREE3](#testing-tree3)
-* [Using TREE3](#using-tree3)
+* [Obtaining](#obtaining-tree3)
+* [Testing](#testing-tree3)
+* [Using](#using-tree3)
 
 ## Introduction
 TREE3 is an implementation of Transd programming language. It can be used for two purposes: 
@@ -40,7 +40,7 @@ Obtain the TREE3's source code either by cloning the repo or by downloading an a
 * Issue the following command on the command line of your console:
 
 ```
-clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -DWIN32 -o tree3.exe
+clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -DWIN32 -DNDEBUG -o tree3.exe
 ```
 
 After building, the `tree3.exe` file contains the TREE3 compiler and is ready to use.
@@ -59,15 +59,14 @@ command:
 Alternatively, you can do the building with the following command:
 
 ```
-clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -D__LINUX__ -lpthread -o tree3
+clang++ -std=c++14 -O3 src/transd.cpp src/main.cpp -D__LINUX__ -DNDEBUG -lpthread -o tree3
 ```
 
-After compiling, the `tree3` executable contains the TREE3 compiler and is
-ready to use.
+After compiling, the `tree3` executable contains the TREE3 compiler and is ready to use.
 
 ## Testing TREE3
 
-TREE3 uses Tourbillon virtual compiler as an implementation of Transd programming language. Correctness of implementation can be checked by running the Tourbillon Compiler Test Suit, containing a comprehensive set of tests of all language parts.
+TREE3 uses Tourbillon virtual compiler as an implementation of Transd programming language. The correctness of working of the compiler on your computer can be checked by running the Tourbillon Compiler Test Suit.
 
 The Test Suit and the instructions how to run it can be found here:
 
