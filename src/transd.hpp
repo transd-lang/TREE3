@@ -2,7 +2,7 @@
 /*
 This is a distributed file for Tourbillon virtual compiler embedding
 library.
-Copyright (c) 2020-2021 Albert Berger [alberger at gmail com].
+Copyright (c) 2020-2022 Albert Berger [alberger at gmail com].
 All rights reserved.
 Redistribution and use of this file in source and binary forms, 
 without modification, are permitted for commercial and non-commercial
@@ -642,7 +642,7 @@ std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 void s178( const s945* pf, const std::wstring& s77,
 std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 } // namespace s6
-#define TRANSD_VERSION L"0.433"
+#define TRANSD_VERSION L"0.434"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s928 extern const uint32_t
@@ -1249,6 +1249,7 @@ size_t s1056( const std::wstring& s, size_t& pos, s813::Cont& s153 );
 std::wstring s1012( const s813::Cont& tp );
 static std::wstring s1352( const std::wstring& tn );
 std::wstring s1275( const std::wstring& tn );
+void s2137( const s813::Cont& v_, s813::Cont& s153, size_t s2117 = 0 );
 };
 class s521
 : public s1::s10{
@@ -4144,9 +4145,12 @@ void s500( const s272* s1672, bool proc ) override;
 s483* s496() override { return this; }
 s1061 s1328() const { return s1903.back(); }
 s271* s335( s483* s2124 ) const override;
+void s2133( s483* s2124 ) override;
 using s483::s355;
 using s483::s1895;
 s483* s355( s272* s588, const std::vector<s1061>& vt ) const override;
+s483* s355( s272* s588, const std::vector<s271*>& l,
+const s263* ast_ ) const override;
 s591* s1685( s1905& s278, s591* s215,	s561* cs ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 std::wstring trace( const char* topics ) const override;
@@ -4341,9 +4345,10 @@ s271* s335( s483* s2124 ) const override;
 };
 class s1603
 : public s591{
+s1603( const s1603& q):s591(q){ throw; }
 public:
 s1603( s262* s300, s272* s588, s591* s587, const std::vector<s271*>& l, const s263* s701 );
-s1603( const s1603& );
+s1603( const s1603& right, s272* s2124 );
 void s500( const s272* s1672, bool proc ) override;
 s486 s497( s483** s274, size_t s498 ) override;
 s271* s335( s483* s2124 ) const override;
