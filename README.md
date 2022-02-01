@@ -66,11 +66,11 @@ After compiling, the `tree3` executable contains the TREE3 compiler and is ready
 
 ## Testing TREE3
 
-TREE3 uses Tourbillon virtual compiler as an implementation of Transd programming language. The correctness of working of the compiler on your computer can be checked by running the Tourbillon Compiler Test Suit.
+TREE3 uses Tourbillon meta-compiler as an implementation of Transd programming language. The correctness of working of the compiler on your computer can be checked by running the Transd Reference Test Suit.
 
 The Test Suit and the instructions how to run it can be found here:
 
-[Tourbillon Compiler Test Suit](https://github.com/transd-lang/Tourbillon-test-suite)
+[Tourbillon Compiler Test Suit](https://github.com/transd-lang/Reference-Test-Suite)
 
 ## Using TREE3
 
