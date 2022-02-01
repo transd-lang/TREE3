@@ -2465,8 +2465,7 @@ throw new s16( L"unknown format of qualified name: " + s, (uint32_t)s16::s17::s2
 s1112 = s.substr( 0, pl );
 s601 = s.substr( pl + 2 );}
 s483::s483( const s483& r ) 
-: s271( r )/*, ns( r.ns ) */
-{ }
+: s271( r ), ns( r.ns ){}
 s483::~s483(){}
 s483* s483::s496(){
 return this;}
@@ -4319,8 +4318,8 @@ s48 );
 s1642( s1644, s482::s146 );
 s493 = Types.s272;
 s1262();}
-s1602::s1602( const s1602& right, const s263* ast_ )
-: s336( right.s300, right.ns, ast_ ), s628( right.s628 ){
+s1602::s1602( const s1602& right, s483* s2124 )
+: s336( right.s300, (s272*)s2124, right.s603() ), s628( right.s628 ){
 s493 = Types.s272;
 wh = right.wh;}
 void s1602::s350(){
@@ -4381,7 +4380,7 @@ else {
 s483* dv = (s483*)it->second->s335();
 sm.insert( make_pair( it->first, dv ));}}}
 s271* s1602::s335( s483* s2124 ) const{
-return new s1602( *this );}
+return new s1602( *this, s2124 ? s2124 : ns );}
 void s1602::s356( s271* p ) const{
 if( p->s352() == Types.s272 )
 ((s1602*)p)->s628 = s628;
@@ -4411,10 +4410,6 @@ inline void s1602::s1639( s483** s274, size_t s498 ){
 s1602* po = (s1602*)DR;
 wstring s189 = s274[2]->to_wstring();
 po->load( s189, true );}
-void s1602::s304( std::wostream* pd, int s197 /*=0*/ ) const
-{
-std::wostream& buf = *pd;
-buf << s4::fill_n_ch( L' ', s197 ) << s353() << L" : " << to_wstring();}
 size_t s1602::s322() const{
 return (size_t)this; //hash<bool>{}( s349 );
 }
@@ -4431,6 +4426,11 @@ s685 += L"\n }";
 return s685;}
 void s1602::s1960( s1905& s ) {
 load( s, false );}
+void s1602::s304( std::wostream* pd, int s197 /*=0*/ ) const
+{
+std::wostream& buf = *pd;
+buf << s4::fill_n_ch( L' ', s197 ) << s353() << L" : " << endl;
+s628.s304( pd, s197 + s419 );}
 s371::s371( s1905& s, s262* s300, s472 cat, bool _cnst )
 : s484( s300, cat ), s372( s ), s376( 0 ), s1168( _cnst ){
 assert( cat == s473 || cat == s475 || cat == s481 || cat == s1063 );
@@ -4529,8 +4529,14 @@ s374 = NULL;}
 void s371::s304( std::wostream* pd, int s197 /*=0*/ ) const
 {
 std::wostream& buf = *pd;
+wchar_t szRoot[20];
+#ifdef WIN32		
+_swprintf( szRoot, L"%p", (uint64_t*)s373.s15<void*>() );
+#else
+swprintf( szRoot, 20, L"%p", (uint64_t*)s373.s15<void*>() );
+#endif	
 buf << s4::fill_n_ch( L' ', s197 ) << L"DataRef : " << s372
-<< L"; Root: " << s373.s15<void*>() << L"; off: " << s375[0];}
+<< L"; Root: " << szRoot << L"; off: " << s375[0];}
 template<class s1312, class Der>
 s336::s341 s1306<s1312, Der>::s348;
 template<class s1312, class Der>
@@ -5380,7 +5386,9 @@ p->s596( s705 );
 p->s500( this, false );
 p->s497( 0, 0 );
 s12();}
-s1663.s351( s493 );}
+s1663.s351( s493 );
+if( s492 == s480 )
+s1679( proto.s618() );}
 s272::s272( s1905& s676, s262* s300, s472 pc, const s263* ast_ )
 : s483( s300, pc, ast_, NULL ), s625(NULL), s626(NULL), 
 s1663( s7::s1601, s300, s475 ), s347( s471 ), s278( s676 ),
@@ -5707,8 +5715,9 @@ if( !s628.s156( s76 ) )
 throw new s16( L"no such member: " + s76 );
 s628.s541( s76, s349, s482::s147 );
 for( size_t n = 0; n < s631.size(); ++n ) {
-if( s631[n].s617() == s76 )
-s630[n] = s349;}}
+if( s631[n].s617() == s76 ) {
+s630[n] = s349;
+break;}}}
 void s272::s1640( const s1602* ob ){
 s630.clear();
 s625->s628.s1613( s628 );
@@ -5813,8 +5822,6 @@ if( s494() == s479 )
 return s278;
 else if( s494() == s478 || s494() == s480 )
 return s347;
-else if( s494() == s476 || s494() == s1245 )
-return s278;// s834();
 assert( 0 );
 return /*s277 + L"::" +*/ s278;
 }
@@ -6017,8 +6024,8 @@ s1061 pt = s300->TR().s1010( s619, false );
 if( !pt ) {
 s947 ast2 = new s263( s619 + L"()", cs->s603()->Nqj(), (s263*)s215->s603() );
 s703 = s300->TR().s518( *ast2, s588, s558 );}
-else
-s703 = s300->TR().s1007( pt )->s355( s215, s274, s215->s603() );}
+else {
+s703 = s300->TR().s1007( pt )->s355( s215, s274, s215->s603() );}}
 catch( s16* e ) {
 if( 1 || e->which() != (uint32_t)s16::s17::s23 )
 throw e->s30( L"\nwhile compiling '" + s601 + L"' function " );
@@ -6224,6 +6231,8 @@ else if( s575 == s566 )
 return L"::";
 else
 throw new s16( L"Cannot get module name." );}
+std::wstring s591::s298() const{
+return s588->s298();}
 void s591::s847( s271* par, size_t pos, s485& s153, const s272* s1672 ){
 if( par->s494() == s477 ) {
 s490 cs = new s561( *((s561*)par) );
@@ -9378,7 +9387,7 @@ s318++;
 return s685;
 }*/
 s959::s959( s262* s300, s272* s588, s1905& s77, const s263* ast_, const s1695& s1759 )
-: s750( s300, ast_ ){
+: s750( s300, s588, ast_ ){
 s1200 = s1151;
 if( s77.size() ) {
 s1160( s77, s588, s1759 );}
@@ -9468,7 +9477,7 @@ s348.equal_range( L"get" ).first->second->s1261( true );
 s348.equal_range( L"fst" ).first->second->s1261( true );
 s348.equal_range( L"snd" ).first->second->s1261( true );}
 s483* s959::s355( s272* s588, const std::vector<s1061>& vt ) const{
-s959* s685 = new s959( s300, NULL, L"" );
+s959* s685 = new s959( s300, s588, L"" );
 s813 s619( vt );
 s685->s493 = s685->s317 = s685->s325 = s300->TR().s1011( s619 );
 return s685;}
@@ -10297,9 +10306,9 @@ void s324::s304( std::wostream* pd, int s197 /*=0*/ ) const
 {
 std::wostream& buf = *pd;
 buf << s4::fill_n_ch( L' ', s197 ) << L"Index : " << endl;
-/*for( size_t n = 0; n < s349.size(); ++n )
-s349[n]->s304( pd, s197 + s419 );*/
-}
+for( auto it = begin( s349 ); it != end( s349 ); ++it ) {
+buf << s4::fill_n_ch( L' ', s197 ) << it->first->to_wstring() + L" : ";
+it->second->s304( pd, s197 + s419 );}}
 s1382::s1382( s262* s300, s1061 s1201, s1061 s1276, const s263* ast_ )
 : s1369( s300, NULL, ast_ ){
 assert( s1201 && s1276 );
@@ -10574,11 +10583,15 @@ s415::s415( s262* s300, s1905& s77, const s263* ast_ )
 : s336( s300, NULL, ast_ ), s754( s300, Types.String, NULL ), s809( s300, Types.String, NULL ){
 s493 = Types.s414;
 s754.s11();
-s809.s11();}
+s809.s11();
+s754.s1262();
+s809.s1262();}
 s415::s415( const s415& right, const s263* ast_ )
 : s336( right.s300, right.ns, ast_ ), s754( right.s300, NULL, L"" ), s809( right.s300, NULL, L"" ){
 s754 = right.s754;
 s809 = right.s809;
+s754.s1262();
+s809.s1262();
 s493 = right.s493;}
 s483* s415::s354( const s263& s701, s272* s588, s1905& s334 ) const{
 return new s415( s300, L"", &s701 );}

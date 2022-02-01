@@ -642,7 +642,6 @@ std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 void s178( const s945* pf, const std::wstring& s77,
 std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 } // namespace s6
-#define TRANSD_VERSION L"0.434"
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s928 extern const uint32_t
@@ -1697,7 +1696,7 @@ const s341& s342() const override { return s348; }
 public:
 s1602( s262* s300 ) : s336( s300, NULL, NULL ) {}
 s1602( s262* s300, s272* s588, const std::wstring& s77, const s263* ast_=NULL );
-s1602( const s1602& right, const s263* ast_ = NULL );
+s1602( const s1602& right, s483* s2124 );
 s1602( s262* s300, s272* s588, const s6::s143* s1644, const s263* ast_ = NULL );
 s483* s354( const s263& s701, s272* s588, s1905& s334 ) const override;
 s483* s355( s272* s588, const std::vector<s271*>& l, const s263* ast_ ) const override;
@@ -2193,6 +2192,7 @@ void s594( s570 vt ) { s576 = vt; }
 s570 s595() const { return s576; }
 const std::wstring& s353() const override { return s271::s353(); }
 std::wstring s834() const override;
+std::wstring s298() const override;
 const s263* s603() const { return past; }
 s483* s496() override { return s586; }
 void s500( const s272* s1672, bool proc ) override;
@@ -3870,8 +3870,8 @@ const s6::s1695& s1759 );
 public:
 s750( s262* s300 )
 : s326( s300, NULL, NULL ) {}
-s750( s262* s300, const s263* ast_ )
-: s326( s300, NULL, ast_ ) {}
+s750( s262* s300, s272* s588, const s263* ast_ )
+: s326( s300, s588, ast_ ) {}
 s750( s262* s300, s272* s588, const std::wstring& s77,
 const s263* ast_ = NULL, const s1720& tbfr=s1738 );
 s750( s262* s300, const std::vector<s271*>& l, const s263* ast_ = NULL );
@@ -5470,6 +5470,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
+#define TRANSD_VERSION L"0.435"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
