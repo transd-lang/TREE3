@@ -1,5 +1,3 @@
-![](https://tokei.rs/b1/github/transd-lang/TREE3?category=code)
-![](https://tokei.rs/b1/github/transd-lang/TREE3?category=files)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/transd-lang/TREE3)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/transd-lang/TREE3)
 
