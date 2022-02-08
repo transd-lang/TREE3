@@ -694,6 +694,7 @@ DEFCONST s1356;
 DEFCONST s1391;
 DEFCONST s1392;
 DEFCONST s1601;
+DEFCONST s2139;
 DEFCONSTI s866;
 DEFCONSTI s438;
 DEFCONSTI s439;
@@ -814,6 +815,7 @@ s928 s1702;
 s928 s1892;
 s928 s1937;
 s928 s1936;
+s928 CLObjectVal_ctor1;
 extern std::set<std::wstring> s1123;
 } // namespace s7
 enum s224 { s225, s226, s227, s228 };
@@ -1682,9 +1684,11 @@ void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 class s1602 
 : public s336{
+friend class s776;
 s482 s628;
 static s341 s348;
 std::wstring s1645;
+static void s1236( s483** s274, size_t n );
 static void s1641( s483** s274, size_t n );
 static void s1639( s483** s274, size_t n );
 static void s1636( s483** s274, size_t n );
@@ -1695,7 +1699,7 @@ void s350() override;
 const s341& s342() const override { return s348; }
 public:
 s1602( s262* s300 ) : s336( s300, NULL, NULL ) {}
-s1602( s262* s300, s272* s588, const std::wstring& s77, const s263* ast_=NULL );
+s1602( s262* s300, s272* s588, s1905& s77, bool typed=true, const s263* ast_=NULL );
 s1602( const s1602& right, s483* s2124 );
 s1602( s262* s300, s272* s588, const s6::s143* s1644, const s263* ast_ = NULL );
 s483* s354( const s263& s701, s272* s588, s1905& s334 ) const override;
@@ -1708,8 +1712,8 @@ void s356( s271* p ) const override;
 size_t s322() const override;
 bool operator==( const s483* p ) const override;
 bool operator<( const s483* p ) const override;
-void load( const std::wstring& s77, bool s194 );
-void s1642( const s6::s143* ob, s482::s145 ap = s482::s146 );
+void load( const std::wstring& s77, bool typed, bool s194 );
+void s1642( const s6::s143* ob, bool typed, s482::s145 ap = s482::s146 );
 void s1632( s482::s535& st ) const;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s1960( s1905& s ) override;
@@ -1720,6 +1724,7 @@ extern s1::s9<s384> s366;
 extern s1::s9<s384> s367;
 extern s1::s9<s384> s368;
 extern s1::s9<s384> s873;
+extern s1::s9<s384> s2146;
 extern s1::s9<s384> s1686;
 extern s1::s9<s384> s1521;
 #define s1152 Types.Null
@@ -3475,7 +3480,9 @@ static void s387( s483** s274, size_t n );
 static void s1592( s483** s274, size_t n );
 static void s328( s483** s274, size_t n );
 static void s1689( s483** s274, size_t n );
+static void s2155( s483** s274, size_t n );
 static void s388( s483** s274, size_t n );
+static void s393( s483** s274, size_t n );
 static void s794( s483** s274, size_t n );
 static void s1595( s483** s274, size_t n );
 static void s1588( s483** s274, size_t n );
@@ -5036,7 +5043,7 @@ return l.operator<( r );}
 typedef std::set<s1787, s1804 > s1789;
 class s1778{
 public:
-enum s1791 { s1856, s1851, s1854, s1852, s1855, s1853 };
+enum s1791 { s1856, s1851, s1854, s1852, s1855, s1853, s2150 };
 private:
 std::wstring field;
 s1791 op;
@@ -5158,7 +5165,7 @@ s487 s783;
 s1779* s1859;
 s484* s1805( const std::wstring& s );
 void s2063( s1781* base, s485 what, std::vector<std::wstring>& s895,
-std::vector<s488>& s2061 );
+std::vector<s488>& s2061, std::vector<std::wstring>& s1868 );
 void s1723( const std::vector<s271*>& l_,	TDException& s968 );
 void s1725( const s272* s1672, bool proc );
 s486 s1730( s483** s274, size_t s498 );
@@ -5184,11 +5191,14 @@ class s776
 : public s1783{
 typedef std::map<std::wstring, s485> s727;
 s727 s762;
+s727* s2151;
 size_t rechash;
+s1::s9<s1602> pobj;
 public:
 s776() {}
-explicit s776( s262* s300, s272* s588, s1905& rec, const std::vector<std::wstring>& s743,
+s776( s262* s300, s272* s588, s1905& rec, const std::vector<std::wstring>& s743,
 std::vector<s485>& types, const s1720& tbfr=s1738 );
+s776( s262* s300, s1602& s588 );
 s486 s760( s1905& s76, bool s714=true ) const override;
 void s863( s750& s153 ) const override;
 void s863( s959& s153 ) const override;
@@ -5253,9 +5263,11 @@ static s341 s348;
 BaseMap s651, s652, s653;
 BaseMap::iterator s318;
 s787 s757;
+std::vector<std::wstring> s2145;
 std::wstring s499;
 static void s1236( s483** s274, size_t n );
 static void s786( s483** s274, size_t n );
+static void s2142( s483** s274, size_t n );
 static void s802( s483** s274, size_t n );
 static void s752( s483** s274, size_t n );
 static void s770( s483** s274, size_t n );
@@ -5263,6 +5275,7 @@ static void s333( s483** s274, size_t n );
 static void s328( s483** s274, size_t n );
 static void s331( s483** s274, size_t n );
 static void s856( s483** s274, size_t n );
+static void s2154( s483** s274, size_t n );
 void s350() override;
 const s341& s342() const override { return s348; }
 public:
@@ -5281,6 +5294,7 @@ size_t s322() const override;
 bool operator==( const s483* p ) const override;
 bool operator<( const s483* p ) const override;
 void s654( s1905& s194 );
+void s379( s1602& obj );
 void s655( s1905& q );
 void s718( s1905& s824, const s1720& tbfr );
 void s855( s1905& s858 ) override;
@@ -5470,7 +5484,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.435"
+#define TRANSD_VERSION L"0.436"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
