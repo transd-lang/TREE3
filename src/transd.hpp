@@ -642,6 +642,7 @@ std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 void s178( const s945* pf, const std::wstring& s77,
 std::vector<s1::s9<s141>>& s153, const s1695& s1759 );
 } // namespace s6
+typedef const std::wstring s1905;
 #define DEFCONST extern const std::wstring
 #define DEFCONSTI extern const int
 #define s928 extern const uint32_t
@@ -723,6 +724,7 @@ DEFCONST s449;
 DEFCONST s450;
 DEFCONST s451;
 DEFCONST s452;
+DEFCONST s2161;
 DEFCONST s453;
 DEFCONST s454;
 DEFCONST s455;
@@ -752,6 +754,7 @@ DEFCONST s739;
 DEFCONST s470;
 DEFCONST s936;
 DEFCONST s1983;
+DEFCONST s2160;
 DEFCONST s1989;
 DEFCONST s1990;
 DEFCONST s1991;
@@ -809,13 +812,14 @@ s928 s1555;
 s928 s1687;
 s928 s1599;
 s928 s1904;
+s928 CLObjectVal_ctor1;
 s928 s1598;
 s928 s1688;
 s928 s1702;
 s928 s1892;
 s928 s1937;
 s928 s1936;
-s928 CLObjectVal_ctor1;
+s928 s2159;
 extern std::set<std::wstring> s1123;
 } // namespace s7
 enum s224 { s225, s226, s227, s228 };
@@ -858,29 +862,29 @@ s264 s266;
 s1061 s1350{};
 s263* s2107;
 s263* s2112;
-void s282( const std::wstring& s77 );
+void s282( s1905& s77 );
 void s283( const s6::s143& s133 );
-void s284( const std::wstring& s77 );
-void s285( const std::wstring& s77 );
-void s286( const std::wstring& s340, const s6::s141& obj );
-void s1003( const std::wstring& s );
-static std::wstring s287( const std::wstring& s77, size_t &pos );
+void s284( s1905& s77 );
+void s285( s1905& s77 );
+void s286( s1905& s340, const s6::s141& obj );
+void s1003( s1905& s );
+static std::wstring s287( s1905& s77, size_t &pos );
 public:
 enum s17 { s18, s149 };
 s263(){ }
-s263( s224 at, const std::wstring& qpre, const std::wstring& s76 )
+s263( s224 at, s1905& qpre, s1905& s76 )
 : s277( qpre ), s1674( s76 ), s279( at ), s2107( NULL ), s2112( NULL ){ }
-s263( const std::wstring& s76, const std::wstring& s349 )
+s263( s1905& s76, s1905& s349 )
 : s1674( s76 ), s279( s225 ), s280( s349 ), s2107( NULL ), s2112( NULL ){ }
-s263( const std::wstring& s340, const s6::s141* s1053, s263* s2108 );
-s263( const std::wstring& s76, const s6::s141& s296, s263* s592 );
+s263( s1905& s340, const s6::s141* s1053, s263* s2108 );
+s263( s1905& s76, const s6::s141& s296, s263* s592 );
 s263( const s6::s143& s133 );
 ~s263();
 s224 s297() const { return s279; }
 void s1872( s224 t ) { s279 = t; }
 std::wstring s298() const;
-const std::wstring& s299() const { return s1674; }
-const std::wstring& Src() const { return src; }
+s1905& s299() const { return s1674; }
+s1905& Src() const { return src; }
 const s6::s141* Nqj() const { return s1053.s15<s6::s141*>(); }
 s263* s2098() { return s2107; }
 s263* s2099() { return s2112; }
@@ -891,21 +895,21 @@ void s2123( const s263& s701 );
 s1061 s1309() const { return s1350; }
 void s1344( s1061 t) { s1350 = t; }
 void reset();
-static void s288( const std::wstring& s77, size_t& pos, std::vector<std::wstring>& s153 );
+static void s288( s1905& s77, size_t& pos, std::vector<std::wstring>& s153 );
 void s289( s6::s143& s133 );
 void s286( s263* node );
 void s290( s262* s300, size_t s301 = 0 );
-const std::wstring& s291() const { return s280; }
-const s263* s292( const std::wstring& s278 ) const;
+s1905& s291() const { return s280; }
+const s263* s292( s1905& s278 ) const;
+bool s156( s1905& s278 ) const;
 s275& s293() { return s281; }
 const s275& s293() const { return s281; }
-void s294( const std::wstring& s ) { s1674 = s; }
-void s1768( const std::wstring& s ) { s280 = s; }
+void s294( s1905& s ) { s1674 = s; }
+void s1768( s1905& s ) { s280 = s; }
 static std::wstring s295( const s6::s143& obj,
-const std::wstring& dfault = std::wstring( L"" ) );
+s1905& dfault = std::wstring( L"" ) );
 static std::wstring s302( const s6::s143& obj,
-const std::wstring& s303,
-const std::wstring& dfault = std::wstring( L"" ) );
+s1905& s303,	s1905& dfault = std::wstring( L"" ) );
 void s304( std::wostream* pd, int s197 = 0 ) const;
 };
 } // namespace transd
@@ -1017,7 +1021,7 @@ bool s656( const std::wstring& s, bool s714 = true );
 } // namespace tdlang
 extern const std::wstring s471;
 enum s472 { s473, s474, s475, s1337, s476, s1245, s1246, 
-s477, s478, s479, s480, s481, s1063 };
+s477, s478, s479, s480, s481, s1063, s2166 };
 enum s1999 { s2047 = 0, s2048, s2046, s2045 };
 enum s1998 { s2054 = 0, s2050, s2051, s2052, s2053 };
 #define s1984 5
@@ -1039,7 +1043,6 @@ typedef s1::s9<s483> s486;
 typedef s1::s9<s272> s487;
 typedef s1::s9<s591> s488;
 class s813;
-typedef const std::wstring s1905;
 typedef std::map<std::wstring, std::vector<std::wstring>> s926;
 extern s926 s993;
 class s271
@@ -1128,7 +1131,8 @@ std::vector<s271*>(), const s263* ast_ = NULL ) const = 0;
 virtual s483* s355( s272* s588, const std::vector<s1061>& vt ) const;
 virtual std::wstring s298() const;
 virtual std::wstring s834() const;
-virtual s483* s344( s1905& s278, s1905& s334,	bool s520 = true ) const {	return NULL;}
+virtual s483* s344( s1905& s278, s1905& s334,	bool s520 = true, bool s2167 = true ) const 
+{	return NULL;}
 virtual s591* s1685( s1905& s278, s591* s215,	s561* cs ) const;
 virtual void s356( s271* p ) const = 0;
 virtual s483* s1536( const s483* p ) const;
@@ -1306,6 +1310,7 @@ void s544( std::vector<std::wstring>& s153 ) const;
 void s545( std::vector<std::wstring>& s153 ) const;
 void s546( std::vector<std::wstring>& s153 ) const;
 void s547( const s482& t, std::vector<std::wstring>& s153 ) const;
+bool implements( const s482& t ) const;
 void copy( s482& t, s272* s588, s591* s587, s145 ap = s146 ) const;
 void s548( s482& t ) const;
 void s1613( s482& t ) const;
@@ -2097,7 +2102,7 @@ const s483* s503() const override { return s625; }
 const s272* s636() const { return s626; }
 s1905& s637() const { return s627; }
 s483* s344( s1905& s278, s1905& s334,
-bool s520 = true ) const override;
+bool s520 = true, bool s2167 = true ) const override;
 s591* s1685( s1905& s278, s591* s215,	s561* cs ) const override;
 void s645( s263& s701 );
 void s555( s1905& s76, s1905& s558 );
@@ -5484,7 +5489,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.436"
+#define TRANSD_VERSION L"0.437"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );

@@ -1755,6 +1755,7 @@ DEFCONST s449 = L"private";
 DEFCONST s450 = L"secure";
 DEFCONST s451 = L"class";
 DEFCONST s452 = L"module";
+DEFCONST s2161 = L"interface";
 DEFCONST s453 = L"AssemblyDescription";
 DEFCONST s454 = L"ProgramText";
 DEFCONST s455 = L"Export";
@@ -1785,6 +1786,7 @@ DEFCONST s739 = L"packages";
 DEFCONST s470 = L"searchDirs";
 DEFCONST s936 = L"@attrs";
 DEFCONST s1983 = L"restrictions";
+DEFCONST s2160 = L"@impl";
 DEFCONST s1989 = L"FileRead";
 DEFCONST s1990 = L"FileWrite";
 DEFCONST s1988 = L"FileAll";
@@ -1838,13 +1840,14 @@ s928 s1687			= 1704;
 s928 s1555			= 1710;
 s928 s1599	= 1715;
 s928 s1904	= 1716;
+s928 CLObjectVal_ctor1				= 1810;
 s928 s1598				= 1824;
 s928 s1688					= 1904;
 s928 s1702				= 2025;
 s928 s1892				= 2103;
 s928 s1937				= 2210;
 s928 s1936					= 2310;
-s928 CLObjectVal_ctor1				= 2410;
+s928 s2159			= 2410;
 set<wstring> s1123 = { s1124, s1391, s1392, s1373, s833, s433,
 s434, s435, s765, s749, s795, s436, s437, s832, s940, s1140,
 s1356, s1391, s1392, s1601, L"and", L"or"
@@ -1909,10 +1912,10 @@ const wstring s1618 = L"sleep";
 const wstring s1614 = L"diag";
 const wstring s1886 = L"rand";
 const s141 s265(L"AttrNA");
-s263::s263( const std::wstring& s, const s141* s6, s263* s2108 )
+s263::s263( s1905& s, const s141* s6, s263* s2108 )
 : s1053( (s141*)s6 ), s2107( s2108 ), s2112( NULL ){
 s1003( s );}
-s263::s263( const std::wstring& s676, const s6::s141& s296, s263* s592 )
+s263::s263( s1905& s676, const s6::s141& s296, s263* s592 )
 : s1674( s676 ), s1053( (s141*)&s296 ), s2107( NULL ), s2112( s592 ){
 if( s296.s164() == s134 ) {
 wstring s = s296.s169();
@@ -1956,7 +1959,7 @@ void s263::reset(){
 s281.clear();
 s266.clear();
 s277 = s1674 = s280 = src = L"";}
-void s263::s1003( const wstring& s ){
+void s263::s1003( s1905& s ){
 size_t pos = 0;
 wstring s1184 = L"\"'-+[{<";
 if( s.empty() ) {
@@ -1975,7 +1978,7 @@ s77 = s52( s, s48 );
 s284( s77 );}
 else
 throw new s16( L"Unknown string content: " + s );}
-void s263::s282( const std::wstring& s77 ){
+void s263::s282( s1905& s77 ){
 src = s77;
 size_t pos = 0;
 vector<wstring> s677;
@@ -1987,11 +1990,11 @@ size_t s68 = 0;
 s280 = s287( s677[0], s68 );
 for( size_t n = 1; n < s677.size(); n++ )
 s281.insert( make_pair( to_wstring( n - 1 ), new s263( s677[n], s1053, this ) ) );}
-void s263::s284( const std::wstring& s77 ){
+void s263::s284( s1905& s77 ){
 src = s77;
 s279 = s225;
 s280 = s77;}
-void s263::s285( const std::wstring& s77 ){
+void s263::s285( s1905& s77 ){
 src = s77;
 s279 = s228;
 s280 = s77;}
@@ -2030,7 +2033,7 @@ else {
 s281.insert( make_pair( s658, new s263( obj ) ) );}}
 void s263::s286( s263* node ){
 s281.insert( make_pair( node->s299(), node ) );}
-void s263::s286( const std::wstring& s76, const s141& s349 ){
+void s263::s286( s1905& s76, const s141& s349 ){
 s281.insert( make_pair( s76, new s263( s76, s349, this ) ) );}
 void s263::s290( s262* s300, size_t s301 /*= 0*/ )
 {
@@ -2040,25 +2043,19 @@ if( it->second->s297() == s227 ) {
 if( s301 == 0 ) {
 it->second->s290( s300, 1 );}
 else {}}}}
-const s263* s263::s292( const std::wstring& s76 ) const{
+bool s263::s156( s1905& s76 ) const{
+if( s281.find( s76 ) == end( s281 ) )
+return false;
+return true;}
+const s263* s263::s292( s1905& s76 ) const{
 size_t s684 = s281.count( s76 );
 if( s684 > 1 )
 throw new s16( L"multiple values: " + s76, (uint32_t)s149 );
 if( s684 == 1 ) {
 auto s685 = s281.find( s76 );
 return s685->second.s15<s263*>();}
-throw new s16( L"node not found: " + s76, (uint32_t)s16::s17::s23 );
-s275::const_iterator it = s281.begin();
-for( ; it != s281.end(); ++it ) {
-try {
-const s263* s685 = it->second->s292( s76 );
-return s685;}
-catch( s16* e ) {
-if( e->which() == (uint32_t)s16::s17::s23 )
-continue;
-throw e;}}
 throw new s16( L"node not found: " + s76, (uint32_t)s16::s17::s23 );}
-void s263::s288( const wstring& s77, size_t& pos, vector<wstring>& s153 ){
+void s263::s288( s1905& s77, size_t& pos, vector<wstring>& s153 ){
 size_t s74, s75;
 s54( s77, pos, L'(', L')', s74, s75, true );
 if( s74 != pos || s75 == string::npos )
@@ -2965,7 +2962,7 @@ s553.clear();}
 void s482::s500( s272* s879, bool s516/*= true*/ )
 {
 for( auto sym : s553 ) {
-if( sym.second->s494() != s476 ) {
+if( sym.second->s494() != s476 && sym.second->s494() != s2166 ) {
 try {
 sym.second->s500( s879 );}
 catch( TDException* e ) {
@@ -3073,6 +3070,11 @@ vector<wstring>& s153 ) const{
 for( auto sym : s553 ) {
 if( t.s156( sym.first ) )
 s153.push_back( sym.first );}}
+bool s482::implements( const s482& t ) const{
+for( auto sym : t.s553 ) {
+if( !s156( sym.first ) )
+return false;}
+return true;}
 void s482::s289( const s482& t, s145 ap /*= s146*/ )
 {
 if( ap != s147 ) 
@@ -5403,7 +5405,7 @@ s629( proto.s629 ), //s633( s687 ),
 s631( proto.s631 )//, s1360( ++s1361 )
 {
 s493 = proto.s493;
-if( s492 == s478 )
+if( s492 == s478 || s492 == s2166 )
 s492 = s480;
 if( proto.s626 )
 proto.s626->s643( this );
@@ -5435,20 +5437,21 @@ s628( am ), s629( NULL )//, s1360( ++s1361 ) //,s633( *new s482() )
 if( s278.find( L" " ) != string::npos )
 throw new s16( L"Malformed class name: " + s278 );
 s625 = this;
-if( pc == s478 ) {
-wstring anc = L"";
-try {
-const s263* s693 = s701.s292( s7::s469 );
-anc = s693->s291();}
-catch( s16* e ) {
-if( e->which() != (uint32_t)s16::s17::s23 )
-throw e;}
-cnl.push_back( make_pair( s701.s299(), anc ) );
+if( pc == s478 || pc == s2166 ) {
 if( cl.find( s701.s299() ) != cl.end() )
 throw new s16( L"class already exists: " + s701.s299() );
+size_t s2165 = cnl.size();
+if( s701.s156( s7::s469 ) ) {
+wstring anc = s701.s292( s7::s469 )->s291();
+cnl.push_back( make_pair( s701.s299(), anc ) );}
+if( s701.s156( s7::s2160 ) ) {
+wstring s2162 = s701.s292( s7::s2160 )->s291();
+cnl.push_back( make_pair( s701.s299(), s2162 ) );}
+if( cnl.size() == s2165 )
+cnl.push_back( make_pair( s701.s299(), L"" ) );
 cl.insert(make_pair(s701.s299(), this));}
 if( al.find( s701.s299() ) != al.end() )
-throw new s16( L"object already exists: " + s701.s299() );
+throw new s16( L"module already defined: " + s701.s299() );
 al.insert(make_pair(s701.s299(), &s701));
 s506( L"proto" );
 s263::s275& s702 = s701.s293();
@@ -5517,6 +5520,7 @@ bool
 s272::s730( s1905& f ) const{
 return s628.s156( f );}
 void s272::s154( s263& s701 ){
+TDException s968( s7::s2159, s932, &s701 );
 s263::s275& s702 = s701.s293();
 s263::s275::iterator it = s702.begin();
 for( ; it != s702.end(); ++it ) {
@@ -5536,12 +5540,14 @@ if( s689 != string::npos ) {
 vector<wstring> s688;
 s4::s57( s76, wstring( 1, s76[s689] ), s688 );
 if( s688.size() > 2 )
-throw new s16( L"malformed object declaration: " + s76 );
+throw s968.s1000( L"malformed object declaration: " + s76 );
 if( s688[0] == s7::s1140 ) {
 s1203 = true;
 s76 = s688[1];}
 node->s294( s76 );}
-lang::s656( s76 );
+try { lang::s656( s76 ); }
+catch( s16* e ) {
+throw s968.s1000( e->Msg() );}
 s483* dv = NULL;
 try {
 dv = s300->TR().s518( *node, this, s278 );}
@@ -5562,6 +5568,10 @@ if( 0 && it->first.find( L"access" ) != 0 ) {
 s272* ob = (s272*)s628.get( it->first );
 ob->s154( *it->second );}}
 else if( node->s297() == s228 ) {
+if( node->s299() == s7::s2160 ) {
+s1061 s2164 = s300->TR().s1010( node->s291() );
+s628.s541( node->s291(), new s1529( s300, s2164 ) );
+continue;}
 s483* dv = new s359( s300, node->s291(), this, node );
 dv->s506( node->s299() );
 dv->s1260( true );
@@ -5594,8 +5604,16 @@ if( s492 == s478 ) {
 s1357* s1364 = new s1357( s300, this, NULL, NULL );
 s628.s541( s7::s1356, s1364 );
 s630.push_back( s1364 );
-s631.push_back( s371( s7::s1356, s300 ) );}}
+s631.push_back( s371( s7::s1356, s300 ) );
+if( s628.s156( s7::s2160 ) ) {
+s272* s2162 = (s272*)s628.get( s7::s2160 );
+wstring s2168 = s2162->to_wstring();
+if( !s628.implements( s2162->s628 ) )
+throw new s16( L"the '" + s278 + L"' class doesn't implement '" + s2168 + L"' interface" );
+s1061 s2163 = 0;
+s300->TR().s1162( s493, s2168, s2163 );}}}
 void s272::s500( const s272* s879, bool ){
+assert( s492 != s2166 );
 if( s492 == s478 || s492 == s479 ) {
 if( s627.size() ) {
 s626 = (s272*)s300->s222( s627, s879->s834() );
@@ -5857,10 +5875,12 @@ assert( 0 );
 return /*s277 + L"::" +*/ s278;
 }
 s483* s272::s344( s1905& s676, s1905& s334,
-bool s520 /*= true*/ ) const
+bool s520 /*= true*/, bool s2167 /*= true*/ ) const
 {
 s371 ref( s676, s300 );
 if( !s556( s676, &ref, s334, true ) )
+return NULL;
+if( !s2167 && ref.s381().s15<s272*>() != this )
 return NULL;
 return ref.s378();}
 s591* s272::s1685( s1905& s676, s591* s215,
@@ -6076,10 +6096,9 @@ s371* ref = (s371*)s703.s15<s484*>();
 s703 = (s483*)ref->s503();
 s710 = s703->s494();}
 try {
-assert( s710 != s479 );
+assert( s710 != s479 && s710 != s2166 );
 if( s710 == s480 || s710 == s478 ) {
-s707 = (s591*)s703.s15<s272*>()->s344( s601, s704,
-false );}
+s707 = (s591*)s703.s15<s272*>()->s344( s601, s704, false, false );}
 else if( s710 == s474 )
 s1237 = s703.s15<s336*>()->s1197( s601 );}
 catch( s16* e ) {
@@ -11618,8 +11637,8 @@ if( !s493 )
 s493 = s1152;
 return;
 s671 = proc ? s588->s298() : s1672->s298();
-if( s588->s494() == s479 || s588->s494() == s478 ) {
-if( s588->s494() == s478 )
+if( s588->s494() == s479 || s588->s494() == s478 || s588->s494() == s2166) {
+if( s588->s494() == s478 || s588->s494() == s2166 )
 return;}
 if( s274.size() > s630.size() )
 throw new s16( L"too many arguments" );
@@ -15069,6 +15088,8 @@ if( s688[idx] == s7::s451 )
 pc = s478;
 else if( s688[idx] == s7::s452 )
 pc = s479;
+else if( s688[idx] == s7::s2161 )
+pc = s2166;
 else
 throw new s16( L"unknown object type: " + s688[0] );
 if( s688.size() == 3 ) {
@@ -15432,7 +15453,7 @@ void s262::s1665( const wstring& s1633 ){
 vector<wstring> s1643;
 for( auto it = s628.Table().begin(); it != s628.Table().end(); ++it ) {
 s271* p = it->second.s15<s271*>();
-if( p->s494() == s479 || p->s494() == s478 ) {
+if( p->s494() == s479 || p->s494() == s478 || p->s494() == s2166) {
 wstring s189 = ( (s272*)p )->s641( s7::s1124, 
 L":::" )->to_wstring();
 if( s189 == s1633 )
