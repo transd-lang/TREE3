@@ -1760,6 +1760,7 @@ DEFCONST s453 = L"AssemblyDescription";
 DEFCONST s454 = L"ProgramText";
 DEFCONST s455 = L"Export";
 DEFCONST s456 = L"Require";
+DEFCONST MTTypeAlias = L"TypeAlias";
 DEFCONST s457 = L".td";
 DEFCONST s946 = L".tsd";
 DEFCONST s459 = L"MainModule";
@@ -2519,7 +2520,7 @@ size_t s685 = 0;
 for( auto i : vt )
 s685 = ( s685 << 7 ) ^ i;
 return s685;}
-size_t s491::s1056( const wstring& s, size_t& pos, s813::Cont& s153 ){
+size_t s491::s1056( s1905& s, size_t& pos, s813::Cont& s153 ){
 size_t s68 = pos;
 size_t s685 = 0;
 if( s[s68] == L' ' )
@@ -2565,7 +2566,7 @@ s685 += s1157( s1064, idx, *this );
 if( idx < s1064.size() )
 s685 += L" ";}
 return s685;}
-wstring s491::s1352( const wstring& tn ){
+wstring s491::s1352( s1905& tn ){
 wstring sv = tn;
 size_t s2126 = sv.find( L"(" );
 size_t b = sv.find( L'<' );
@@ -2676,7 +2677,7 @@ s1259[1] = L":Data";
 s1205 = 1;
 s1274.push_back( 0 );
 srand( (unsigned int)time(NULL) );}
-s1061 s491::s218( s483* p, const std::wstring& s347 ){
+s1061 s491::s218( s483* p, s1905& s347 ){
 if( s1097.find( s347 ) != s1097.end() )
 throw new s16( (uint32_t)s16::s17::s21 );
 s1096.push_back( s347 );
@@ -2689,7 +2690,7 @@ s1102[s1101.back()] = s1091;
 s1274.push_back( 1 );
 s1551.push_back( vector<s1061>() );
 return s1091;}
-void s491::s1666( const std::wstring& s347 ){
+void s491::s1666( s1905& s347 ){
 auto it = s1097.find( s347 );
 if( it == s1097.end() )
 throw new s16( (uint32_t)s16::s17::s23 );
@@ -2701,7 +2702,7 @@ s1102.erase( s1101[s1091] );
 s1101[s1091] = s813();
 s1274[s1091] = 0;
 s1551[s1091-1].clear();}
-s1061 s491::s1068( const s813::Cont& v, const std::wstring& s347 ){
+s1061 s491::s1068( const s813::Cont& v, s1905& s347 ){
 s813 vt( v );
 if( s1102.find( vt ) != s1102.end() )
 throw new s16( (uint32_t)s16::s17::s21 );
@@ -2756,7 +2757,7 @@ composite = true;
 break;}}
 if( !composite )
 return n;}}
-traitnum_t s491::s1252( const std::wstring& trait, s1061& s1510 ){
+traitnum_t s491::s1252( s1905& trait, s1061& s1510 ){
 auto it = s892.find( trait );
 if( it != end( s892 ) )
 return it->second;
@@ -2766,7 +2767,7 @@ s1259[s1205] = trait;
 s1510 = s7::s1554 + (s1061)s1511.size();
 s1511.push_back( s1205 );
 return s1205;}
-void s491::s1162( s813::s893 type, const wstring& trait, s1061& s1510 ){
+void s491::s1162( s813::s893 type, s1905& trait, s1061& s1510 ){
 traitnum_t tn;
 auto it = s892.find( trait );
 if( it == end( s892 ) ) {
@@ -2799,8 +2800,7 @@ for( size_t n = 0; n < v.size(); ++n ) {
 if( v[n] == is )
 return true;}
 return false;}
-void s491::s1171( const wstring& alias, const wstring& s347, 
-const wstring& s1840 ){
+void s491::s1171( s1905& alias, s1905& s347, s1905& s1840 ){
 assert( s1097.find( alias ) == end( s1097 ) );
 s1061 typid;
 auto it = s1097.find( s347 );
@@ -2821,26 +2821,32 @@ auto it1 = s1841.find( s1840 );
 if( it1 == s1841.end() )
 it1 = s1841.insert( make_pair( s1840, list<wstring>() ) ).first;
 it1->second.push_back( alias );}
-void s491::s1878( const std::wstring& s1112 ){
+void s491::s1878( s1905& s1112 ){
 auto it = s1841.find( s1112 );
 if( it != s1841.end() ) {
 for( auto it1 = it->second.begin(); it1 != it->second.end(); ++it1 ) {
 s1097.erase( *it1 );}}}
-wstring s491::s1275( const wstring& tn_ ){
+wstring s491::s1275( s1905& tn_, s1905& s1112 ){
 wstring s = tn_.substr(0, tn_.find_first_of( L" (" ));
 auto it = s1097.find( s );
 if( it == end( s1097 ) )
 return tn_;
 const wstring& tn = s1096[s1102[s1101[it->second]]];
 if( tn != s ) {
+auto it1 = s1841.find( s1112 );
+if( it1 != end( s1841 ) ) {
+if( std::find( it1->second.begin(), it1->second.end(), s ) == it1->second.end() ) {
+it1 = s1841.find( L"::" );
+if( std::find( it1->second.begin(), it1->second.end(), s ) == it1->second.end() )
+return tn_;}}
 wstring s685 = tn_;
 return s685.replace( 0, s.size(), tn );}
 return tn_;}
-s483* s491::s518( const s263& s701, s272* s588, const wstring& s519 ){
+s483* s491::s518( const s263& s701, s272* s588, s1905& s519 ){
 if( s701.s1309() )
 return s1113[s701.s1309()]->s354( s701, s588, s519 );
 wstring s349 = s701.s291();
-if( s349.substr(0,2) == L"[[" )
+if( s349.substr(0,2) == L"[[" && s959::checkIfTuple( s349 ) )
 return s1113[s1097[Types( s300, Types.Tuple )->s353()]]->s354( s701, s588, s519 );
 else if( s349[0] == L'[' )
 return s1113[s1097[Types( s300, Types.Vector )->s353()]]->s354( s701, s588, s519 );
@@ -2874,7 +2880,7 @@ if( it1 == end( s892 ) )
 throw new s16( L"Type does not exist: " + s349, (uint32_t)s16::s17::s23 );
 return new s384( s300, s588, it1->second, s1246 );}
 return s1113[it->second]->s354( s701, s588, s519 );}
-s483* s491::s518( s1061 s340, s272* s588, const wstring& s519 ){
+s483* s491::s518( s1061 s340, s272* s588, s1905& s519 ){
 if( s340 >= s7::s1554 ) {
 auto it = s1259.find( s340 - s7::s1554 );
 if( it != end( s1259 ) )
@@ -2888,7 +2894,7 @@ if( s1101[s340].s819().size() == 1 )
 return s1113[type]->s355( s588 );
 else {
 return s1113[type]->s355( s588, s1101[s340].s819() );}}
-const s483* s491::get( const wstring& s76, bool s520/*= true*/ ) const
+const s483* s491::get( s1905& s76, bool s520/*= true*/ ) const
 {
 wstring s347 = s76;
 size_t pl = s76.find( L"<" );
@@ -2901,7 +2907,7 @@ throw new s16( L"1: symbol not found: " + s76 );
 else
 return NULL;}
 return s1113[s685->second].s15<const s483*>();}
-bool s491::s156( const std::wstring& s76 ) const{
+bool s491::s156( s1905& s76 ) const{
 if( s1097.find( s76 ) == s1097.end() )
 return false;
 return true;}
@@ -2909,7 +2915,7 @@ const wstring& s491::s804( s1061 n ) const{
 if( n >= s1096.size() )
 throw new s16( L"no type with such ordinal: " + std::to_wstring( n ) );
 return s1096[n];}
-s1061 s491::s1010( const std::wstring& s347, bool s520 ) const{
+s1061 s491::s1010( s1905& s347, bool s520 ) const{
 auto it = s1097.find( s347 );
 if( it == s1097.end() ) {
 if( s520 )
@@ -3011,7 +3017,7 @@ if( it1 == end( t.s553 ) )
 t.s553[it->first] = it->second;
 else
 it->second.s15<s483*>()->s356( it1->second.s15<s271*>() );}}}
-bool s482::s538( const std::wstring& s76, s145 ap /*= s146*/ )
+bool s482::s538( s1905& s76, s145 ap /*= s146*/ )
 {
 if( s553.find( s76 ) != s553.end() ) {
 wstring rep = s7::s421 + L" name already exists: " + s76;
@@ -3022,11 +3028,11 @@ return false;}
 else if( ap == s148 ) {
 return false;}}
 return true;}
-void s482::s541( const std::wstring& s76, s271* sym, s145 ap/*= s146*/ )
+void s482::s541( s1905& s76, s271* sym, s145 ap/*= s146*/ )
 {
 if( (ap == s147) || s538( s76, ap ) )
 s553[s76] = sym;}
-void s482::s541( const std::wstring& s76, s142 s349, s145 ap/*= s146*/ )
+void s482::s541( s1905& s76, s142 s349, s145 ap/*= s146*/ )
 {
 throw new s16( (uint32_t)s16::s17::s21 );}
 void s482::s542( const std::wstring& s76 ){
@@ -3040,11 +3046,11 @@ vector<pair<wstring, s142>> s144;
 s79.s160( s144 );
 for( size_t n = 0; n < s144.size(); ++n )
 s541( s144[n].first, s144[n].second );}
-bool s482::s156( const std::wstring& s76 ) const{
+bool s482::s156( s1905& s76 ) const{
 if( s553.find( s76 ) == s553.end() )
 return false;
 return true;}
-s483* s482::get( const wstring& s76, bool s520/*= true*/ ) const
+s483* s482::get( s1905& s76, bool s520/*= true*/ ) const
 {
 auto s685 = s553.find( s76 );
 if( s685 == s553.end() ) {
@@ -3086,7 +3092,7 @@ void s482::s549( s512 pv, s263* s79 ){
 if( !s539 )
 s539 = new s526();
 s539->s529( pv, s79 );}
-void s482::s533( const wstring& s334, vector<wstring>& s153 ){
+void s482::s533( s1905& s334, vector<wstring>& s153 ){
 for( s535::iterator it = s553.begin(); it != s553.end(); ++it ) {
 s512 pv = s513;
 if( s539 )
@@ -3103,8 +3109,7 @@ else
 pv = s515;}}
 if( pv == s514 )
 s153.push_back( it->first );}}
-bool s482::s550( const std::wstring& s278,
-const std::wstring& s334 ) const{
+bool s482::s550( s1905& s278,	s1905& s334 ) const{
 if( s539 ) {
 s512 pv = s539->s532( s278, s334 );
 if( pv == s514 )
@@ -3144,7 +3149,7 @@ it->second->s304( &buf, s419 * 2 );
 buf << endl;}}
 return buf.str();}
 s551::s551(){}
-void s551::s500( s262* s300, const wstring& s558 ){
+void s551::s500( s262* s300, s1905& s558 ){
 s334 = s558;
 for( size_t n = 0; n < s559.size(); ++n ) {
 wstring s76 = s559[n];
@@ -3154,18 +3159,18 @@ for( size_t m = 0; m < s153.size(); ++m ) {
 s76 = s76.substr( 0, s76.find( L"::" ) );
 s553.insert( make_pair( s153[m], make_pair( (s483*)s300->s641( 
 s559[n],	s558 ), s76) ) );}}}
-void s551::s555( const wstring& s76, s262* s300, const wstring& s558 ){
+void s551::s555( s1905& s76, s262* s300, s1905& s558 ){
 s559.push_back( s76 );
 vector<wstring> s153;
 s300->s219( s76, s558, s153 );
 for( size_t n = 0; n < s153.size(); ++n )
 s553.insert( make_pair( s153[n], make_pair( (s483*)s300->s641( 
 s76,	s558 ), s76 ) ) );}
-void s551::s554( const std::wstring& s ){
+void s551::s554( s1905& s ){
 if( s[0] != L'"' || s[s.size() - 1] != L'"' )
 throw new s16( L"Unrecognized import syntax: " + s );
 s559.push_back( s.substr(1, s.size() - 2 ) );}
-bool s551::s556( const std::wstring& sym, s371* ref ){
+bool s551::s556( s1905& sym, s371* ref ){
 wstring mod, mem;
 size_t pl = sym.rfind( L"::" );
 if( pl != string::npos ) {
@@ -3200,9 +3205,17 @@ void s551::copy( s551& t ) const{
 for( s535::const_iterator it = s553.begin(); it != s553.end(); ++it )
 t.s553.insert( make_pair( it->first, it->second ) );}
 s521::s521( s512 pv_, const vector<wstring>& s523 )
-: s522( s523 ), pv( pv_ ){}
-s521::s521( const wstring& ag_, const wstring& s77 ){}
-s512 s521::s560( const std::wstring& s499 ) const{
+: pv( pv_ ){
+for( auto p : s523 ) {
+if( p.empty() )
+throw new s16( L"empty values in permissions list are not allowed" );
+if( p[0] == L'"' ) {
+if( p.size() < 3 || p[p.size()-1] != L'"' )
+throw new s16( L"unmatched quotes in a value in permission list" );
+p = p.substr( 1, p.size() - 2 );}
+s522.push_back( p );}}
+s521::s521( s1905& ag_, s1905& s77 ){}
+s512 s521::s560( s1905& s499 ) const{
 for( size_t n = 0; n < s522.size(); ++n )
 if( s522[n] == s499 || s522[n] == L"_" )
 return pv;
@@ -3218,9 +3231,9 @@ vector<wstring> s153;
 wstring s72( s1118, 1 );
 s4::s57( l, s72, s153 );
 s528[it->first] = new s521( pv, s153 );}}
-void s526::s530( const std::wstring& s, s521& pl ){}
-void s526::s531( const std::wstring& s, const std::wstring& s524 ){}
-s512 s526::s532( const std::wstring& mem, const std::wstring& s499 ){
+void s526::s530( s1905& s, s521& pl ){}
+void s526::s531( s1905& s, s1905& s524 ){}
+s512 s526::s532( s1905& mem, s1905& s499 ){
 s527::iterator it = s528.find( mem );
 if( it == s528.end() )
 return s513;
@@ -6036,7 +6049,16 @@ par = s274[s1363];
 s472 pc = par->s494();
 if( pc == s475 ) {
 try {
-par->s500( s215, true );}
+if( !proc ) {// ??DEBUG??? 220214
+if( s215->s834() == s588->s298() )
+par->s500( s215, true );
+else
+par->s500( s588, true );}
+else {
+if( s215->s834() == s588->s298() )
+par->s500( s215, true ); 
+else
+par->s500( s588, true ); }}
 catch( TDException* e ) {
 if( e->Category() != s930 || (
 ( (s371*)par )->s617()[0] != L':' && ( (s371*)par )->s617().back() != L':' ) )
@@ -6050,7 +6072,7 @@ s703 = ( (s371*)par )->s377();}}
 else {
 if( pc == s477 ) {
 s490 cs = new s561( *(s561*)par );
-par = s600( cs, s300, s588, s215, s558, proc );
+par = s600( cs, s300, s588, s215, s558, false ); // ???DEBUG??? 220214
 ( (s591*)par )->s500( s588, false );}
 else {
 par->s500( s215 );}}
@@ -6069,10 +6091,10 @@ if( s1451 != end( s1371 ) )
 return s300->s214( s1451->second, s274, s588, s215, cs->s603() );}
 else {
 wstring s2138 = s601.substr( pl + 1, s601.size() - pl - 2 );
-wstring s619 = s300->TR().s1275( s2138 );
+wstring s619 = s300->TR().s1275( s2138, s558 );
 s601 = s601.substr( 0, pl );
 if( s619 != s2138 ) {
-s2138 = s300->TR().s1352( s300->TR().s1275( s2138 ) );
+s2138 = s300->TR().s1352( s300->TR().s1275( s2138, s558 ) );
 ((s263*)cs->s603())->s1768( s601 + L"<" + s2138 + L">" );}
 try {
 s1061 pt = s300->TR().s1010( s619, false );
@@ -6335,6 +6357,7 @@ s591::s1242( s274, ((s336*)s274[0]->s496())->s1191( s278 ) );}
 if( par->s494() == s475 ) {
 if( par.s15<s371*>()->s381().s13() ) {
 s487 s1675 = s588;
+if( s1672 != this )  // ???DEBUG??? 220214
 s588 = (s272*)s1672;
 par.s15<s371*>()->s500( this, false );
 s588 = s1675;}
@@ -6366,7 +6389,7 @@ else // lambda - ?
 throw new s16( L"unhandled expression" );}
 for( auto it : s584 ) {
 if( it->s494() == s476 )
-it.s15<Transd*>()->s500( s588, true );
+it.s15<Transd*>()->s500( /*s588*/s1672, true );
 else if( it->s494() == s1245 )
 it.s15<Transd*>()->s500( s587, true );}
 if( !s493 && s584.size() ) {
@@ -6571,7 +6594,7 @@ for( size_t n = 0; n < s274.size(); ++n ) {
 s271* par = s274[n];
 if( par->s494() == s477 ) {
 s490 cs = new s561( *(s561*)par );
-par = s600( cs, s300, s588, /*this*/s587, s588->s298(), false );
+par = s600( cs, s300, (s272*)s1672, /*this*/s587, s588->s298(), false ); // ???DEBUG??? 220214
 ((s591*)par)->s500( s1672, false );
 s274[n] = par;}
 if( s274[n]->s494() == s481 ) {
@@ -6727,7 +6750,7 @@ s586 = s588.s15<s272*>();
 s493 = s586->s352();
 s1262();}
 s486 s1357::s497( s483** s691, size_t s697 ){
-s597( s588 );
+s597( s587 );
 s483* s685 = NULL;
 if( s588->s352() == s1716 ) {
 s685 = new s838( *s588.s15<s838*>(), ns, s588.s15<s591*>(), s274, s603() );
@@ -8874,7 +8897,7 @@ throw s968.s1000( L"vector's element type doesn't match the vector type" );}}}
 s483* s316::s354( const s263& s701, s272* s588, s1905& s334 ) const{
 TDException s968( s7::s1300, s932, &s701,
 L"wrong Vector constructor syntax" );
-wstring s = s300->TR().s1275( s701.s291() );
+wstring s = s300->TR().s1275( s701.s291(), s334 );
 wstring sv;
 wstring s347 = s353();
 wstring s1273, s644;
@@ -8889,7 +8912,7 @@ sv = s;}
 else if( s.find( s347 ) == 0 && s[s.size() - 1] == L')' ) {
 if( s.find( L'<' ) == string::npos )
 throw s968.s1000( L"missing element type" );
-s1161( s300, s, s1273, s644 );
+s1161( s300, s300->TR().s1352( s ), s1273, s644 );
 if( !s644.empty() && ( s644[0] == L'[' || s644[0] == L']' ) )
 sv = s644;
 if( !s1273.empty() )
@@ -9004,6 +9027,22 @@ void s316::s356( s271* p ) const{
 s316* pv = (s316*)p;
 pv->s349.assign( s349.begin(), s349.end() );
 pv->s1679( wh );}
+s483* s316::s1536( const s483* p ) const{
+if( s352() == p->s352() ) {
+s483* s685 = (s483*)p->s335();
+return s685;}
+else if( s300->TR().s1465( p->s352(), s1512::s1507 ) ) {
+const s483* proto = s300->TR().s1007( s317 );
+s316* s685 = (s316*)proto->s335( ns );
+if( proto->s494() == s480 ) {
+Iterator* s1020 = ( (s326*)p )->s314( NULL );
+while( 1 ) {
+s485 pEl = s1020->s315();
+if( pEl.s13() )
+break;
+s685->s349.push_back( (s484*)proto->s355( ns, vector<s271*>( { pEl } ), s603() ) );}}
+s685->s1262();}
+throw new s16( L"no conversion from '" + s353() + L"' to '" + p->s353() + L"'" );}
 Iterator* s316::s1164( const s483* idx ){
 s1418::iterator it;
 int i = (int)*idx;
@@ -9519,7 +9558,7 @@ s317 = right.s317;
 s1200 = right.s1200;
 s325 = right.s325;}
 s483* s959::s354( const s263& s701, s272* s588, s1905& s334 ) const{
-wstring s = s300->TR().s1275( s701.s291() );
+wstring s = s300->TR().s1275( s701.s291(), s334);
 wstring sv;
 wstring s347 = s353();
 if( s.find( L"[[" ) == 0 )
@@ -9747,6 +9786,17 @@ s271* s959::s335( s483* s2124 ) const{
 return new s959( *this );}
 void s959::s356( s271* p ) const{
 *p = *this;}
+bool s959::checkIfTuple( s1905& s ){
+if( s.size() < 4 )
+return false;
+if( s[0] != L'[' || s[1] != L'[' )
+return false;
+size_t pl = s.rfind( L",[" );
+if( pl == string::npos ) {
+return ( s[1] == L'[' );}
+int cntl = (int)s4::count( s, L"[", pl, string::npos, true );
+int cntr = (int)s4::count( s, L"]", pl, string::npos, true );
+return ( cntr - cntl > 1 );}
 wstring s959::to_wstring( uint32_t s1565 ) const{
 wstring s685 = L"[[";
 if( s618() == s7::s868 )
@@ -9832,7 +9882,7 @@ s349.push_back( (tdbyte_t)s163 );}}}
 s483* s1292::s354( const s263& s701, s272* s588, s1905& s334 ) const{
 TDException s968( s7::s1296, s932, &s701,
 L"wrong ByteArray constructor syntax" );
-wstring s = s300->TR().s1275( s701.s291() );
+wstring s = s300->TR().s1275( s701.s291(), s334 );
 wstring sv;
 wstring s347 = s353();
 if( s[0] == L'[' && s[s.size() - 1] == L']' )
@@ -11632,7 +11682,7 @@ s493 = 0;// Types.Null;
 }
 void
 s605::s500( const s272* s1672, bool proc ){
-s591::s500( s1672, proc );
+s591::s500( this, proc ); // ???DEBUG??? 220214
 if( !s493 )
 s493 = s1152;
 return;
@@ -12043,10 +12093,10 @@ s630.push_back( s2109->s335( this ) );
 s628.s541( ref->s617(), s630.back().s15<s484*>() );}}}
 s584.insert( s584.end(), l.begin() + n, l.end() );
 s1679( s1901.s618() );}
-s483* s838::s354( const s263& s701, s272* s588, const std::wstring& s334 ) const{
+s483* s838::s354( const s263& s701, s272* s588, s1905& s334 ) const{
 TDException s968( s7::s1892, s932, &s701,
 L"wrong Lambda constructor syntax" );
-wstring s = s300->TR().s1352( s300->TR().s1275( s701.s291() ));
+wstring s = s300->TR().s1352( s300->TR().s1275( s701.s291(), s334 ));
 wstring sv;
 wstring s773 = Types( s300, Types.Lambda )->s353();
 wstring s1273, s644;
@@ -12151,7 +12201,7 @@ s1061 pt = s300->TR().s1046( vt );
 return new s838( s300, s588, vt, pt, NULL );}
 s483* s838::s355( s272* s588, const std::vector<s271*>& l, const s263* ast_ ) const{
 return new s838( s300, s588, (s591*)s588, l, ast_ );}
-s591* s838::s1685( const std::wstring& s676, s591* s215, 
+s591* s838::s1685( s1905& s676, s591* s215, 
 s561* cs ) const{
 if( s676 == L"new" ) {
 if( cs->s602().size() > 1 && (cs->s602()[1]->s494() != s475 ||
@@ -14915,7 +14965,7 @@ memset( s2041, 0, s1984 * sizeof( s1999 ) );
 if( s2049.empty() )
 s2049 = { s7::s1994, s7::s1997, s7::s1996,
 s7::s1995 };}
-s1999 s1987::s2003( const wstring& s2039 ){
+s1999 s1987::s2003( s1905& s2039 ){
 auto it = std::find( begin(s2049), end(s2049), s2039 );
 size_t n = std::distance( begin(s2049), it );
 if( n == string::npos )
@@ -15001,7 +15051,7 @@ s1317, s255, s233 };
 for( size_t n = 1; n < s1372.size(); ++n )
 s1371[s1372[n]] = (int)n;}}
 static s6::s1695 s1770( L".", L",", true, true, true );
-void s262::s202( const std::wstring& s657, s722& s153 ) {
+void s262::s202( s1905& s657, s722& s153 ) {
 vector<s9<s143>> s662;
 s948 s1051 = new s945( s657, true, s1770 );
 s1051->read( s662, s7::s418 );
@@ -15019,7 +15069,7 @@ const s143& s133 = (*s662[n]).s158( s7::s1983 )->s166();
 s2040.s2056( s133 );}}}
 if( s153.s663.empty() )
 s153.s663.push_back( s657 );}
-wstring s717( const wstring& s753, const wstring& s756 ){
+wstring s717( s1905& s753, s1905& s756 ){
 if( s3::s724( s756 ) )
 return s756;
 if( !s3::s724( s753 ) )
@@ -15042,7 +15092,7 @@ path = path.size() > 3 ? path.substr( 3 ) : L"";}
 else
 throw new s16( L"The relative path '" + s756 + L"' is incompatible with the root '" + s753 + L"'." );}
 return root + path;}
-void s262::s213( const std::wstring& s194, const s143& obj ){
+void s262::s213( s1905& s194, const s143& obj ){
 const vector<s142>& s729 = ( obj ).s158( s7::s470 )->s167();
 const vector<s142>& packs = ( obj ).s158( s7::s739 )->s167();
 vector<wstring> s41;
@@ -15070,6 +15120,15 @@ s4::s289( matches, L",\n", s738 );
 throw new s16( L"The required library's name '" + req + L"' is ambiguous: \n" + s738 );}
 if( std::find( s199.begin(), s199.end(), matches[0] ) == s199.end() )
 s199.push_back( matches[0] );}}}
+void s262::_processTypeAlias( const s143& obj ){
+vector<pair<wstring, s142>> s144;
+obj.s160( s144 );
+for( size_t n = 0; n < s144.size(); ++n ) {
+if( s144[n].first == s7::s465 )
+continue;
+s947 past = new s263( s144[n].first, *s144[n].second, NULL );
+s483* dv = (s483*)s271::s504( *past, s300, (s272*)this, L"::" );
+dv->s1262();}}
 void s675( s262* s300, s263& s701, s482& s659,
 s623& cl, s622& cnl, s624& al ){
 s263::s275& s702 = s701.s293();
@@ -15103,7 +15162,7 @@ s658 = s688[2];}
 it->second->s294( s658 );}
 s272* ob = new s272( *it->second, s300, pc, s300, am, cl, cnl, al );
 s659.s541( ob->s299(), ob );}}
-void s262::s209( const wstring& s661, bool s1902 ){
+void s262::s209( s1905& s661, bool s1902 ){
 s722 s646;
 s263* s208 = new s263();
 wstring s189 = s4::s746( s661 );
@@ -15149,6 +15208,8 @@ s1051->read( s662, s7::s418 );
 for( size_t m = 0; m < s662.size(); m++ ) {
 if( s263::s302( *s662[m], s7::s465 ) == s7::s456 )
 s213( s199[n], *s662[m] );
+else if( s263::s302( *s662[m], s7::s465 ) == s7::MTTypeAlias )
+_processTypeAlias( *s662[m] );
 else if( s263::s295( *s662[m], s7::s454 ) == s7::s454 ) {
 s662[m]->s159( s7::s1124, new s6::s141( L"\"" 
 + s199[n] + 
@@ -15205,7 +15266,7 @@ void s262::s211( s143& obj ){
 s263 s208;
 s208.s289( obj );
 s207( s208 );}
-void s262::s1650( const std::wstring& s671 ){
+void s262::s1650( s1905& s671 ){
 s483* pd = s628.get( s671 );
 if( pd->s494() == s479 )
 ((s272*)pd)->s1649();}
@@ -15226,7 +15287,7 @@ mod->s851( s7::s1572, s911 );
 mod->s851( s7::s829, new s346( this, (int)s691.size() ) );}
 vector<wstring> l;
 return callFunc( s200, l );}
-s483* s262::callFunc( const wstring& s, vector<wstring>& l ){
+s483* s262::callFunc( s1905& s, vector<wstring>& l ){
 wstring  s672, s671;
 s670( s, s671, s672 );
 s272* mod = (s272*)s628.get( s671 );
@@ -15310,9 +15371,9 @@ void s262::s2013( const std::vector<s1998>* s2034, s1999 sw ) const{
 s2040.s2013( s2034, sw );}
 bool s262::s2012( s1998 si, s1999 sw ) const{
 return s2040.s2012( si, sw );}
-s1061 s262::s218( s483* p, const wstring& s347 ){
+s1061 s262::s218( s483* p, s1905& s347 ){
 return s203.s218( p, s347 );}
-bool s262::s556( const wstring& sym_, s371* ref, const wstring& s334, bool fr ) const{
+bool s262::s556( s1905& sym_, s371* ref, s1905& s334, bool fr ) const{
 if( !s272::s556( sym_, ref, s334, fr ) ) {
 if( sym_ == s7::s1572 ) {
 ref->s379( s640( s7::s832 ), s365 );
@@ -15327,7 +15388,7 @@ if( it != end( s206 ) ) {
 rf.s382( it->second );
 return true;}
 return false;}
-void s262::s219( const wstring& s76, const wstring& s334,
+void s262::s219( s1905& s76, s1905& s334,
 vector<wstring>& s153 ){
 size_t pl = s76.rfind( L"::" );
 s272* mod = NULL;
@@ -15421,7 +15482,7 @@ else if( s1457 == s1887 )
 s685 = new s1885( this, s588, s215, s705, s701 );
 return s685;}
 s271*
-s262::s222( const wstring& s76, const wstring& s499, bool s520 /*= true*/ )
+s262::s222( s1905& s76, s1905& s499, bool s520 /*= true*/ )
 {
 size_t pl = s76.rfind( L"::" );
 s485 s685;
@@ -15435,7 +15496,7 @@ return s685;}
 wstring s674 = s76.substr( 0, pl );
 wstring sym = s76.substr( pl + 2 );
 return ((s272*)s203.get( s674 ))->s641( sym, s499 );	}
-void* s262::s223( const std::wstring& s278 ){
+void* s262::s223( s1905& s278 ){
 s336* s685;
 s272* exp = (s272*) s628.get( s7::s455, false );
 if( exp )
@@ -15444,12 +15505,12 @@ else
 throw new s16( L"no such export variable: " + s278 );
 void * pv = s685->addr();
 return pv;}
-void s262::s1351( const wstring& s671 ){
+void s262::s1351( s1905& s671 ){
 s203.s1878( s671 );
 s628.s542( s671 );
 if( s203.s156( s671) )
 s203.s1666( s671 );}
-void s262::s1665( const wstring& s1633 ){
+void s262::s1665( s1905& s1633 ){
 vector<wstring> s1643;
 for( auto it = s628.Table().begin(); it != s628.Table().end(); ++it ) {
 s271* p = it->second.s15<s271*>();
