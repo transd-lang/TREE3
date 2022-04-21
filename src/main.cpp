@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2020-2021 Albert Berger
+Copyright (c) 2020-2022 Albert Berger
 
 This file is licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.2";
-// 220214
-wstring buildnum = L"16";
+// 220414
+wstring buildnum = L"17";
 wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nVirtual compiler (interpreter) for Transd programming language."
 "\n\nCopyright (c) 2020-2022 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 
