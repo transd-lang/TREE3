@@ -838,6 +838,10 @@ s853,  s1317, s1620, s1316, s1428,
 s1944,	 s1886,    s1945, s1943,
 s1562,  s1616,  s1615, s1614,
 s1619, s1617, s1618, s1427, s2078;
+#define s2101		1
+#define s2100		2
+#define s2102		3
+#define s2191  4
 class s262;
 class s263;
 class s270;
@@ -898,7 +902,7 @@ s1061 s1309() const { return s1350; }
 void s1344( s1061 t) { s1350 = t; }
 void reset();
 static void s288( s1905& s77, size_t& pos, std::vector<std::wstring>& s153 );
-void s289( s6::s143& s133 );
+void s289( s6::s143& s133, size_t s2194 );
 void s286( s263* node );
 void s290( s262* s300, size_t s301 = 0 );
 s1905& s291() const { return s280; }
@@ -1027,10 +1031,8 @@ enum s472 { s473, s474, s475, s1337, s476, s1245, s1246,
 s477, s478, s479, s480, s481, s1063, s2166 };
 enum s1999 { s2047 = 0, s2048, s2046, s2045 };
 enum s1998 { s2054 = 0, s2050, s2051, s2052, s2053 };
+enum s2193 { s2204, s2200, s2203, s2205, s2201, s2202 };
 #define s1984 5
-#define s2101		1
-#define s2100		2
-#define s2102		3
 class s262;
 class s482;
 class s483;
@@ -1083,6 +1085,7 @@ void s1260(bool b = true) { if(b) wh |= (1 << (s7::s1199-1));
 else wh &= ~(1 << (s7::s1199-1));}
 bool s1204() const { return wh >= 0; }
 virtual bool s1203() const { return (wh > 0) && (wh & (1 << (s7::s1199-1))); }
+virtual void s2198( s2193 st ) { }
 virtual bool s501( const s483* s502 ) const;
 virtual bool s1541( s1061 tp ) const;
 virtual const s926& s1004() const { return s993;  }
@@ -2059,7 +2062,7 @@ void s1935( Stream* ) const override;
 typedef s346 TDInt;
 class s591;
 class s272;
-typedef std::vector<std::pair<std::wstring, std::wstring>> s622;
+typedef std::vector<std::pair<std::wstring, size_t>> s622;
 typedef std::map<std::wstring, s272*> s623;
 typedef std::map<std::wstring, s263*> s624;
 class s272
@@ -2075,21 +2078,24 @@ s482 s628;
 s551* s629;
 std::vector<s485> s630;
 std::vector<s371> s631;
+s2193 s2197;
 void s350() override { }
 s483* s1704( s483** s274, size_t s498 );
 public:
-s272( const s272& s632, std::vector<s485>& s274, const s263* ast_=NULL, s272* ns_ = NULL );
-s272( s262* s300, s1061 s340, s472 pc/* = s473*/, const s263* ast_ = NULL, s272* ns_ = NULL );
-s272( s1905& s278, s262* s300, s472 pc, const s263* ast_ = NULL, s272* ns_ = NULL );
+s272( const s272& s632, std::vector<s485>& s274, const s263* ast_/*=NULL*/, s272* ns_/* = NULL*/ );
+s272( s262* s300, s1061 s340, s472 pc/* = s473*/, const s263* ast_/* = NULL*/, s272* ns_/* = NULL*/, s2193 st = s2200  );
+s272( s1905& s278, s262* s300, s472 pc, const s263* ast_/* = NULL*/, s272* ns_/* = NULL*/, s2193 st = s2200 );
 s272( s1905& s347, const std::wstring& s278, s262* s300, s482& s633,
-const s482& s628, const s263* ast_ = NULL );
+const s482& s628, const s263* ast_/* = NULL*/, s2193 st/* = s2204*/  );
 s272( s263& s701, s262* s300, s472 pc, s272* ns, s536 am,
-s623& cl, s622& cnl, s624& al );
+s623& cl, s622& cnl, s624& al, s2193 st );
 virtual ~s272();
 s1905& s353() const override { return s347; }
 virtual s1905& s299() const { return s278; }
 std::wstring s298() const override;
-std::wstring s834() const override { return /*ns->s298()*/ s278;} // ???DEBUG??? 220114
+std::wstring s834() const override { return /*ns->s298()*/ s278;} 
+s2193 s2195() const { return s2197; }
+void s2198( s2193 st ) override { s2197 = st; }
 static s271* s634( const s6::s143& obj, s1905& s278, s262* s300 );
 static s271* s634( std::multimap<std::wstring, s484*>& v, s484* s587 );
 s483* s635( const s263& s701, s483* s588, s1905& s334 ) const;
@@ -4059,7 +4065,8 @@ void s1313( const std::vector<s271*>& v, s483* s588 );
 public:
 typedef s938 s1139;
 s324( s262* s300 ) : s1369( s300, NULL, NULL ) {}
-s324( s262* s300, s1061 s1200, s1061 s325, s272* s588, const s263* ast_ = NULL );
+s324( s262* s300, s1061 s1201, s1061 s1276, s1061 s1181,
+s1061 s709, s272* s588, const s263* ast_ = NULL );
 s324( s262* s300, s272* s588, const std::wstring& s77, const s263* ast_ = NULL );
 s324( const s324& right, const s263* ast_ = NULL );
 s324( s262* s300, const std::vector<s271*>& l, s272* s588,
@@ -4571,12 +4578,9 @@ s813::Cont s1279;
 s1061 s1099 = this->s325;
 std::wstring ts = Types( this->s300, Types.Vector )->s353() + L"<" +
 this->s300->TR().s1352( this->s300->TR().s804( s1099 ) ) + L">";
-s1061 s1516 = ((s316*)Types( this->s300, Types.Vector ))->s1195( ts, s1279 );
 s1061 s1467 = l[0].s15<s838*>()->s1328();
-s1061 s1456 = this->s300->TR().s1046( std::vector<s1061>( 
-{ s1717, 2, s1467, 0, s1516, 0 } ) );
 s685 = this->s300->TR().s1046( std::vector<s1061>( 
-{ Types.Index, 1, s1456, 0 } ) );}
+{ Types.Index, 2, s1467, 0, s1099, 0 } ) );}
 else
 s685 = s1401<_Cont, s1311, Der, s1311>::s1188( s1553, l );
 return s685;}
@@ -5509,7 +5513,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.439"
+#define TRANSD_VERSION L"0.441"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
