@@ -2662,6 +2662,7 @@ s1::s9<s1529> s1175;
 static s341 s348;
 std::wstring s499;
 static void s1236( s483** s274, size_t n );
+static void s398( s483** s274, size_t n );
 virtual void s350() override;
 virtual const s341& s342() const override { return s348; }
 public:
@@ -2701,7 +2702,8 @@ const s271* s962() const override;
 s271* Idx() override;
 s271* El() override;
 s326* s819() { return s985; }
-virtual void s304( std::wostream* pd, int s197 = 0 ) const override;
+std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
+void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 class s1134
 : public s326,
@@ -3525,6 +3527,7 @@ static void s1034( s483** s274, size_t n );
 static void s1347( s483** s274, size_t n );
 static void s412( s483** s274, size_t n );
 static void s1490( s483** s274, size_t n );
+static void replace_impl( s483** s274, size_t n );
 virtual void s350() override;
 virtual const s341& s342() const override { return s348; }
 public:
@@ -3805,6 +3808,8 @@ class s964;
 class s1293;
 class s316
 : public s1576<s1418, s485, s316>{
+s316( const s316& right ) :s1576( 0, 0, 0 ) {
+throw; }
 protected:
 typedef s1418 s1386;
 typedef s316 s1167;
@@ -3835,7 +3840,7 @@ s316( s262* s300, s272* s588, const std::wstring& s77, const s263* ast_ = NULL,
 const s6::s1695& s1759 = s1736 );
 s316( s262* s300, const std::vector<s271*>& l, s272* s588,
 const s263* ast_ = NULL, s1061 s709 = 0, s1061 s1276 = 0 );
-s316( const s316& right, const s263* ast_ = NULL );
+s316( const s316& right, s272* ns, const s263* ast_ );
 s316( s262* s300, s1061 s325, s272* s588, const s263* ast_ = NULL );
 virtual ~s316() override;
 s483* s354( const s263& s701, s272* s588, s1905& s334 ) const override;
@@ -5513,7 +5518,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.442"
+#define TRANSD_VERSION L"0.443"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
