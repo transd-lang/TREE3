@@ -7102,6 +7102,8 @@ s348.insert( make_pair( L"find", new s337( L"find", &s359::s780, s1151,
 s348.insert( make_pair( L"find-first-not-of", new s337( L"find-first-not-of", &s359::s1588, s1151,
 { s1122( { Types.String } ), s1122( { Types.String, s1151 } ), 
 s1122( { Types.String, s1151, s1151 } )}, 1, 3 )));
+s348.insert( make_pair( L"contains", new s337( L"contains", &s359::s2207, s1148,
+{ s1122( { Types.String } ), s1122( { Types.Char } ) }, 1, 1 )));
 s348.insert( make_pair( L"set", new s337( L"set", &s359::s387, s1153,
 { s1122( { Types.String } ), s1122( { s1152 } ) }, 1, 1, false )));
 s348.insert( make_pair( L"set-el", new s337( L"set-el", &s359::s1592, s1152,
@@ -7152,7 +7154,7 @@ s348.insert( make_pair( L"getline", new s337( L"getline", &s359::s1483, s1151,
 { s1122(), s1122( { s1512::s1505 } ) }, 0, 1 )));
 s348.insert( make_pair( L"match", new s337( L"match", &s359::s1034, s1148,
 { s1122( { Types.String } ) }, 1, 1 )));
-s348.insert( make_pair( L"replace", new s337( L"replace", &s359::replace_impl, s1153,
+s348.insert( make_pair( L"replace", new s337( L"replace", &s359::s2206, s1153,
 { s1122( { Types.String, Types.String, Types.String } ),
 s1122( { Types.String, Types.String, Types.String, Types.Int } ),
 s1122( { Types.String, Types.String, Types.String, Types.Int, Types.Int } ),
@@ -7490,6 +7492,20 @@ start = (int)dr.size() + start;
 if( start < 0 )
 throw new s16( s696 + L"the start position is less than 0." );}
 *( (s346*)s274[0] )->s357() = (int)dr.rfind( str, start );}
+inline void s359::s2207( s483** s274, size_t s498 ){
+wstring s696 = L"Invalid 'contains' syntax: ";
+const wstring& dr = ( (s359*)DR )->s349;
+const wstring& str = ( (s359*)s274[2] )->to_wstring();
+int start = 0; 
+if( s498 > 3 ) {
+start = (int)*s274[3];
+if( start < 0 )
+start = (int)dr.size() + start;
+if( start < 0 )
+throw new s16( s696 + L"the start position is negative." );
+if( start > (int) dr.size() - 1 )
+throw new s16( s696 + L"the start position is greater than string's length." );}
+*((s360*)s274[0])->s357() = ( dr.find( str, start ) != string::npos );}
 inline void s359::s398( s483** s274, size_t s498 ){
 *s699->s357() = *( (s359*)DR )->s357() == *( (s359*)PARN( 2 ) )->s357();}
 inline void s359::s413( s483** s274, size_t s498 ){
@@ -7538,7 +7554,7 @@ wsmatch s1040;
 wstring s = DR->to_wstring();
 bool s153 = regex_match( s, s1040, rg );
 *s699->s357() = s153;}
-inline void s359::replace_impl( s483** s274, size_t s498 ){
+inline void s359::s2206( s483** s274, size_t s498 ){
 wstring s = DR->to_wstring();
 wregex rg( PARN( 2 )->to_wstring() );
 wstring rep( PARN( 3 )->to_wstring() );
@@ -9204,6 +9220,8 @@ s348.emplace( make_pair( L"get", new s337( L"get", &s316::s327, 0,
 { s1122( { s1512::s1549 } ) }, 1, 1, true ) ) );
 s348.emplace( make_pair( L"append", new s337( L"append", &s316::s1314, s1152,
 { s1122( { s7::s1397 } ) }, 1, 1, false ) ) );
+s348.emplace( make_pair( L"erase", new s337( L"erase", &s316::s333, s1152,
+{ s1122( { s1512::s1549 } ), s1122( { s1512::s1549, s1512::s1549 } ) }, 1, 2, false ) ) );
 s348.emplace( make_pair( L"resize", new s337( L"resize", &s316::s329, s1152,
 { s1122( { s1512::s1549 } ) }, 1, 1, false ) ) );
 s348.emplace( make_pair( L"reserve", new s337( L"reserve", &s316::s1889, s1152,
@@ -9350,6 +9368,21 @@ throw new s16( L"negative index is out of bound" );}
 if( idx >= (int)pv->s349.size() )
 throw new s16( L"index is out of bound" );
 *s274 = (s483*)(s271*)pv->s349[idx];}
+inline void s316::s333( s483** s274, size_t s498 ){
+s316* pv = (s316*)DR;
+int idx = (int)*s274[2];
+int s163 = 1;
+if( s498 > 3 )
+s163 = (int)*s274[3];
+if( idx >= (int)pv->s349.size() )
+throw new s16( L"index is out of bound" );
+auto it1 = pv->s349.begin() + idx;
+s1418::iterator it2;
+if( idx + s163 >= pv->s349.size() )
+it2 = pv->s349.end();
+else
+it2 = pv->s349.begin() + idx + s163;
+pv->s349.erase( it1, it2 );}
 inline void s316::s1314( s483** s274, size_t s498 ){
 s316* pv = (s316*)DR;
 const s483* s1552 = pv->s300->TR().s1007( pv->s325 );

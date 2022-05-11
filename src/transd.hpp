@@ -3509,11 +3509,12 @@ static void s388( s483** s274, size_t n );
 static void s393( s483** s274, size_t n );
 static void s794( s483** s274, size_t n );
 static void s1595( s483** s274, size_t n );
-static void s1588( s483** s274, size_t n );
 static void s890( s483** s274, size_t n );
 static void s891( s483** s274, size_t n );
+static void s1588( s483** s274, size_t n );
 static void s780( s483** s274, size_t n );
 static void s799( s483** s274, size_t n );
+static void s2207( s483** s274, size_t n );
 static void s398( s483** s274, size_t n );
 static void s399( s483** s274, size_t n );
 static void s400( s483** s274, size_t n );
@@ -3527,7 +3528,7 @@ static void s1034( s483** s274, size_t n );
 static void s1347( s483** s274, size_t n );
 static void s412( s483** s274, size_t n );
 static void s1490( s483** s274, size_t n );
-static void replace_impl( s483** s274, size_t n );
+static void s2206( s483** s274, size_t n );
 virtual void s350() override;
 virtual const s341& s342() const override { return s348; }
 public:
@@ -3820,6 +3821,7 @@ static void s387( s483** s274, size_t n );
 static void s1264( s483** s274, size_t n );
 static void s327( s483** s274, size_t n );
 static void s1314( s483** s274, size_t n );
+static void s333( s483** s274, size_t n );
 static void s802( s483** s274, size_t n );
 static void s329( s483** s274, size_t n );
 static void s1889( s483** s274, size_t n );
@@ -5518,7 +5520,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.443"
+#define TRANSD_VERSION L"0.444"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
