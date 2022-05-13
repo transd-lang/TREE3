@@ -1857,6 +1857,8 @@ s928 s1892				= 2103;
 s928 s1937				= 2210;
 s928 s1936					= 2310;
 s928 s2159			= 2410;
+s928 CLTDFilter_ctor1				= 2504;
+s928 s2208					= 2510;
 set<wstring> s1123 = { s1124, s1391, s1392, s1373, s833, s433,
 s434, s435, s765, s749, s795, s436, s437, s832, s940, s1140,
 s1356, s1391, s1392, s1601, L"and", L"or"
@@ -1911,6 +1913,7 @@ const wstring s1316 = L"to-file";
 const wstring s1428 = L"any";
 const wstring s1427 = L"all";
 const wstring s1944 = L"pipe";
+const wstring s2211 = L"filter";
 const wstring s1562 = L"lout";
 const wstring s1943 = L"lin";
 const wstring s1616 = L"read-tsd-file";
@@ -3704,6 +3707,10 @@ s348.insert( make_pair( L"dcmp", new s337( L"dcmp", &s358::s410, Types.Int,
 { s1122( { Types.Double, Types.Double } ) }, 2, 2 )));
 s348.insert( make_pair( L"dcmpr", new s337( L"dcmpr", &s358::s411, Types.Int,
 { s1122( { Types.Double, Types.Double } ) }, 2, 2 )));
+s348.insert( make_pair( L"floor", new s337( L"floor", &s358::s2215, Types.Double,
+{ s1122() }, 0, 0 )));
+s348.insert( make_pair( L"ceil", new s337( L"ceil", &s358::s2213, Types.Double,
+{ s1122() }, 0, 0 )));
 s348.insert( make_pair( L"to-Int", new s337( L"to-Int", &s358::s412, Types.Int,
 { s1122(), s1122( { Types.Int } ) }, 0, 1 )));
 s348.insert( make_pair( L"incr", new s337( L"incr", &s358::s1978, Types.Double,
@@ -3921,6 +3928,12 @@ else
 *INTRES->s357() = -1;}}
 inline void s358::s392( s483** s274, size_t s498 ){
 s698->s349 = std::pow( ( (double)*DR ), (double)*PARN( 2 ) );}
+inline void s358::s2215( s483** s274, size_t s498 ){
+double dv = ( (s358*)DR )->s349;
+*( (s358*)s274[0] )->s357() = floor( dv );}
+inline void s358::s2213( s483** s274, size_t s498 ){
+double dv = ( (s358*)DR )->s349;
+*( (s358*)s274[0] )->s357() = ceil( dv );}
 inline void s358::s412( s483** s274, size_t s498 ){
 int s1331 = -1;
 if( s498 == 3 )
@@ -6988,8 +7001,7 @@ return s685;}
 s271* s591::s335( s591* s2057, s272* impl ) const{
 return new s591( *this );}
 s271* s841::s335( s591* s2057, s272* impl ) const{
-return new s841( *this, s2057 ? 
-s2057 : (s591*)ns, ns );}
+return new s841( *this, s2057 ? s2057 : s587.s15<s591*>(), ns );}
 s271* s842::s335( s591* s2057, s272* impl ) const{
 auto s685 = new s842( *this, s2057, std::vector<s271*>(), s575, s603(), 
 impl ? impl : s588.s15<s272*>(), s588.s15<s272*>(), intro, s2176 );
@@ -7147,7 +7159,11 @@ s348.insert( make_pair( L"geq", new s337( L"geq", &s359::s402, s1148,
 { s1122( { Types.String } ) }, 1, 1 )));
 s348.insert( make_pair( L"neq", new s337( L"neq", &s359::s403, s1148,
 { s1122( { Types.String } ) }, 1, 1 )));
-s348.insert( make_pair( L"textin", new s337( L"textin", &s359::s409, s1151,
+s348.insert( make_pair( L"max", new s337( L"max", &s359::s1965, s1153,
+{ s1122( { Types.String, s7::s1399 } ) }, 1, 1 ) ) );
+s348.insert( make_pair( L"min", new s337( L"min", &s359::s1966, s1153,
+{ s1122( { Types.String, s7::s1399 } ) }, 1, 1 ) ) );
+s348.insert( make_pair( L"read", new s337( L"read", &s359::s409, s1153,
 { s1122( ), s1122( { s1151 } ), s1122( { s1512::s1505 } ), 
 s1122( { s1512::s1505, s1151 } ) }, 1, 2 )));
 s348.insert( make_pair( L"getline", new s337( L"getline", &s359::s1483, s1151,
@@ -7520,6 +7536,16 @@ inline void s359::s402( s483** s274, size_t s498 ){
 *s699->s357() = *( (s359*)DR )->s357() >= *( (s359*)PARN( 2 ) )->s357();}
 inline void s359::s403( s483** s274, size_t s498 ){
 *s699->s357() = *( (s359*)DR )->s357() != *( (s359*)PARN( 2 ) )->s357();}
+inline void s359::s1965( s483** s274, size_t s498 ){
+*s698->s357() = ( (s359*)DR )->s349;
+for( size_t n = 2; n < s498; ++n ) {
+if( *((s359*)s274[n])->s357() > *s698->s357() )
+*s698->s357() = *( (s359*)s274[n] )->s357();}}
+inline void s359::s1966( s483** s274, size_t s498 ){
+*s698->s357() = ( (s359*)DR )->s349;
+for( size_t n = 2; n < s498; ++n ) {
+if( *((s359*)s274[n])->s357() < *s698->s357() )
+*s698->s357() = *( (s359*)s274[n] )->s357();}}
 inline void s359::s409( s483** s274, size_t s498 ){
 Stream* s1477 = NULL;
 size_t s1452 = 0;
@@ -7536,7 +7562,7 @@ wstring& s153 = *( (s359*)DR )->s357();
 s1477->s1461( s153, s1452 );
 int s685 = (int)s153.size();
 s153.resize( s685 );
-*((s346*)s698)->s357() = s685;}
+s274[0] = s274[1];}
 inline void s359::s1483( s483** s274, size_t s498 ){
 Stream* s1477 = NULL;
 if( s498 >= 3 ) {
@@ -9124,8 +9150,6 @@ s349.push_back( s271::s504( *s225, s300, s588, s588->s298() ) );
 if( s349.back()->s494() != s475 ) {
 if( n == 0 )
 pt = s349.back()->s352();
-else if( pt && s349.back()->s352() != pt )
-throw s968.s1000( L"different elements types in vector" );
 s349.back()->s2198( s2203 );}}
 if( !s1326 ) {
 if( !s325 && s349[0]->s352() ) {
@@ -10583,6 +10607,8 @@ s348.insert( make_pair( L"get", new s337( L"get", &s324::s327, 0,
 { s1122( { s7::s1396 } ) }, 1, 1 ) ) );
 s348.insert( make_pair( L"get-val", new s337( L"get-val", &s324::s1463, 0,
 { s1122( { s7::s1396, s7::s1397 } ) }, 2, 2 ) ) );
+s348.insert( make_pair( L"values", new s337( L"values", &s324::s2216, 0,
+{ s1122() }, 0, 0 ) ) );
 s348.insert( make_pair( L"set", new s337( L"set", &s324::s387, s1152,
 { s1122( { s7::s1394 } ) }, 1, 1 ) ) );
 s348.insert( make_pair( L"set-el", new s337( L"set-el", &s324::s1592, s1148,
@@ -10594,6 +10620,7 @@ s348.insert( make_pair( L"size", new s337( L"size", &s324::s328, s1151,
 s348.equal_range( L"find" ).first->second->s1261( true );
 s348.equal_range( L"get" ).first->second->s1261( true );
 s348.equal_range( L"get-val" ).first->second->s1261( true );
+s348.equal_range( L"values" ).first->second->s1261( true );
 s300->TR().s1162( s493, s7::s1410, s1512::s1506 );
 s300->TR().s1162( s493, s7::s1411, s1512::s1507 );}
 s483* s324::s355( s272* s588, const std::vector<s271*>& l, const s263* ast_ ) const{
@@ -10639,6 +10666,12 @@ if( s1553 == L"get" ) {
 s685 = s317;}
 else if( s1553 == L"get-val" ) {
 s685 = s317;}
+else if( s1553 == L"values" ) {
+s813::Cont s1279;
+wstring ts = this->s300->TR().s1352( 
+Types( s300, Types.Vector )->s353() + L"<" + 
+Types( s300, s325 )->s353() + L">" );
+s685 = ((s316*)Types( s300, Types.Vector ))->s1195( ts, s1279 );}
 else
 s685 = s1369::s1188( s1553, l );
 return s685;}
@@ -10714,6 +10747,17 @@ else {
 { it->first.s15<s484*>()->s335(0,0), it->second.s15<s484*>()->s335(0,0) } ) );}
 s274[0]->s1262();//s500( p->ns, true );
 }
+inline void s324::s2216( s483** s274, size_t s498 ){
+s324* p = (s324*)DR;
+s316* s685 = new s316( p->s300, p->ValType(), p->ns, p->s603() );
+s1386::iterator it = p->s349.begin();
+vector<s485>& v = s685->s320();
+v.resize( p->s349.size() );
+size_t idx = 0;
+for( ; it != p->s349.end(); ++it )
+v[idx++] = it->second.s15<s484*>();
+s685->s1262();
+*s274 = s685;}
 inline void s324::s387( s483** s274, size_t s498 ){
 s324* l = (s324*)DR;
 s324* right = (s324*)PARN( 2 );
@@ -11845,7 +11889,7 @@ throw new s16( L"StdIn object cannot be copied" );}
 void s1402::s1461( std::wstring& s153, size_t s1472 ){
 s153.clear();
 wcin >> s153;
-if( s153.size() > s1472 )
+if( s1472 && s153.size() > s1472 )
 s153.resize( s1472 );}
 void s1402::s1480( s1905& src ){
 throw new s16( L"cannot output to StdIn" );}
@@ -12698,9 +12742,94 @@ void
 s1939::s500( const s272* s1672, bool proc ){
 s591::s500( s1672, proc );
 s493 = s274[0]->s352();
+s586 = s300->TR().s518( s352(), s588, s588->s298() );
 s1262();}
 s486 s1939::s497( s483**, size_t  ){
 return s274[0]->s497( 0, 0 );}
+vector<wstring> s2209( { L"where:" } );
+s2210::s2210( s262* s300, s272* s592, s591* s593, vector<s271*>& l, const s263* s701 )
+: s591( s300, s592, s593, s593, s565, s2211, s701, true ){
+TDException s968( s7::CLTDFilter_ctor1, s932, s701, L"wrong '(filter ...)' call" );
+if( l.size() > 5 )
+throw s968.s1000( L"too many arguments" );
+if( l.size() < 2 )
+throw s968.s1000( L"too few arguments" );
+s591::s1242( ( vector<s271*>& )l, s2209 );
+s2214 = l[0];
+size_t bas = 1;
+if( l[1]->s352() == s1415 ) {
+range = (s385*)l[1];
+bas = 2;}
+if( l.size() == 1 + bas ) {
+s1070 = l[bas];}
+if( l.size() == 2 + bas ) {
+where = l[1 + bas];}
+else if( l.size() == 3 + bas ) {
+if( l[bas]->s494() != s1063 || ((s371*)l[bas])->Id() != s1235 )
+throw s968.s1000( L"expected the 'where:' clause" );
+where = l[1 + bas];
+s1070 = l[2 + bas];}
+s493 = 0;}
+void
+s2210::s500( const s272* s879, bool proc ){
+TDException s968( s7::s2208, s932, s603(), L"wrong parameters to '(filter ...)' call");
+if( s2214.s13() )
+return;
+if( s2214->s494() == s475 ) {
+s489 rf = s2214.s15<s371*>();
+if( rf->s381().s13() )
+rf->s500( s879 );
+s985 = rf.s15<s371*>()->s377();}
+else if( s2214->s494() == s477 ) {
+s485 tmp = s271::s1018( s300, s2214, (s272*)s879, (s591*)s879, s879->s298(), false );
+s2214 = tmp;
+s985 = s2214->s496();}
+else {
+s985 = (s483*)s271::s1018( s300, s2214, (s272*)s879, (s591*)s879, s879->s298(), false );}
+if( !s300->TR().s1465( s985->s352(), s1512::s1507 ) )
+throw s968.s1000( L"the type is not rangeable: " + s985->s353() );
+if( s985->s494() == s474 ) {}
+else if( s985->s494() == s480 ) {}
+else
+throw s968.s1000( L"unsupported container type" );
+if( where.s14() ) {
+if( where->s494() == s475 )
+where.s15<s371*>()->s500( s879 );
+else {
+s485 tmp = s271::s1018( s300, where, (s272*)this, (s591*)s879, s879->s298(), false );
+where = tmp;}}
+if( s1070.s14() ) {
+if( s1070->s494() == s475 ) {
+s1070.s15<s371*>()->s500( s879 );}
+else {
+if( s1070->s494() != s1245 ) {
+s485 tmp = s271::s1018( s300, s1070, (s272*)s879, (s591*)s879, s879->s298(), false );
+s1070 = tmp;}}}
+s493 = s985->s352();
+s586 = s300->TR().s518( s352(), s588, s588->s298() );
+s1262();}
+s486 s2210::s497( s483**, size_t  ){
+std::vector<s485>s861( 1 );
+s685 = new s316( s300, s985.s15<s326*>()->ValType(), s588, s603() );
+s685->s500( s588, true );
+if( s2214->s494() == s476 ) {
+s985 = s2214->s497( 0, 0 );}
+Iterator* it = s985.s15<s326*>()->s314( NULL );
+while( 1 ) {
+s485 p = it->s315();
+if( p.s13() )
+break;
+s861[0] = p;
+if( where.s14() ) {
+where.s15<s838*>()->s596( s861 );
+s486 s153 = where->s497( 0, 0 );
+if( !(bool)*s153 )
+continue;}
+if( s1070.s14() ) {
+s1070.s15<s838*>()->s596( s861 );
+p = s1070->s497( 0, 0 ).s15<s271*>();}
+s685->add( p );}
+return s685;}
 vector<wstring> s958( { L"else", L"elsif" } );
 s608::s608( s262* s300, s272* s592, s591* s593, const std::vector<s271*>& l, const s263* s701,
 bool s2177 )
@@ -13215,6 +13344,8 @@ s271* s2077::s335( s591* s2057, s272* impl ) const{
 return new s2077( *this );}
 s271* s1939::s335( s591* s2057, s272* impl ) const{
 return new s1939( *this );}
+s271* s2210::s335( s591* s2057, s272* impl ) const{
+return new s2210( *this );}
 s271* s611::s335( s591* s2057, s272* impl ) const{
 return new s611( *this );}
 s271* s612::s335( s591* s2057, s272* impl ) const{
@@ -15277,7 +15408,7 @@ s257, s818, s1317, s255,
 s233 }*/;
 vector<int> BIFuncs1v = {	0, 
 0, 0, s1431, s1432, 0, 
-0, s1434, 0, s1435, s1436, 0, 
+0, s1434, s2212, 0, s1435, s1436, 0, 
 0,	s1438, s1623, 0, 0, 0,
 s1441, 0, 0, 0, s1443, 
 s1887, s1625, 0, 0, s1444, 
@@ -15369,7 +15500,8 @@ s851( s7::s1373, s1473 );
 if( s1371.empty() ) {
 s1372 = { L"", 
 s1427, s243, s1428, s258, s1614, 
-s256, s900, s2078, s260, s230, s772,
+s256, s900, s2211, s2078, s260, s230, 
+s772,
 s821, s252, s1615, s244,s1944,
 s1616, 
 s852,s261, s1618, s1619, s759, 
@@ -15753,6 +15885,8 @@ else if( s1457 == s2079 )
 s685 = new s2077( this, s588, s215, s705, s701 );
 else if( s1457 == s1947 )
 s685 = new s1939( this, s588, s215, s705, s701 );
+else if( s1457 == s2212 )
+s685 = new s2210( this, s588, s215, s705, s701 );
 else if( s1457 == s1449 )
 s685 = new s305( this, s588, s215, s705, s701, s2177 );
 else if( s1457 == s1440 )

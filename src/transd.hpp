@@ -822,6 +822,8 @@ s928 s1892;
 s928 s1937;
 s928 s1936;
 s928 s2159;
+s928 CLTDFilter_ctor1;
+s928 s2208;
 extern std::set<std::wstring> s1123;
 } // namespace s7
 enum s224 { s225, s226, s227, s228 };
@@ -830,7 +832,7 @@ extern const std::wstring s230, s231, s232,				s821,
 s233,  s234,     s235,    s236,      s237,
 s238,  s239, s240, s241,s244,
 s242, s243,			s258,	s245,			s257,
-s246, s247,     s249,		s751,
+s246, s247,     s249,		s751, s2211,
 s250,   s251, s252, s253,			s254,
 s255, s256,		s259,	s900,			s261,
 s260,	 s818,			s759, s852, 	s772,
@@ -1509,6 +1511,8 @@ static void s404( s483** s274, size_t n );
 static void s406( s483** s274, size_t n );
 static void s407( s483** s274, size_t n );
 static void s412( s483** s274, size_t n );
+static void s2215( s483** s274, size_t n );
+static void s2213( s483** s274, size_t n );
 static void s409( s483** s274, size_t n );
 static void s1978( s483** s274, size_t n );
 static void s1977( s483** s274, size_t n );
@@ -2810,7 +2814,7 @@ void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 typedef int HPROG;
 enum s1370{ s1429=1, s1430, s1431, s1432, s1622, 
-s1433, s1434, s2079, s1435, s1436, s1439, 
+s1433, s1434, s2212, s2079, s1435, s1436, s1439, 
 s1437, s1438, s1623, s1440, s1947, s1624, 
 s1441, s1442, s1626, s1627, s1443,
 s1887, s1625,	s1948, s1946, s1444,
@@ -3522,6 +3526,8 @@ static void s401( s483** s274, size_t n );
 static void s402( s483** s274, size_t n );
 static void s403( s483** s274, size_t n );
 static void s413( s483** s274, size_t n );
+static void s1966( s483** s274, size_t n );
+static void s1965( s483** s274, size_t n );
 static void s409( s483** s274, size_t n );
 static void s1483( s483** s274, size_t n );
 static void s1034( s483** s274, size_t n );
@@ -3870,7 +3876,7 @@ Iterator* s1164( const s483* idx ) override;
 Iterator* s1183( const s483* s349 ) override;
 s483* s1190( Iterator* it ) override;
 void clear() { s349.clear(); }
-void add( s484* el ) { s349.push_back( el ); }
+void add( s484* el ) { s349.push_back( el->s335( 0, ns ) ); }
 void erase( size_t n ) { s349.erase( begin( s349 ) + n ); }
 size_t size() const { return s349.size(); }
 s483* sort( bool reverse, s840* cmp ) override;
@@ -4057,6 +4063,7 @@ static void s332( s483** s274, size_t n );
 static void s780( s483** s274, size_t n );
 static void s327( s483** s274, size_t n );
 static void s1463( s483** s274, size_t n );
+static void s2216( s483** s274, size_t n );
 static void s387( s483** s274, size_t n );
 static void s1592( s483** s274, size_t n );
 static void s333( s483** s274, size_t n );
@@ -4154,6 +4161,8 @@ virtual void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
 typedef s324 TDIndex;
 class s959;
+class s385;
+class s316;
 class s604
 : public s591{
 std::vector<s1061> types;
@@ -4259,6 +4268,22 @@ public:
 s1939( s262* s300, s272* s588, s591* s587, std::vector<s271*>& l, 
 const s263* s701 );
 s1939( s262* s300 );
+void s500( const s272* s1672, bool proc ) override;
+s486 s497( s483** s274, size_t s498 ) override;
+s271* s335( s591* s2057, s272* impl ) const override;
+};
+class s2210
+: public s591{
+s485 s2214;
+s486 s985;
+s1::s9<s385> range;
+s485 where, s1070;
+s1::s9<s316> s685;
+public:
+enum s1141 { s1235 };
+s2210( s262* s300, s272* s588, s591* s587, std::vector<s271*>& l, 
+const s263* s701 );
+s2210( s262* s300 );
 void s500( const s272* s1672, bool proc ) override;
 s486 s497( s483** s274, size_t s498 ) override;
 s271* s335( s591* s2057, s272* impl ) const override;
@@ -4561,7 +4586,8 @@ else if( s1553 == L"front" || s1553 == L"back" )
 s685 = this->ValType();
 else if( s1553 == L"max-element-idx" || s1553 == L"min-element-idx" )
 s685 = this->s937();
-else if( s1553 == L"sort" || s1553 == L"reverse" || s1553 == L"unique" )
+else if( s1553 == L"sort" || s1553 == L"reverse" || s1553 == L"unique" 
+|| s1553 == L"shuffle" )
 s685 = this->s352();
 else if( s1553 == L"find-adjacent" || s1553 == L"max-element" || 
 s1553 == L"min-element") {
@@ -4583,11 +4609,12 @@ s685 = this->s352();
 else if( s1553 == L"group-by" ) {
 s813::Cont s1279;
 s1061 s1099 = this->s325;
-std::wstring ts = Types( this->s300, Types.Vector )->s353() + L"<" +
-this->s300->TR().s1352( this->s300->TR().s804( s1099 ) ) + L">";
+std::wstring ts = this->s300->TR().s1352( Types( this->s300, Types.Vector )->s353() + L"<" +
+this->s300->TR().s804( s1099 ) + L">" );
+s1061 s1516 = ((s316*)Types( this->s300, Types.Vector ))->s1195( ts, s1279 );
 s1061 s1467 = l[0].s15<s838*>()->s1328();
 s685 = this->s300->TR().s1046( std::vector<s1061>( 
-{ Types.Index, 2, s1467, 0, s1099, 0 } ) );}
+{ Types.Index, 2, s1467, 0, s1516, 0 } ) );}
 else
 s685 = s1401<_Cont, s1311, Der, s1311>::s1188( s1553, l );
 return s685;}
@@ -5520,7 +5547,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.444"
+#define TRANSD_VERSION L"0.445"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
