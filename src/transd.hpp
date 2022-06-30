@@ -699,6 +699,7 @@ DEFCONST s1601;
 DEFCONST s2139;
 DEFCONSTI s866;
 DEFCONSTI s2238;
+DEFCONSTI s2284;
 DEFCONSTI s438;
 DEFCONSTI s439;
 DEFCONSTI s440;
@@ -928,6 +929,7 @@ static std::wstring s295( const s6::s143& obj,
 s1905& dfault = std::wstring( L"" ) );
 static std::wstring s302( const s6::s143& obj,
 s1905& s303,	s1905& dfault = std::wstring( L"" ) );
+void s2287( const std::pair<std::wstring, std::wstring>& pr );
 void s304( std::wostream* pd, int s197 = 0 ) const;
 };
 } // namespace transd
@@ -1599,11 +1601,14 @@ extern s1::s9<s360> s369;
 extern s1::s9<s360> s370;
 class s361
 : public s336{
+enum s2279 { s2281, s2282 };
 static s341 s348;
 static void s792( s483** s274, size_t n );
 static void s508( s483** s274, size_t n );
+static void s2285( s483** s274, size_t n );
 void s350() override;
 const s341& s342() const override { return s348; }
+s2279 s2283;
 std::wstring s78;
 public:
 s361( const s361& right );
@@ -1611,6 +1616,7 @@ s361( s262* s300, const std::wstring& s = std::wstring( L"" ) );
 s483* s354( const s263& s701, s272* s588, s1905& s334 ) const override;
 s483* s355( s272* s588, const std::vector<s271*>& l, 
 const s263* ast_ ) const override;
+void create( const std::vector<s485>& l );
 s1905& Msg() const { return s78; }
 void s363( const std::wstring& s ) { s78 = s; }
 void* addr() override { return (void*)0; }
@@ -1798,6 +1804,7 @@ const s483* s374;
 std::vector<size_t> s375;
 size_t s376;
 bool s1168;
+static size_t s2286;
 public:
 s371( s1905& s, s262* s300, s472 cat = s473, bool _cnst = false );
 s371( const s371& right, s483* s2184 = NULL );
@@ -1808,6 +1815,7 @@ const s485 s381();
 bool s1203() const override { return s1168; }
 void s1260() { s1168 = true; }
 const std::wstring& s617() const { return s372; }
+void s2289();
 s486 s497( s483** s274, size_t s498 ) override;
 s483* s377() const;
 s483* s378();
@@ -2708,6 +2716,7 @@ s385( uint64_t b, uint64_t e = U64_MAX );
 s385( s262* s300, s1905& s77, const s263* ast_ = NULL );
 s385( const s385& right, const s263* ast_ = NULL );
 s385( s262* s300, s272* s588, const std::vector<s271*>& l, const s263* ast_ = NULL );
+~s385();
 s483* s354( const s263& s701, s272* s588, s1905& s334 ) const override;
 s483* s355( s272* s588, const std::vector<s271*>& l, const s263* ast_ ) const override;
 s1142 s1197( s1905& s343 ) const override;
@@ -3567,6 +3576,8 @@ static void s393( s483** s274, size_t n );
 static void s794( s483** s274, size_t n );
 static void s1595( s483** s274, size_t n );
 static void s2264( s483** s274, size_t n );
+static void s2242( s483** s274, size_t n );
+static void s2244( s483** s274, size_t n );
 static void s890( s483** s274, size_t n );
 static void s891( s483** s274, size_t n );
 static void s1588( s483** s274, size_t n );
@@ -5366,6 +5377,8 @@ s485 where;
 s485 s1060;
 s371 s311;
 s1529 s312;
+Iterator* s2293;
+s1::s9<s326> s2292;
 public:
 s614( s262* s300, s272* s588, Transd* s587, const std::vector<s271*>& l,
 const s263* s701, bool s2176 = true );
@@ -5950,7 +5963,7 @@ s1061 s2015( s1905& s858 ) const override;
 std::wstring to_wstring( uint32_t s1565 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.447"
+#define TRANSD_VERSION L"0.448"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
