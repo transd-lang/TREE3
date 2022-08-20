@@ -1171,6 +1171,7 @@ virtual size_t s320() const = 0;
 virtual bool operator==( const s481* p ) const = 0;
 virtual bool operator<( const s481* p ) const = 0;
 s481* s1880( s481** s274, size_t s496 );
+s272* s2293() { return ns; }
 void s2118( s589* s2042, s272* impl, bool s2159 = true ) override { ns = impl; }
 s484 s495( s481** s274, size_t s496 ) override { return this; }
 s481* s494() override;
@@ -1644,7 +1645,7 @@ static s339 s346;
 void s348() override {}
 const s339& s340() const override { return s346; }
 public:
-s362( s262* s300 );
+s362( s262* s300, s272* s586 = NULL );
 s481* s352( const s263& s695, s272* s586, s1890& s332 ) const override;
 s481* s353( s272* s586, const std::vector<s271*>& l, 
 const s263* ast_ ) const override;
@@ -2980,6 +2981,16 @@ return l.operator==( &r );}
 bool operator()( const s483 l, const s483 r ) const{
 return l.s15<s481*>()->operator==( r.s15<s481*>() );}
 };
+struct s2292{
+bool operator()( const s484 l, const s484 r ) const{
+return l->s320() == r->s320();}
+bool operator()( const s481* l, const s481* r ) const{
+return l->s320() == r->s320();}
+bool operator()( const s481& l, const s481& r ) const{
+return l.s320() == r.s320();}
+bool operator()( const s483 l, const s483 r ) const{
+return l.s15<s481*>()->s320() == r.s15<s481*>()->s320();}
+};
 struct s1414{
 bool operator()( const s484 l, const s484 r ) const{
 return l->operator<( ( s481* )&( *r ) );}
@@ -3691,7 +3702,7 @@ typedef std::vector<s483> s1407;
 typedef std::vector<s483> s1406;
 typedef s1312 s1364;
 typedef std::map<s484, s484, s1414> s1376;
-typedef std::unordered_map<s484, s484, s319, s321> s1370;
+typedef std::unordered_map<s484, s484, s319, s2292> s1370;
 typedef std::set<s483, s1414> s2203;
 typedef std::unordered_set<s483, s319, s321> s2236;
 class s1116
@@ -4004,6 +4015,7 @@ void s498( const s272* s873, bool fr=true ) override;
 s271* s333( s589* s2042, s272* impl ) const override;
 void s354( s271* p ) const override;
 s481* s1525( const s481* p ) const override;
+s484 s495( s481** s274 = NULL, size_t s496 = 0 ) override;
 size_t s320() const override;
 bool operator==( const s481* p ) const override;
 bool operator<( const s481* p ) const override;
@@ -4368,11 +4380,13 @@ typedef s1371 s1158;
 static s339 s346;
 s1375::iterator s316;
 std::wstring s497;
+static void s1227( s481** s274, size_t n );
 static void s330( s481** s274, size_t n );
 static void s774( s481** s274, size_t n );
 static void s325( s481** s274, size_t n );
 static void s1452( s481** s274, size_t n );
 static void s385( s481** s274, size_t n );
+static void s1580( s481** s274, size_t n );
 static void s331( s481** s274, size_t n );
 static void s326( s481** s274, size_t n );
 static void s329( s481** s274, size_t n );
@@ -5214,6 +5228,7 @@ s681 += s72 + (*s1507)->to_wstring();
 template<class _Cont, class s1301, class Der>
 inline void s1564<_Cont, s1301, Der>::s2222( s481** s274, size_t s496 ){
 Der* pv = ( (Der*)s274[1] );
+pv->s495(0,0); // ???DEBUG??? 220816
 s484 el = (s481*)s274[2];
 if( el->s1195() &&
 std::find_if( pv->s347.begin(), pv->s347.end(), [el]( s483 r ) { return el->operator==(r.s15<s481*>()); } ) != pv->s347.end() )
@@ -5986,7 +6001,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.449"
+#define TRANSD_VERSION L"0.500"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
