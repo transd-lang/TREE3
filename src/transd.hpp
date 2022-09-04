@@ -410,6 +410,7 @@ size_t& start, size_t& end, bool s880 = false );
 void s55( const std::wstring& s, size_t s65, wchar_t c, size_t& start, 
 size_t& end );
 void s994( const std::wstring& s, size_t& s65, const std::wstring& s1083 );
+void s1317( const std::wstring& s, size_t& s65, const std::wstring& s1083 );
 size_t count( const std::wstring& s77, const std::wstring& s1083, size_t start, size_t end,
 bool s880 = false );
 int s56( const std::wstring& s77, wchar_t s72, size_t& pos );
@@ -1127,7 +1128,7 @@ virtual operator double() const;
 virtual std::wstring to_wstring( uint32_t s1553 = 0 ) const;
 virtual s1312 to_bytes() const;
 virtual void to_null();
-virtual std::wstring trace( const char* topics ) const { return L""; }
+virtual std::wstring trace( s1890& topics ) const { return L""; }
 virtual void s304( std::wostream* pd, int s197 = 0 ) const = 0;
 };
 typedef std::multimap<std::wstring, s482*> s503;
@@ -1849,7 +1850,7 @@ virtual s481* s352( const s263& s695, s272* s586,
 s1890& s332 ) const override {	return NULL; }
 public:
 s1588( s262* s300 )
-: s481( s300, s1327, NULL, NULL ) {}
+: s481( s300, s1327, NULL, NULL ), pobj(0) {}
 virtual ~s1588() { }
 void s1647( s481* obj ) { pobj = obj; }
 s484 s2103( ) { return pobj; }
@@ -1918,6 +1919,7 @@ static void s2082( s481** s274, size_t n );
 static void s1951( s481** s274, size_t n );
 static void s1950( s481** s274, size_t n );
 static void s403( s481** s274, size_t n );
+static void divrem_impl( s481** s274, size_t n );
 static void s404( s481** s274, size_t n );
 static void s405( s481** s274, size_t n );
 static void s406( s481** s274, size_t n );
@@ -2284,8 +2286,7 @@ void s808( s829& s153 ) const;
 void s595( const s272* s1658 );
 void s2114( s575& s2113 );
 void s2118( s589* s2042, s272* impl, bool s2159 = true ) override;
-bool s554( const std::wstring& s278, s369* ref,
-const std::wstring& s332, bool ) const override;
+bool s554( s1890& s278, s369* ref, s1890& s332, bool ) const override;
 s271* s596( size_t off ) override;
 s484 s495( s481** s274 = NULL, size_t s496 = 0 ) override;
 s271* s333( s589* s2042, s272* impl ) const override;
@@ -2298,7 +2299,7 @@ s1890& s556, bool proc );
 static void s1232( std::vector<s271*>& s274, const std::vector<std::wstring>& s1199 );
 static void s1232( std::vector<s483>& s274, const std::vector<std::wstring>& s1199 );
 void s304( std::wostream* pd, int s197 = 0 ) const override;
-std::wstring trace( const char* topics ) const override;
+std::wstring trace( s1890& topics ) const override;
 };
 class s835
 : public s589{
@@ -2306,13 +2307,12 @@ s614 s560;
 bool s1961;
 public:
 s835( s262* s300, s589* s585, s272* ns, s561 ct, const std::vector<s271*>& l,
-s1054 s491, const std::wstring& s1541, const s263* s695, bool _bd = false );
+s1054 s491, s1890& s1541, const s263* s695, bool _bd = false );
 s835( const s835& right, s589* s585, s272* ns );
 virtual ~s835();
 void s498( const s272* s1658, bool proc ) override;
 s484 s495( s481** s274 = NULL, size_t s496 = 0 ) override;
-bool s554( const std::wstring& s278, s369* ref,
-const std::wstring& s332, bool ) const override;
+bool s554( s1890& s278, s369* ref,	s1890& s332, bool ) const override;
 s271* s333( s589* s2042, s272* impl ) const override;
 bool s1194() const override { return s1961; }
 };
@@ -4471,7 +4471,7 @@ s481* s353( s272* s586, const std::vector<s271*>& l,
 const s263* ast_ ) const override;
 s589* s1671( s1890& s278, s589* s215,	s272* s586, s559* cs ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
-std::wstring trace( const char* topics ) const override;
+std::wstring trace( s1890& topics ) const override;
 };
 class s833
 : public s589{
@@ -6001,7 +6001,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.500"
+#define TRANSD_VERSION L"0.501"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
