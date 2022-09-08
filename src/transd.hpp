@@ -4682,7 +4682,7 @@ class s1595
 : public s589{
 public:
 s1595( s262* s300, s272* s586, s589* s585, const std::vector<s271*>& l, const s263* s695 );
-s1595( const s1595& );
+s1595( const s1595& r, s272* s590, s589* s591 );
 void s498( const s272* s1658, bool proc ) override;
 s484 s495( s481** s274, size_t s496 ) override;
 s271* s333( s589* s2042, s272* impl ) const override;
@@ -6001,7 +6001,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.501"
+#define TRANSD_VERSION L"0.502"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );

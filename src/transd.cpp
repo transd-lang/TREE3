@@ -3241,8 +3241,10 @@ s533::const_iterator it = s551.begin();
 size_t s681 = 1;
 for( ; it != s551.end(); ++it ) {
 if( it->first[0] != '@' && it->second->s492() != s474 
-&& it->second->s492() != s1235 )
-s681 = s681 * it->second.s15<s481*>()->s320() << 1;}
+&& it->second->s492() != s1235 ) {
+size_t h = it->second.s15<s481*>()->s320();
+if(!h) h = 501316864073;
+s681 = s681 * h << 1;}}
 return s681;}
 bool s480::compare( const s533& r ) const{
 if( r.size() != s551.size() )
@@ -6332,8 +6334,9 @@ s589* s1641 = (s589*)s626.get( s7::s1617 );
 s9<s505> s1639 = new s505( (s262*)s300, (s272*)this, s601() );
 vector<s483> s699 = { /*(s271*)this,*/ s1639 };
 s1641->s594( s699 );
+s1641->s2118(NULL, (s272*)this);
 if( s1641->s616() != s7::s861 )
-s1641->s498( this, false );
+s1641->s498( this, true );
 else
 s1641->s595( this );
 s1641->s495( 0, 0 );
@@ -6697,8 +6700,7 @@ s578 = s496 ? (s481**)&s581[0] : NULL;
 s974 = right.s974;}
 s835::s835( s262* s300, s589* s591, s272* ns_, s561 ct, const vector<s271*>& l,
 s1054 s703, s1890& s1541, const s263* s695, bool _bd )
-: s589( s300, s591, s591, ns_, ct, L"", s695, false, _bd ), s1961( false )/*,
-s560( s702 )*/
+: s589( s300, s591, s591, ns_, ct, L"", s695, false, _bd ), s1961( false )/*, s560( s702 )*/
 {
 s278 = s1541;
 if( s278 == s7::s1346 )
@@ -7315,7 +7317,7 @@ if( ( !s2128 && !s2159 ) || ( !s2128 && !fr ) || (!s2128 && s2159 && fr) ||
 ( s2128 && !s2159 && !fr && !intro )
 /*|| ( s585.s14() && !intro && s2129 )*/ ) {
 if( s585.s14() && ((s573 == s563 || s573 == s2098) || !fr ||
-(s490 == s1235 && !s2159 ) ) ) // ???DEBUG??? 220701
+(s490 == s1235 && !s2159 ) ) ) 
 s681 = s585->s554( s76, ref, s332, s2159 );
 if( !s681 ) {
 if( s586.s14() )
@@ -10431,8 +10433,10 @@ for( size_t n = 0; n < s347.size(); ++n )
 s347[n]->s304( pd, s197 + s417 );}
 size_t s744::s320() const{
 size_t s681 = 1;
-for( size_t n = 0; n < s347.size(); ++n )
-s681 = s681 * ( ( s481* )&( *s347[n] ) )->s320() << 1;
+for( size_t n = 0; n < s347.size(); ++n ) {
+size_t h = ( ( s481* )&( *s347[n] ) )->s320();
+if(!h) h = 501316864073;
+s681 = s681 * h << 1;}
 return s681;}
 bool s744::operator==( const s481* p ) const{
 if( ( (s744*)p )->s347.size() != s347.size() )
@@ -11624,7 +11628,7 @@ s481* s347 = (s481*)PARN( 3 );
 s1371* dr = (s1371*)DR;
 if( dr->s1191 != s152->s350() || dr->s323 != s347->s350() )
 throw new s16( L"non-compatible types cannot be inserted to an HashIndex" );
-s1375::iterator it = dr->s347.find( (s481*)PARN( 2 ) );
+s1375::iterator it = dr->s347.find( s152 );
 if( it == dr->s347.end() ) {
 s484 s1231 = (s481*)s347->s333(0,0)->s495(0,0);
 s484 s1582 = (s481*)s152->s333(0,0);
@@ -13605,6 +13609,7 @@ s629 = s1886.s629;
 s274 = s1886.s274;
 s580 = s1886.s580;}
 if( s2095.s14() ) {
+bool _b = ( s629.size() == s274.size() );
 const vector<s483>& v = s2095->s318();
 for( size_t n = 0; n < v.size(); ++n ) {
 s369* ref = v[n].s15<s369*>();
@@ -13613,7 +13618,7 @@ ref->s2118( s591, s590, s2166() ); // ???DEBUG??? 220828
 s481* _dv = ref->s375();
 if( _dv->s616() == s7::s862 )
 _dv->s498( s586, true );
-if( s629.size() == s274.size() ) {
+if( _b ) {
 s629.push_back( *ref );
 s271* _p = _dv->s333( this, s586 );
 s628.push_back( _p );
@@ -14133,10 +14138,11 @@ s1252();}
 void s606::s2118( s589* s2042, s272* impl, bool s2160 ){
 s589::s2118( s2042 ? s2042 : s585.s15<s589*>(), impl ? impl : s586.s15<s272*>(), s2160 );
 for( size_t n = 0; n < s618.size(); ++n )
-s618[n]->s2118(  s2042 ? s2042 : s585.s15<s589*>(), impl ? impl : s586.s15<s272*>(), s2160 );
+s618[n]->s2118( this, impl ? impl : s586.s15<s272*>(), s2160 ); // ???DEBUG??? 220908
 for( size_t n = 0; n < s619.size(); ++n ) {
 for( size_t m = 0; m < s619[n].size(); ++m )
-s619[n][m]->s2118( s2042 ? s2042 : s585.s15<s589*>(), impl ? impl : s586.s15<s272*>(), s2160 );}}
+s619[n][m]->s2118( this, impl ? impl : s586.s15<s272*>(), s2160 ); // ???DEBUG??? 220907 V
+}}
 s484 s606::s495( s481**, size_t ){
 size_t idx = string::npos;
 for( size_t n = 0; n < s618.size(); ++n ) {
@@ -14371,9 +14377,13 @@ tmp->s1252();
 s697 = tmp.s15<s482*>();}
 if( s697->s492() == s1235 ) {
 if( s278 == s7::s1346 ) {
-subject = s585->s2284();
-s832* s681 = new s832( *s697.s15<s832*>(), subject.s15<s272*>(), 
+auto _subject = s585->s2284();
+s832* s681 = new s832( *s697.s15<s832*>(), _subject.s15<s272*>(), 
 s585, s2100, s601() );
+if( s585->s299() == s233 )
+s681->s2181( s2188 );
+else
+s681->s2181( s2185 );
 s681->s498( s586, true );
 return s681;}
 else if( s278 == L"cp" ) {
@@ -14488,8 +14498,9 @@ throw new s16( s1605 + L"(): wrong numbers of arguments" );
 if( l[0]->s492() != s473 )
 throw new s16( s1605 + L"(): the first argument must be a reference" );
 s274.assign( l.begin(), l.end() );}
-s1595::s1595( const s1595& right )
-: s589( right ){}
+s1595::s1595( const s1595& right, s272* s590, s589* s591 )
+: s589( right, s590, s591, s591, vector<s482*>(), right.s601(),
+false, true ){}
 void
 s1595::s498( const s272* s1658, bool proc ){
 s491 = s1143;
@@ -14637,7 +14648,7 @@ return s681;}
 s271* s1597::s333( s589* s2042, s272* impl ) const{
 return new s1597( *this );}
 s271* s1595::s333( s589* s2042, s272* impl ) const{
-return new s1595( *this );}
+return new s1595( *this, impl, s2042 );}
 s271* s1592::s333( s589* s2042, s272* impl ) const{
 return new s1592( *this, impl, s2042 );}
 s271* s1596::s333( s589* s2042, s272* impl ) const{
