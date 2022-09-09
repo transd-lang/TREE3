@@ -4879,7 +4879,7 @@ s346.insert( make_pair( L"min", new s335( L"min", &s1296<s1302, Der>::s1951, s15
 { s1113( { s1501::s1538, s7::s1388 } ) }, 1, 1 ) ) );
 s346.insert( make_pair( L"mod", new s335( L"mod", &s1296<s1302, Der>::s403, s1514,
 { s1113( { s1501::s1538 } ) }, 1, 1 ) ) );
-s346.insert( make_pair( L"divrem", new s335( L"divrem", &s1296<s1302, Der>::divrem_impl, s1514,
+s346.insert( make_pair( L"divrem", new s335( L"divrem", &s1296<s1302, Der>::s2294, s1514,
 { //s1113( { s1501::s1538 } ), 
 s1113( { s1501::s1538, s1501::s1538, s1501::s1538 } ) }, 3, 3 ) ) );
 s346.insert( make_pair( L"sqrt", new s335( L"sqrt", &s1296<s1302, Der>::s404, s1141,
@@ -5068,7 +5068,7 @@ if( tmp.s347 == 0 )
 throw new s16( L"division by zero: " + std::to_wstring( (int)*DR ) + L" % 0" );
 s692->s347 = ((Der*)DR)->s347 % tmp.s347;}
 template<class s1302, class Der>
-inline void s1296<s1302, Der>::divrem_impl( s481** s274, size_t s496 ){
+inline void s1296<s1302, Der>::s2294( s481** s274, size_t s496 ){
 Der _div;
 s274[2]->s354( &_div );
 if( _div.s347 == 0 )

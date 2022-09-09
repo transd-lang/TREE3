@@ -1919,7 +1919,7 @@ static void s2082( s481** s274, size_t n );
 static void s1951( s481** s274, size_t n );
 static void s1950( s481** s274, size_t n );
 static void s403( s481** s274, size_t n );
-static void divrem_impl( s481** s274, size_t n );
+static void s2294( s481** s274, size_t n );
 static void s404( s481** s274, size_t n );
 static void s405( s481** s274, size_t n );
 static void s406( s481** s274, size_t n );
@@ -5230,6 +5230,7 @@ inline void s1564<_Cont, s1301, Der>::s2222( s481** s274, size_t s496 ){
 Der* pv = ( (Der*)s274[1] );
 pv->s495(0,0); // ???DEBUG??? 220816
 s484 el = (s481*)s274[2];
+el->s495(0,0); // ???DEBUG??? 220909
 if( el->s1195() &&
 std::find_if( pv->s347.begin(), pv->s347.end(), [el]( s483 r ) { return el->operator==(r.s15<s481*>()); } ) != pv->s347.end() )
 *( (s358*)*s274 )->s355() = true;
@@ -6001,7 +6002,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.502"
+#define TRANSD_VERSION L"0.503"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
