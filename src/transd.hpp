@@ -1159,7 +1159,7 @@ std::vector<s271*>(), const s263* ast_ = NULL ) const = 0;
 virtual s481* s353( s272* s586, const std::vector<s1054>& vt ) const;
 virtual std::wstring s298() const;
 virtual std::wstring s828() const;
-std::wstring s2154() const;
+virtual std::wstring s2154() const;
 virtual s481* s342( s1890& s278, s1890& s332,	bool s518 = true, bool s2151 = true ) const 
 {	return NULL;}
 virtual s589* s1671( s1890& s278, s589* s215,	s272* s586, s559* cs ) const;
@@ -2273,6 +2273,7 @@ s568 s593() const { return s574; }
 const std::wstring& s351() const override { return s271::s351(); }
 std::wstring s828() const override;
 std::wstring s298() const override;
+std::wstring s2154() const override;
 bool s2166() const { return s2159; }
 bool s2285() const { return ( s2220 == -1 ); }
 const s263* s601() const { return past; }
@@ -2760,7 +2761,7 @@ s271* Idx() override;
 s271* El() override;
 s1054 ValType() const override { return s323; }
 bool s1964() const override;
-s324* s813() { return s978; }
+s324* s813() { return s978.s14() ? s978.s15<s324*>() : (s324*)this; }
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
@@ -4558,30 +4559,6 @@ void s498( const s272* s1658, bool proc ) override;
 s484 s495( s481** s274, size_t s496 ) override;
 s271* s333( s589* s2042, s272* impl ) const override;
 };
-/*
-class s2206
-: public s589,
-public Iterator{
-public:
-s2206( s262* s300, s272* s590, s589* s591, s272* ns_, s561 ct,
-s1890& s672, const s263* s695, bool s1713 = false, bool _bd = true );
-s2206( s262* s300, s272* s586, s589* s585, s272* ns_, s561 ct,
-const std::vector<s271*>& l, const s263* s695, bool s1713, bool _bd );
-s2206( const s2206& right, s272* s586, s589* s585, s272* ns_, 
-const std::vector<s271*>& s274, const s263* s695, bool s2105=false, 
-bool _bd=true );
-void s498( const s272* s1658, bool proc ) override;
-s484 s495( s481** s274, size_t s496 ) override;
-s271* s333( s589* s2042, s272* impl ) const override;
-s271* s313() override;
-s271* s955() override;
-const s271* s955() const override;
-s271* Idx() override;
-s271* El() override;
-s1054 ValType() const override { return s323; }
-bool s1964() const override;
-};
-*/
 class s606
 : public s589{
 s577 s618;
@@ -6002,7 +5979,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.503"
+#define TRANSD_VERSION L"0.504"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );

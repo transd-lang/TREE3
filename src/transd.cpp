@@ -2262,7 +2262,7 @@ while( pl != string::npos ) {
 if( ( pl && ( s280[pl - 1] == L'(' || s280[pl - 1] == L' ' ||
 s280[pl - 1] == ',' || s280[pl - 1] == '[' || s280[pl - 1] == '{' ||
 s280[pl - 1] == ':' ) ) &&
-( s280[pl + len] == L')' || s280[pl + len] == L' ' ||
+( s280[pl + len] == L')' || s280[pl + len] == L' ' || s280[pl + len] == L'\n' ||
 s280[pl + len] == ',' || s280[pl + len] == '.' || s280[pl + len] == ']' ||
 s280[pl + len] == '}' || s280[pl + len] == ':' ) )
 s280.replace( pl, len, pr.second );
@@ -2558,7 +2558,7 @@ s481* s481::s1525( const s481* p ) const{
 if( s350() == p->s350() ) {
 s481* s681 = (s481*)p->s333(0,0);
 return s681;}
-throw new s16( L"no conversion from '" + s351() + L"' to '" + p->s351() + L"'" );}
+throw new s16( L"no conversion from '" + p->s351() + L"' to '" + s351() + L"'" );}
 s481* s481::s353( s272* s586, const std::vector<s1054>& vt ) const{
 assert(0);
 return 0;}
@@ -6719,11 +6719,11 @@ s584 = (s481*)right.s584->s333(0,0);
 s581.resize( right.s581.size() );
 s581[0] = s584;}
 s835::~s835(){}
-s836::s836( s262* s300, s272* s586, s589* s585, s272* ns_, s561 ct,
+s836::s836( s262* s300, s272* s590, s589* s591, s272* ns_, s561 ct,
 const std::vector<s271*>& l, const s263* s695, bool s2160 )
-: s589( s300, s586, s585, ns_, ct, l, s695, false, s2160 ){
+: s589( s300, s590, s591, ns_, ct, l, s695, false, s2160 ){
 if( ct == s566 ) {
-subject = s586;		}}
+subject = s590;		}}
 s836::s836( const s836& right, s589* s591,
 const std::vector<s271*>& s699, s561 ct,  const s263* s695, 
 s272* s590, s272* ns_, bool s2105, bool s2160 )
@@ -6774,8 +6774,11 @@ return L"::";
 else
 throw new s16( L"Cannot get module name." );}
 std::wstring s589::s298() const{
-return ns->s828(); //s586->s298();
-}
+return ns->s828();}
+std::wstring s589::s2154() const{
+if( s2159 )
+return ns->s828();
+return s585.s14() ? s585->s2154() : s586->s828();}
 void s589::s841( s271* par, size_t pos, s483& s153, const s272* s1658, bool proc ){
 if( par->s492() == s475 ) {
 s488 cs = new s559( *((s559*)par) );
@@ -6837,17 +6840,7 @@ if( s278 == s233 || s573 == s565 || s573 == s566 ) {
 s481* par = s274[n]->s492() == s474 ? s274[n]->s494() : s274[n].s15<s481*>();
 s626.s539( s629[n].s615(), par, s480::s147 );
 s274[n]->s1665( s7::s861 );
-s628[n] = par;
-if( 0 && s274[n]->s492() == s474 
-&& s278 != s233 // ???DEBUG??? 220716
-) {
-s369* ref = new s369( s629[n].s615(), s300, s473 );
-size_t off = s638( s629[n].s615() );
-s271* s1053 = s628[off].s15<s271*>()->s494();
-if( !s1053 )
-s1053 = (s271*)s300->TR().s1000( s628[off]->s350() );
-ref->s377( off, s1053->s501() );
-s274[n].s15<s589*>()->s2172( ref );}}}
+s628[n] = par;}}
 if( s573 == s563 || s573 == s565 ) {
 for( size_t n = 0; n < s582.size(); ++n ) {
 if( s582[n]->s492() == s475 ) {
@@ -7553,7 +7546,7 @@ wstring ts = Types( s300, Types.Vector )->s351() + L"<" +
 Types( s300, Types.String )->s351() + L">";
 s1054 s1506 = ( (s314*)Types( s300, Types.Vector ) )->s1186( this, ts, s1705, s1269 );
 s346.insert( make_pair( L"split", new s335( L"split", &s357::s1479, s1506,
-{ s1113(), s1113( { Types.String } ) }, 0, 0 )));
+{ s1113(), s1113( { Types.String } ) }, 0, 0, true, {L"plain:", L"regex:"} )));
 s300->TR().s1153( s491, s7::s1401, s1501::s1497 );
 s300->TR().s1153( s491, s7::s1399, s1501::s1495 );
 s300->TR().s1153( s491, s7::s1400, s1501::s1496 );
@@ -7697,32 +7690,23 @@ if( 0 && s347.front() == '\"' &&
 s347.back() == '\"' )
 return s347.substr( 1, s347.size() - 2 );
 return s347; }
-/*inline void s357::s1479( s481** s274, size_t s496 )
-{
-s314* pv = (s314*)s274[0];
-pv->clear();
-wstring s72 = L"\n";
-if( s496 == 3 )
-s72 = s274[2]->to_wstring();
-wstring& s = ((s357*)DR)->s347;
-size_t s68 = 0, s69 = 0;
-s1::s9<s357> adds = new s357( ((s357*)DR)->s300, L"", ( (s357*)DR )->ns );
-while( s69 != wstring::npos && s68 < s.size()) {
-if( s72.size() )
-s69 = s.find( s72, s68 );
-else
-s69 = s68 + 1;
-adds->s347 = s.substr( s68, s69 - s68 );
-s68 = s69 + s72.size();
-if( adds->s347.size() )
-pv->s318().push_back( (s481*)adds->s333( 0,0 ) );}
-}*/
 inline void s357::s1479( s481** s274, size_t s496 ){
 s314* pv = (s314*)s274[0];
 pv->clear();
 wstring s72 = L"";
 bool s2244 = false;
-if( s496 == 3 ) {
+bool breg = false;
+if( s496 > 2 ) {
+if( s496 == 4 ) {
+if( s274[2]->s492() == s1056 &&
+s274[2]->s350() ) {
+s487 rf = (s369*)s274[2];
+if( rf->Id() == 2 )
+breg = true;
+s72 = s274[3]->to_wstring();}
+else
+throw new s16( L"unrecognized 2-nd parameter" );}
+else
 s72 = s274[2]->to_wstring();
 s2244 = true;}
 wstring& s = ((s357*)DR)->s347;
@@ -7738,6 +7722,19 @@ adds->s347 = s.substr( s68, s69 - s68 );
 if( adds->s347.size() )
 pv->s318().push_back( (s481*)adds->s333( 0,0 ) );}}
 else {
+if( breg ) {
+wsmatch sm;
+wregex rg( s72 );
+wstring::const_iterator itst = s.begin();
+wstring::const_iterator iten = s.end();
+while( std::regex_search( itst, iten, sm, rg ) ) {
+adds->s347 = s.substr( sm.position( 1 ), sm.length( 1 ) );
+s68 = s69 + s72.size();
+if( adds->s347.size() )
+pv->s318().push_back( (s481*)adds->s333( 0,0 ) );
+s.erase( sm.position( 1 ), sm.length( 1 ) );
+itst = s.begin() + sm.position( 1 );}}
+else {
 while( s69 != wstring::npos && s68 < s.size()) {
 if( s72.size() )
 s69 = s.find( s72, s68 );
@@ -7746,7 +7743,7 @@ s69 = s68 + 1;
 adds->s347 = s.substr( s68, s69 - s68 );
 s68 = s69 + s72.size();
 if( adds->s347.size() )
-pv->s318().push_back( (s481*)adds->s333( 0,0 ) );}}}
+pv->s318().push_back( (s481*)adds->s333( 0,0 ) );}}}}
 void s357::s1920( Stream* s1919 ) const{
 if( s1919->s2052() )
 s1919->s1469( L"\"" 
@@ -9782,12 +9779,10 @@ s347[n]->s498( s873, false );
 if( s300->s1320() )
 s347[n] = ( s481* ) s347[n].s15<s369*>()->s375()->s333( NULL, NULL );
 else
-s347[n] = (s481*)s347[n].s15<s369*>()->s333( NULL, NULL ); // ???DEBUG??? 220805
-}
-else { // ???DEBUG??? 220805
-s483 s1081;
+s347[n] = (s481*)s347[n].s15<s369*>()->s333( NULL, NULL );}
+else {
 if( !s347[n]->s1195() ) {
-s1081 = s271::s1011( s300, s347[n], (s272*)s873, (s589*)s873, s873->s298(), false );
+s483 s1081 = s271::s1011( s300, s347[n], (s272*)s873, (s589*)s873, s873->s298(), false );
 s347[n] = s1081;}}
 if( !s323 )
 s323 = s347[0]->s350();
@@ -13343,7 +13338,11 @@ else if( pc == s472 )
 s308->s498( this );
 else
 throw s961.s993( L"unknown iterable type" );
-s482* s1465 = s308->s494();
+s482* s1465;
+if( s308->s350() == Types.Range )
+s1465 = ((s383*)s308->s494())->s813();
+else
+s1465 = s308->s494();
 s1054 vt;
 if( s300->TR().s1454( s1465->s350(), s1501::s1497 ) )
 vt = ( (s324*)s1465 )->ValType();
@@ -14208,8 +14207,7 @@ return s681;
 s681 = s581[1];}
 else {
 s681 = s274[0].s15<s481*>();
-s681->s498( this, true ); // ???DEBUG??? 220806
-}}
+s681->s498( this, true );}}
 else
 s681 = new s362( s300 );
 if( s2233 ) {		
@@ -17028,6 +17026,7 @@ s1054 pt = ((s314*)Types( this, Types.Vector ))->s1186( this, ts, s1705, s1269 )
 s314* s905 = (s314*) s300->TR().s1000( pt )->s353( this, vector<s482*>( {} ) );
 for( size_t n = 0; n < s687.size(); ++n ) {
 s905->add( new s357( this, s687[n], this ) );}
+s905->s498( this, true );
 mod->s845( s7::s1560, s905 );
 mod->s845( s7::s823, new s344( this, (int)s687.size() ) );}
 vector<wstring> l;
