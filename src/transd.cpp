@@ -2807,9 +2807,11 @@ s1054 s1084 = (s1054)s1087.size() - 1;
 s1088[s345] = s1084;
 s1093[s1092.back()] = s1084;
 s1093[s807( s1084 )] = s1084;
-s1104.push_back( s1104[vt.s350( 0 )]->s353( s300, v ) );
 s1264.push_back( s1264[vt.s350( 0 )] );
 s1540.push_back( vector<s1054>() );
+s1104.push_back( s1104[vt.s350( 0 )] );
+size_t s2297 = s1104.size();
+s1104[s2297-1] = s1104[s1084]->s353( s300, v );
 return s1084;}
 void s489::s2122( const s807::Cont& v, s807::Cont& s153, size_t s2102  ){
 assert( v.size() );
@@ -2994,11 +2996,10 @@ throw new s16( L"no type with such id: " + to_wstring( s338 ) );
 s1054 type = s338;
 if( s1092[type].s350() != type )
 type = s1092[type].s350();
-if( s1092[s338].s813().size() == 1 ) {
-s481* p = s1104[type]->s353( s586 );
-return p;}
-else {
-return s1104[type]->s353( s586, s1092[s338].s813() );}}
+if( s1092[s338].s813().size() == 1 )
+return s1104[type]->s353( s586 ); 
+else
+return s1104[type]->s353( s586, s1092[s338].s813() );}
 const s481* s489::get( s1890& s76, bool s518/*= true*/ ) const
 {
 wstring s345 = s76;
@@ -3511,7 +3512,7 @@ bool s1260 = true;
 s489* ptr = s522.s586 ? &s522.s586->Pass()->TR() : NULL;
 while( !send || !pend ) {
 if( send && !starred ) // ???DEBUG??? 220821
-throw new s16( L"too few arguments" );
+return false; // ???DEBUG??? 220920
 s1260 = false;
 s1054 s1168 = starred ? starred : (pend ? 0 : s1268[k]);
 s1054 s1165 = send ? (s522.s1268.empty() ? 0 : s522.s1268[n-1]) : s522.s1268[n];
@@ -6825,7 +6826,7 @@ par.s15<s369*>()->reset();
 s485 s1661 = s586;
 if( s2161 != this )
 s586 = (s272*)s2161;
-par.s15<s369*>()->s498( s585, false ); // ???DEBUG??? 220617
+par.s15<s369*>()->s498( s585, s2159 ); // ???DEBUG??? 220920
 s586 = s1661;}
 s581.push_back( par.s15<s369*>()->s375() );}
 else if( par->s492() == s1056 || par->s492() == s479 )
@@ -7701,7 +7702,7 @@ if( s496 == 4 ) {
 if( s274[2]->s492() == s1056 &&
 s274[2]->s350() ) {
 s487 rf = (s369*)s274[2];
-if( rf->Id() == 2 )
+if( rf->Id() == 1 )
 breg = true;
 s72 = s274[3]->to_wstring();}
 else
@@ -7723,17 +7724,17 @@ if( adds->s347.size() )
 pv->s318().push_back( (s481*)adds->s333( 0,0 ) );}}
 else {
 if( breg ) {
+size_t s1805 = 0;
 wsmatch sm;
 wregex rg( s72 );
 wstring::const_iterator itst = s.begin();
 wstring::const_iterator iten = s.end();
 while( std::regex_search( itst, iten, sm, rg ) ) {
-adds->s347 = s.substr( sm.position( 1 ), sm.length( 1 ) );
-s68 = s69 + s72.size();
+adds->s347 = s.substr( s1805, sm.position( 0 ) );
 if( adds->s347.size() )
 pv->s318().push_back( (s481*)adds->s333( 0,0 ) );
-s.erase( sm.position( 1 ), sm.length( 1 ) );
-itst = s.begin() + sm.position( 1 );}}
+s1805 = s1805 + sm.position( 0 ) + sm.length( 0 );
+itst = s.begin() + s1805;}}
 else {
 while( s69 != wstring::npos && s68 < s.size()) {
 if( s72.size() )
@@ -8096,9 +8097,12 @@ return new s1566( s300, this, s347.begin(), s347.begin() + 1 );
 return new s1566( s300, this, s347.end(), s347.end() );}
 Iterator* s357::s1180() {
 return new s1566( s300, this, s347.end(), s347.end() ); }
-Iterator* s357::s312( s383* rv ){
-if( !rv )
+Iterator* s357::s312( s383* rv, bool s2296 ){
+if( !rv ) {
+if( !s2296 )
 return new s1566( s300, this, begin( s347 ), end( s347 ) );
+else
+return new s1566( s300, this, rbegin( s347 ), rend( s347 ) );}
 s1135 pr = rv->s1185( this );
 return new s1566( s300, this,
 pr.first.s15<s1130*>()->s1136(), pr.second.s15<s1130*>()->s1136() );}
@@ -8522,7 +8526,7 @@ bool s383::operator<( const s481* p ) const{
 return false;}
 bool s383::s1964() const{
 return s981 == s1535;}
-Iterator* s383::s312( s383* r ){
+Iterator* s383::s312( s383* r, bool s2296 ){
 if( s1233.s14() ) {
 s470 pc = s1233->s492();
 if( pc == s474 )
@@ -8540,7 +8544,7 @@ s1532 = s1234.s15<s369*>()->s375();
 else
 s1532 = s1234.s15<s481*>();}
 if( s978.s14() )
-return s978->s312( this );
+return s978->s312( this, s2296 );
 s981 = U64_MAX;//( std::numeric_limits<int>::max )( );// (int)*s1233.s15<s481*>();
 return this;}
 s271* s383::s313(){
@@ -8857,13 +8861,13 @@ if( range.s14() )
 return range->s1185();
 else
 return s978.s15<s324*>()->s1185();}
-Iterator* s1125::s312( s383* r ){
+Iterator* s1125::s312( s383* r, bool s2296 ){
 if( range.s14() ) {
 s1135 pr = range->s1185( );
 s316 = pr.first;
 s1478 = pr.second;}
 else {
-s316 = s978.s15<s324*>()->s312( NULL );
+s316 = s978.s15<s324*>()->s312( NULL, s2296 );
 s1478 = NULL;}
 return this;}
 bool s1125::s1964() const{
@@ -8991,7 +8995,8 @@ bool s944::s1964() const{
 if( (bool)*eq.s15<s589*>()->s495( 0, 0 ) )
 return true;
 return false;}
-Iterator* s944::s312( s383* r ){
+Iterator* s944::s312( s383* r, bool s2296 ){
+assert( !s2296 );
 set->s495( 0, 0 );
 s1040 = true;
 return this;}
@@ -9337,6 +9342,14 @@ s300->TR().s516( v_->s931(), s300, v_->s2154() ),
 s300->TR().s516( v_->ValType(), s300, v_->s2154() )
 } ) ) ){
 s1163->s498( s300, true );}
+s932::s932( s262* s300, s322* v_, s1237 it, s1237 sent )
+: v( v_ ), s1248( it ), s1477( sent ), s1164( s363 ), s1163( new s952( s300, NULL,
+vector<s271*>(	{ 
+s300->TR().s516( v_->s931(), s300, v_->s2154() ),
+s300->TR().s516( v_->ValType(), s300, v_->s2154() )
+} ) ) ){
+s1163->s498( s300, true );
+s878 = true;}
 s932::s932( s932* it )
 : v( it->v ), s1205( it->s1205 ), s1164( s363 ), s1163( new s952( it->s1163->Pass(), NULL,
 vector<s271*>(	{ 
@@ -9350,9 +9363,14 @@ return s1205 == v->s318().end();
 return s1248 == v->s318().rend();}
 s271* s932::s313(){
 s271* s681 = NULL;
+if( !s878 ) {
 if( s1205 != s1079 ) {
-s681 = El(); // ???DEBUG??? 220514
-++s1205;}
+s681 = El(); 
+++s1205;}}
+else {
+if( s1248 != s1477 ) {
+s681 = El(); 
+++s1248;}}
 return s681;}
 s271* s932::s955(){
 return (*s1205).second.s15<s482*>();}
@@ -9363,15 +9381,21 @@ return s1163->s318().at(0).s15<s482*>(); // ???DEBUG??? 220514
 }
 s271* s932::El(){
 s271* s681 = NULL;
+if( !s878 ) {
 if( s1205 != v->s318().end() ) {
 s1163->assign( vector<s483>(
 { ( *s1205 ).first.s15<s271*>(),( *s1205 ).second.s15<s271*>() } ));
-s681 = s1163; //s1205->second; // ???DEBUG??? 220514
-}
+s681 = s1163; }}
+else{
+if( s1248 != v->s318().rend() ) {
+s1163->assign( vector<s483>(
+{ ( *s1248 ).first.s15<s271*>(),( *s1248 ).second.s15<s271*>() } ));
+s681 = s1163; }}
 return s681;}
 void s932::reverse(){
 s878 = true;
-s1248 = std::make_reverse_iterator( s1205 );}
+s1248 = std::make_reverse_iterator( s1205 );
+s1477 = std::make_reverse_iterator( s1079 );}
 s1054 s932::s317() const{
 return v->s317();}
 s1054 s932::ValType() const{
@@ -10171,9 +10195,12 @@ return false;
 return true;}
 bool s314::operator<( const s481* p ) const{
 return false;}
-Iterator* s314::s312( s383* rv ){
-if( !rv )
+Iterator* s314::s312( s383* rv, bool s2296 ){
+if( !rv ) {
+if( !s2296 )
 return new s957( s300, this, begin( s347 ), end( s347 ) );
+else
+return new s957( s300, this, rbegin( s347 ), rend( s347 ) );}
 s1135 pr = rv->s1185( this );
 return new s957( s300, this,
 pr.first.s15<s1130*>()->s1136(), pr.second.s15<s1130*>()->s1136() );}
@@ -10444,7 +10471,7 @@ return false;}
 return true;}
 bool s744::operator<( const s481* p ) const{
 return false;}
-Iterator* s744::s312( s383* rv ){
+Iterator* s744::s312( s383* rv, bool s2296 ){
 return NULL;}
 /*s484 s744::s313()
 {
@@ -11010,7 +11037,7 @@ return false;
 return true;}
 bool s1282::operator<( const s481* p ) const{
 return false;}
-Iterator* s1282::s312( s383* rv ){
+Iterator* s1282::s312( s383* rv, bool s2296 ){
 s1135 pr = rv->s1185( this );
 return new s1283( s300, this,
 pr.first.s15<s1130*>()->s1136(), pr.second.s15<s1130*>()->s1136() );}
@@ -11216,6 +11243,8 @@ s346.insert( make_pair( L"get", new s335( L"get", &s322::s325, 0,
 { s1113( { s7::s1385 } ) }, 1, 1 ) ) );
 s346.insert( make_pair( L"get-val", new s335( L"get-val", &s322::s1452, 0,
 { s1113( { s7::s1385, s7::s1386 } ) }, 2, 2 ) ) );
+s346.insert( make_pair( L"keys", new s335( L"keys", &s322::s2295, 0,
+{ s1113() }, 0, 0 ) ) );
 s346.insert( make_pair( L"values", new s335( L"values", &s322::s2199, 0,
 { s1113() }, 0, 0 ) ) );
 s346.insert( make_pair( L"set", new s335( L"set", &s322::s385, s1143,
@@ -11228,6 +11257,7 @@ s346.insert( make_pair( L"size", new s335( L"size", &s322::s326, s1142,
 { s1113() }, 0, 0 ) ) );
 s346.equal_range( L"get" ).first->second->s1251( true );
 s346.equal_range( L"get-val" ).first->second->s1251( true );
+s346.equal_range( L"keys" ).first->second->s1251( true );
 s346.equal_range( L"values" ).first->second->s1251( true );
 s300->TR().s1153( s491, s7::s1399, s1501::s1495 );
 s300->TR().s1153( s491, s7::s1400, s1501::s1496 );}
@@ -11272,6 +11302,12 @@ if( s1541 == L"get" ) {
 s681 = s323;}
 else if( s1541 == L"get-val" ) {
 s681 = s323;}
+else if( s1541 == L"keys" ) {
+s807::Cont s1269;
+wstring ts = this->s300->TR().s1342( 
+Types( s300, Types.Vector )->s351() + L"<" + 
+Types( s300, s1191 )->s351() + L">" );
+s681 = ((s314*)Types( s300, Types.Vector ))->s1186( (s271*)this, ts, s1705, s1269 );}
 else if( s1541 == L"values" ) {
 s807::Cont s1269;
 wstring ts = this->s300->TR().s1342( 
@@ -11343,6 +11379,17 @@ else {
 *s274 = (s481*)it->second->s333(0,0);
 s274[0]->s1252();//s498( p->ns, true );
 }}
+inline void s322::s2295( s481** s274, size_t s496 ){
+s322* p = (s322*)DR;
+s314* s681 = new s314( p->s300, p->ValType(), p->ns, p->s601() );
+s1375::iterator it = p->s347.begin();
+vector<s483>& v = s681->s318();
+v.resize( p->s347.size() );
+size_t idx = 0;
+for( ; it != p->s347.end(); ++it )
+v[idx++] = it->first.s15<s271*>();
+s681->s1252();
+*s274 = s681;}
 inline void s322::s2199( s481** s274, size_t s496 ){
 s322* p = (s322*)DR;
 s314* s681 = new s314( p->s300, p->ValType(), p->ns, p->s601() );
@@ -11378,9 +11425,12 @@ s322* p = (s322*)DR;
 p->s347.erase( (s481*)PARN( 2 ) );}
 inline void s322::s326( s481** s274, size_t s496 ){}
 inline void s322::s329( s481** s274, size_t s496 ){}
-Iterator* s322::s312( s383* rv ){
-if( !rv )
+Iterator* s322::s312( s383* rv, bool s2296 ){
+if( !rv ) {
+if( !s2296 )
 return new s932( s300, this, begin( s347 ), end( s347 ) );
+else
+return new s932( s300, this, rbegin( s347 ), rend( s347 ) );}
 s1135 pr = rv->s1185( this );
 return new s932( s300, this,
 pr.first.s15<s1130*>()->s1136(), pr.second.s15<s1130*>()->s1136() );}
@@ -11675,7 +11725,8 @@ s1371* p = (s1371*)DR;
 p->s347.erase( (s481*)PARN( 2 ) );}
 inline void s1371::s326( s481** s274, size_t s496 ){}
 inline void s1371::s329( s481** s274, size_t s496 ){}
-Iterator* s1371::s312( s383* rv ){
+Iterator* s1371::s312( s383* rv, bool s2296 ){
+assert( !s2296 );
 if( !rv )
 return new s1372( s300, this, begin( s347 ), end( s347 ) );
 s1135 pr = rv->s1185( this );
@@ -11954,9 +12005,12 @@ else {
 *s274 = it->s15<s481*>();}}
 inline void s2204::s2228( s481** s274, size_t s496 ){
 throw new s16( L"method is not implemented" );}
-Iterator* s2204::s312( s383* rv ){
-if( !rv )
+Iterator* s2204::s312( s383* rv, bool s2296 ){
+if( !rv ) {
+if( !s2296 )
 return new s2205( s300, this, begin( s347 ), end( s347 ) );
+else
+return new s2205( s300, this, rbegin( s347 ), rend( s347 ) );}
 s1135 pr = rv->s1185( this );
 return new s2205( s300, this,
 pr.first.s15<s1130*>()->s1136(), pr.second.s15<s1130*>()->s1136() );}
@@ -12188,7 +12242,8 @@ else {
 *s274 = it->s15<s481*>();}}
 inline void s2237::s2228( s481** s274, size_t s496 ){
 throw new s16( L"method is not implemented" );}
-Iterator* s2237::s312( s383* rv ){
+Iterator* s2237::s312( s383* rv, bool s2296 ){
+assert( !s2296 );
 if( !rv )
 return new s2238( s300, this, begin( s347 ), end( s347 ) );
 s1135 pr = rv->s1185( this );
@@ -13276,7 +13331,7 @@ return s681;}
 s612::s612( s262* s300, s272* s590, s589* s591, const std::vector<s271*>& l,
 const s263* s695, bool s2160 )
 : s589( s300, s590, s591, s591, s563, s260, s695, true, s2160 ),
-s309( s7::s460, s300 ), s310( s300, 0, NULL ), s2274( NULL ){
+s309( s7::s460, s300 ), s310( s300, 0, NULL ), s2274( NULL ), s878( false ){
 TDException s961( s7::s1654, s926, s695, L"malformed syntax of 'for' statement" );
 if( l.size() < 5 )
 throw s961.s993( L"too few arguments" );
@@ -13284,6 +13339,7 @@ s626.s539( s309.s615(), &s310 );
 s580.push_back( (s481*)&s310 );
 s628.push_back( (s481*)&s310 );
 s629.push_back( s369( s309.s615(), s300 ) );
+s310.s11();
 s271* p = l[0];
 if( p->s492() != s473 )
 throw s961.s993( L"the variable must be a name" );
@@ -13294,26 +13350,27 @@ if( in->s615() != L"in" )
 throw s961.s993( L"the 'in' keyword is missing" );
 s308 = l[2];
 p = l[3];
-size_t idx = 3; 
-wstring actmsg = L"the DO clause is non-conforming: should begin with 'select' "
-"or 'do' keyword and contain at least one statement.";
+size_t idx = 4; 
+wstring s988 = L"malformed 'for' statement";
 if( p->s492() != s473 )
-throw s961.s993( actmsg );
+throw s961.s993( s988 );
+if( ((s369*)p)->s615() == L":rev" ) {
+s878 = true;
+p = l[idx++];}
 if( ((s369*)p)->s615() == L"where" ) {
-where = l[4];
-idx = 5;}
 if( l.size() < ( idx + 2 ) )
-throw new s16( actmsg );
-p = l[idx];
+throw new s16( s988 );
+where = l[idx++];
+p = l[idx++];}
 if( p->s492() != s473 )
-throw new s16( actmsg );
+throw new s16( s988 + L": the DO clause is missing" );
 if( ((s369*)p)->s615() == L"project" ) {
 if( l.size()  )
-s1053 = l[idx+1];}
+s1053 = l[idx];}
 else {
 if( ((s369*)p)->s615() != L"do" )
-throw new s16( actmsg );
-s582.assign( l.begin() + (idx + 1), l.end() );}
+throw new s16( s988 );
+s582.assign( l.begin() + idx, l.end() );}
 s626.s539( s707->s615(), NULL );
 s580.push_back( varval );
 s628.push_back( varval );
@@ -13348,6 +13405,8 @@ if( s300->TR().s1454( s1465->s350(), s1501::s1497 ) )
 vt = ( (s324*)s1465 )->ValType();
 else
 vt = ( (s324*)s1465 )->s317();
+if( s878 && !s300->TR().s1454( s1465->s350(), s1501::s1495 ) )
+throw s961.s993( L"iterable doesn't support the reverse iteration" );
 varval = s300->TR().s516(vt, s586, s586->s298() );
 varval->s1665( s7::s861 );
 s707->s380( varval );
@@ -13412,7 +13471,7 @@ s961.s2288( (s263*)s978->s601() );
 throw s961.s993( s78 );}
 if( s1053.s14() )
 s584.s15<s314*>()->clear();
-s1013 = s978->s312( NULL );}
+s1013 = s978->s312( NULL, s878 );}
 else {
 s2229 = s2220;
 s1013 = s2274;}
