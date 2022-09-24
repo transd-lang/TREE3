@@ -45,6 +45,573 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #include <limits>
 #include "transd.hpp"
 using namespace std;
+using namespace s2;
+using namespace s1;
+using namespace s5;
+using namespace s4;
+namespace s6{
+wstring s185 = L"-.0123456789";
+wstring s1527 = L"0123456789";
+wstring s1528 = L".0123456789";
+wstring s186 = L" ,]}\t\r\n";
+wstring s2133 = L"-_[]@";
+s1681 s1743;
+thread_local std::list<bool> s1755;
+void s1684( const wstring& dd, const wstring& fs, bool ab, bool rb, bool sb ){
+s1743 = s1681( dd, fs, ab, rb, sb );}
+void s1684( const s1681& cnf ){
+s1743 = cnf;}
+void s938::s170( const wstring& s77, size_t& pos, s9<s143> ob ){
+size_t s74, s75;
+s54( s77, pos, L'{', L'}', s74, s75, true );
+if( s74 == string::npos )
+return;
+s1052 = s74 - 1;
+wstring sob = s77.substr( s74, s75 - s74 + 1 );
+pos = s75 + 1;
+try {
+s1755.push_back( s1746.s151 );
+ob->s154( sob, s1746 );
+s1755.pop_back();}
+catch( s16* e ) {
+s1755.pop_back();
+e->s30( L"during reading the object: " + sob.substr( 0, 50 ) + L"...");
+throw e;}}
+bool s938::s998( wstring& s, size_t s68, size_t s679, size_t& line ) const{
+line = 0;
+s = L"";
+auto itst = s1107.lower_bound( s68 );
+auto iten = s1107.lower_bound( s679 );
+if( itst == end(s1107) || iten == end(s1107) )
+return false;
+line = itst->second;
+s = s1106[itst->second-1];
+if( iten != itst )
+s += L"\n ...\n" + s1106[iten->second-1];
+return true;}
+void s187( wstring& s77 ){
+wregex s188(
+LR"regex(\n\r?\/\/.*?\n\r?)regex"
+);
+wsmatch sm;
+wstring::const_iterator itst = s77.begin();
+wstring::const_iterator iten = s77.end();
+while( std::regex_search( itst, iten, sm, s188 ) ) {
+s77.erase( sm.position(), sm.length() - 
+(sm[0].str()[sm.length()-1]=='\r' ? 2 : 1 ) );
+itst = s77.begin();
+iten = s77.end();}}
+s938::s938( const std::wstring& file, bool s1622, const s1681& s1745 )
+: s1746( s1745 ){
+if( file.empty() )
+return;
+size_t pl = file.find_first_not_of( s4::s48 );
+if( pl == string::npos )
+return;
+if( file[pl] == L'{' || s1622 == false )
+s1105 = file;
+else
+s194 = file;}
+void s938::read( vector<s9<s143>>& s153, const wstring& s190 ){
+size_t pos = 0;
+if( s194.size() ) {
+std::ifstream fs( TOFS( s194 ));
+if( !fs.good() )
+throw runtime_error( "Failed to read TSD file: " + U8( s194 ));
+string s191( (std::istreambuf_iterator<char>( fs )), std::istreambuf_iterator<char>());
+s1105 = conv.from_bytes( s191 );
+s4::s81( s1105, s1106, s1107 );
+if( s190.size() ) {
+pos = s1105.find( s190 );
+if( pos == string::npos )
+throw new s16( s190 + L" directive not found in the source file." );
+pos += s190.size() + 1;
+if( s1105.size() > 13 && s1105[14] == '\r' )
+++pos;}}
+size_t s192 = pos;
+wstring s278;
+bool s193 = false;
+while( ( pos = s1105.find( L'{', pos ) ) != string::npos ) {
+size_t pl = s1105.rfind( '}', pos );
+size_t subl = pos - pl - 1;
+if( string::npos == pl ) {
+pl = s192; subl = pos - s192;}
+else
+pl += 1;
+wstring s1 = s52( s1105.substr( pl, /*pos - pl - 1*/subl ), s48 );
+if( s1.size() ) {
+if( s1[s1.size()-1] != L':' )
+throw new s16( L"Malformed syntax: " + s1.substr( 0, 20 ) + L"...",
+(uint32_t)s16::s17::s20 );
+if( s1.size() == 1 )
+s193 = true;
+else
+s278 = s52( s1, s48 + L":" );}
+if( s278.empty() ) {
+size_t pl1 = s1105.rfind( '\n', pl );
+if( pl1 < pl - 1 ) {
+wstring s1 = s52( s1105.substr( pl1, pl ), s48 );
+if( s1.size() ) {
+if( ( !s193 && s1[s1.size() - 1] != L':' ) ||
+( s193 && s1[s1.size() - 1] == L':' ) ||
+(!s193 && s1.size() == 1 ) )
+throw new s16( L"Malformed syntax: " + s1.substr( 0, 20 ) + L"...",
+(uint32_t)s16::s17::s20 );
+s278 = s52( s1, s48 + L":" );}}}
+if( s88.find( s278[0] ) != string::npos ) {
+if( s278[0] != s278[s278.size()-1] )
+throw new s16( L"Malformed block name: " + s278.substr( 0, 20 ) + L"...",
+(uint32_t)s16::s17::s20 );}
+else {
+if(	iswdigit( s278[0] ) )
+throw new s16( L"wrong unquoted syntax: " + s278.substr( 0, 20 ) + L"...",
+(uint32_t)s16::s17::s20 );}
+s9<s143> ob = new s143( this );
+try {
+s1755.push_back( s1746.s151 );
+s170( s1105, pos, ob );
+s1755.pop_back();}
+catch( s16* e ) {
+s1755.pop_back();
+e->s30( L"during reading the file: " + s194 );
+throw e;}
+if( s278.size() )
+ob->s159( L"@name", new s141( s278 ), s143::s145::s147 );
+s278 = L"";
+s193 = false;
+s153.push_back( ob );}}
+void s171( const wstring& s194, const vector<s1::s9<s143>>& s195 ){
+std::ofstream fs( TOFS( s194 ), ios::out | ios::trunc | ios::binary );
+if( !fs.good() )
+throw runtime_error( "Reading state file failed: " + U8( s194 ) );
+for( auto ob : s195 ) {
+basic_stringstream<wchar_t> ss;
+ob->s155( &ss );
+string s = U8( ss.str() );
+s += "\n\n";
+fs.write( s.c_str(), s.size() );}}
+void s172( const wstring& s77, size_t& pos, wchar_t quote, wstring& s153, bool s151 = false ){
+size_t s74, s75;
+s55( s77, pos, quote, s74, s75 );
+if( s75 != string::npos ) {
+pos = s75 + 1;
+if( !s1755.empty() && s1755.back() )
+s153 = s52( s77.substr( s74, s75 - s74 + 1), s48 ); 
+else
+s153 = s52( s77.substr( s74+1, s75 - s74 - 1 ), s48 ); }
+else
+pos = string::npos;}
+void s173( wostream* pd, const wstring& s ){
+wchar_t q = L'\"';
+if( s88.find( s[0] ) != string::npos )
+q = s[0];
+size_t start = 1;
+*pd << q;
+if( s[0] != q ) 
+start = 0;
+for( size_t n = start; n < s.size(); ++n ) {
+if( s[n] == q && s[n-1] != L'\\' && n != s.size() - 1 )
+*pd << L'\\';
+*pd << s[n];}
+if( s.empty() || s[s.size()-1] != q )
+*pd << q;}
+void s174( const wstring& s77, size_t& pos, wstring& s153 ){
+if( !std::isgraph<wchar_t>( s77[pos], locloc ) ||
+s77[pos] == L':' || s77[pos] == L',' )
+throw new s16( L"unrecognized unquoted syntax: " + s77.substr(pos, 20), 
+(uint32_t)s16::s17::s20 );
+size_t s196 = pos + 1;
+while( std::isgraph<wchar_t>( s77[s196], locloc ) &&
+s77[s196] != L':' && s77[s196] != L',' )
+++s196;
+s153 = s52( s77.substr( pos, s196 - pos ), s48 );
+pos = s196;}
+void s175( const wstring& s77, size_t& pos, wchar_t s1198, wchar_t s1240, wstring& s153 ){
+size_t s74, s75;
+s54( s77, pos, s1198, s1240, s74, s75, true );
+if( s75 == string::npos )
+throw new s16( L"unmatched unquoted parentheses: " + s77.substr(pos, 20), 
+(uint32_t)s16::s17::s20 );
+if( s75 == s77.size() - 1 ) {
+pos = s75;}
+else {
+size_t pl = s77.find_first_not_of( s48, s75 + 1 );
+if( pl == string::npos && s77[pl] != L',' && s77[pl] != L'}' )
+throw new s16( L"wrong unquoted parentheses syntax: " + s77.substr( pos, 20 ),
+(uint32_t)s16::s17::s20 );
+pos = s75 + 1;}}
+s131 s176( const wstring& s77, size_t& pos, wstring& s153, const s1681& s1745 ){
+if( s77[pos] == s1745.s1683[0] && s1745.s1730) {
+s153 = L"";
+return s132;}
+if( !std::isgraph<wchar_t>( s77[pos], locloc ) ||
+s77[pos] == L':' || s77[pos] == L',' )
+throw new s16( L"empty element or unrecognized unquoted syntax: " + s77.substr( pos, 20 ),
+(uint32_t)s16::s17::s20 );
+size_t s196 = pos;
+int shift = 0;
+if( s77[pos] == L'(' && s1745.s1685) {
+s175( s77, s196, L'(', L')', s153 );
+if( s196 == s77.size() - 1 )
+shift = 1;}
+else {
+s196 = pos + 1;
+while( std::isgraph<wchar_t>( s77[s196], locloc ) &&
+s77[s196] != L':' && s77[s196] != L',' ) {
+if( s77[s196] == L'<'  && s1745.s1686 ) {
+s175( s77, s196, L'<', L'>', s153 );}
+else if( s77[s196] == L'(' && s1745.s1685 ) {
+s175( s77, s196, L'(', L')', s153 );
+if( s196 == s77.size() - 1 )
+shift = 1;
+break;}
+else
+++s196;}}
+s153 = s52( s77.substr( pos, s196 - pos + shift ), s48 );
+pos = s196;
+return s134;}
+void s177( wostream* pd, const wstring& s ){
+if( ( !std::isalpha<wchar_t>( s[0], locloc ) && s[0] != L'_' ) ||
+s[s.size()-1] == L'"' )
+throw new s16( L"wrong unquoted syntax: " + s.substr(0, 20),
+(uint32_t)s16::s17::s20 );
+for( size_t n = 0; n < s.size(); ++n ) 
+if( !std::isgraph<wchar_t>( s[n], locloc ) )
+throw new s16( L"wrong unquoted syntax: " + s.substr(0, 20),
+(uint32_t)s16::s17::s20 );
+*pd << s;}
+void s178( const s938* pf, const wstring& s77, vector<s9<s141>>& s153, 
+const s1681& s1745 ){
+size_t s68 = s77.find_first_not_of( s48 );
+s1755.push_back( s1745.s1718 );
+while( true ) {
+s153.push_back( s9<s141>(new s141( pf, s77, s68, s1745 ) ) );
+s4::s994( s77, s68, s1745.s1683 );
+if( s68 == string::npos )
+break;
+++s68;}
+s1755.pop_back();}
+void s178( const s938* pf, const wstring& s77, size_t& pos,
+vector<s9<s141>>& s153, const s1681& s1745 ){
+size_t s74, s75, s68 = 0;
+s54( s77, pos, L'[', L']', s74, s75, true );
+pos = s75 + 1;
+wstring ar = s52( s77.substr( s74 + 1, s75 - s74 - 1 ), s48 );
+if( ar.empty() )
+return;
+s1755.push_back( s1745.s1718 );
+while( true ) {
+s153.push_back( s9<s141>(new s141( pf, ar, s68, s1745 ) ) );
+s4::s994( ar, s68, s1745.s1683 );
+if( s68 == string::npos )
+break;
+++s68;}
+s1755.pop_back();}
+void s179( wostream* pd, const vector<s9<s141>>& v, bool s151=false ){
+*pd << L'[';
+for( size_t n = 0; n < v.size(); ++n ) {
+v[n]->s155( pd, s151 );
+if( n != v.size() - 1 )
+*pd << L',';}
+*pd << L']';}
+void s180( const wstring& s77, size_t& pos, wstring& s153, bool s151 = false ){
+size_t pl = s77.find_first_not_of( L", \n\r\t", pos );
+if( s88.find( s77[pl] ) != string::npos ) 
+s172( s77, pos, s77[pl], s153, s151 );
+else {
+if( !std::isgraph<wchar_t>( s77[pos], locloc ) ||
+s77[pos] == L':' || s77[pos] == L',' )
+throw new s16( L"unrecognized name syntax: " + s77.substr( pos, 20 ) +
+L"...",	(uint32_t)s16::s17::s20 );
+size_t s196 = pos + 1;
+wchar_t c = s77[s196];
+while( c != L':' && c != L',' ) {
+if( !std::isalnum<wchar_t>( c, locloc ) &&	!std::isspace<wchar_t>( c, locloc ) && 
+s2133.find( c ) == string::npos )
+throw new s16( L"unrecognized name syntax: " + s77.substr( pos, 20 ) +
+L"...",	(uint32_t)s16::s17::s20 );
+c = s77[++s196];}
+s153 = s52( s77.substr( pos, s196 - pos ), s48 );
+pos = s196;}}
+void s181( wostream* pd, const wstring& s, bool s151=false ){
+bool space = false;
+for( size_t n = 0; n < s.size(); ++n )
+if( !std::isgraph<wchar_t>( s[n], locloc ) ) {
+space = true;
+break;}
+if( !space && !s151 && s88.find( s[0] ) == string::npos )
+s177( pd, s );
+else
+s173( pd, s );}
+s131 s182( const wstring& s77, size_t& pos, double& s153 ){
+s131 s681 = s140;
+size_t pl = s77.find_first_not_of( L"-0123456789.", pos );
+size_t pl1 = s77.find( L".", pl );
+if( pl1 < pl )
+s681 = s136;
+if( pl == string::npos )
+s153 = stod( s77.substr( pos ) );
+else
+s153 = stod( s77.substr( pos, pl - pos ) );
+pos = pl;
+return s681;}
+s131 s1539( const wstring& s77, size_t& pos, double& s153, const s1681& s1745 ){
+const wchar_t* ps = s77.c_str();
+size_t sz = s77.size();
+size_t st = pos;
+if( ps[st] == L'-' ) {
+if( sz == st+1 || s1528.find( ps[st+1] ) == string::npos )
+return s132;
+st += 1;}
+if( ( ps[st] == L'0' && sz > st + 1 && s1527.find( ps[st+1] ) != string::npos ) ||
+( s1527.find( ps[st] ) == string::npos ) )
+return s132;
+size_t s680 = st;
+bool pt = false;
+while( s680 < sz ) {
+if( ps[s680] == s1745.s1682[0] ) {
+if( pt ) return s132;
+pt = true;
+s680++;}
+else if( s1527.find( ps[s680] ) != string::npos )
+s680++;
+else if( (s48 + s1745.s1683 + L"}").find( ps[s680] ) != string::npos  )
+break;
+else
+return s132;}
+s131 s681 = s140;
+if( pt )
+s681 = s136;
+if( s680 == sz )
+s153 = stod( s77.substr( pos ) );
+else
+s153 = stod( s77.substr( pos, s680 - pos ) );
+pos = s680;
+return s681;}
+bool s183( const wstring& s77, size_t& pos, bool& s153 ){
+size_t pl = 0;
+if( s77.find( L"true", pos, 4 ) == pos )
+pl = 4;
+else if( s77.find( L"false", pos, 5 ) == pos )
+pl = 5;
+if( pl ) {
+if( s186.find( s77[pos+pl] ) != string::npos ) {
+pos += pl;
+s153 = (pl == 4);
+return true;}}
+return false;}
+bool s184( const wstring& s77, size_t& pos ){
+if( s77.find( L"null", pos, 4 ) == pos ) {
+if( s186.find( s77[pos+4] ) != string::npos ) {
+pos += 4;
+return true;}}
+return false;}
+s141::s141( const s938* pf, const wstring& s77, size_t& pos, const s1681& s1745 )
+: s198( s132 ), obj( pf ), s1075( pos + (pf ? pf->s942():0), 0 ), s1074( (s938*)pf ){
+size_t s68 = s77.find_first_not_of( L" \n\r\t", pos );
+if( s68 == string::npos ) {
+if( s1745.s1730 )
+s198 = s132;
+else {
+s16* s961 = new s16(wstring( 28, L' ' ) + L"|^|" );
+s961->s30( L"empty array item: " + s77.substr( pos - 10, 20 ) );
+throw s961;}}
+else if( s77[s68] == L'{' ) {
+size_t s74, s75;
+s54( s77, s68, L'{', L'}', s74, s75, true );
+pos = s75+1;
+obj.s154( s52( s77.substr( s74 + 1, s75 - s74 - 1 ), s48 ), s1745 );
+s198 = s133;}
+else {
+pos = s68;
+if ( s88.find( s77[pos] ) != string::npos ) {
+s172( s77, pos, s77[pos], str, s1745.s151 );
+s198 = s139;}
+else if ( s77[pos] == L'[' ) {
+s178( (s938*)s1074, s77, pos, s162, s1745 ); 
+s198 = s135;}
+else {
+s198 = s1539( s77, pos, s163, s1745 );
+if( s198 != s132 )
+(void)0;
+else if( s183( s77, pos, b ) )
+s198 = s137;
+else if( s184( s77, pos ) )
+s198 = s138;
+else
+s198 = s176( s77, pos, str, s1745 );;}}
+s1075.second = pf ? pos - 1 + pf->s942() : 0;}
+s141::s141( double d, s131 v ) 
+: s198( v ), obj( NULL ), s163( d ) {
+assert( v == s136 || v == s140 );}
+bool s141::s1002( wstring& f, std::wstring& s, size_t& line  ) const{
+if( !s1075.first || s1074.s13() )
+return false;
+f = s1074->Path();
+s1074->s998( s, s1075.first, s1075.second, line );
+return true;}
+const s143& s141::s166() const{
+if( s198 == s133 )
+return obj;
+throw new s16( L"NQJ value: wrong variant" );}
+const std::vector<s142>& s141::s167() const{
+if( s198 == s135 )
+return s162;
+throw new s16( L"NQJ value: wrong variant" );}
+double s141::s168() const{
+if( s198 == s136 )
+return s163;
+throw new s16( L"NQJ value: wrong variant" );}
+int s141::s56() const{
+if( s198 == s140 )
+return (int)s163;
+throw new s16( L"NQJ value: wrong variant" );}
+bool s141::s722() const{
+if( s198 == s137 )
+return b;
+throw new s16( L"NQJ value: wrong variant" );}
+const std::wstring& s141::s169() const{
+if( s198 == s134 || s198 == s139 )
+return str;
+throw new s16( L"NQJ value: wrong variant" );}
+const std::wstring& s141::s859() const{
+if( s198 == s139 )
+return str;
+throw new s16( L"NQJ value: wrong variant" );}
+std::wstring s141::s851() const{
+if( s198 == s139 )
+return str.substr( 1, str.size() - 2 );
+throw new s16( L"NQJ value: wrong variant" );}
+void s143::s154( const wstring& s77, const s1681& s1745 ){
+s144.clear();
+size_t s68;
+size_t pl = s77.find_first_not_of( L" \n\r\t" );
+if( pl == string::npos )
+return;
+if( s77[pl] == L'{' )
+s68 = s77.find_first_not_of( L" \n\r\t", pl + 1 );
+else
+s68 = pl;
+while( true ) {
+wstring s76;
+s180( s77, s68, s76, s1745.s151 );
+size_t pl = s77.find_first_not_of( L" \n\r\t", s68 );
+if( pl == string::npos || s77[pl] != L':' )
+throw new s16( L"unrecognized nqj syntax: " + s77.substr(s68, 50), 
+(uint32_t)s16::s17::s20 );
+s68 = pl + 1;
+s144.insert( make_pair( s76, new s141( src, s77, s68, s1745 ) ) );
+pl = s77.find_first_not_of( L" \n\r\t", s68 );
+if( pl != string::npos && s186.find( s77[pl] ) == string::npos ) 
+throw new s16( L"wrong nqj syntax: missed separator or closing brace: " + s77.substr(s68, 50), 
+(uint32_t)s16::s17::s20 );
+if( pl != string::npos )
+pl = s77.find_first_not_of( L" \n\r\t", pl+1 );
+if( pl == string::npos )
+break;
+s68 = pl;}}
+bool s143::operator==( const s143& r )  const{
+bool s681 = true;
+for( auto it = s144.begin(); it != s144.end(); ++it ) {
+auto it1 = r.s144.find( it->first );
+if( it1 == r.s144.end() || !( *( it->second ) == *( it->second ) ) ) {
+s681 = false;
+break;}}
+return s681;}
+void s143::s155( wostream* pd, bool s151 ) const{
+*pd << L"{\n";
+for( auto it = s144.begin(); it != s144.end(); ++it ) {
+if( it != s144.begin() )
+*pd << L",\n";
+s181( pd, it->first, s151 );
+*pd << L" : ";
+it->second->s155( pd );}
+*pd << L"\n}";}
+void s141::s155( wostream* pd, bool s151 ) const{
+if( s198 == s133 )
+obj.s155( pd, s151 );
+else if( s198 == s135 )
+s179( pd, s162, s151 );
+else if( s198 == s134 )
+s181( pd, str, s151 );
+else if( s198 == s139 )
+s181( pd, str, true );
+else if( s198 == s136 )
+*pd << to_wstring( s163 );
+else if( s198 == s140 )
+*pd << to_wstring( (int)s163 );
+else if( s198 == s137 )
+*pd << ( b ? L"true" : L"false" );
+else if( s198 == s138 )
+*pd << L"null" << endl;
+else
+throw new s16( L"unknown variant" );}
+bool s143::s156( const wstring& s152 ) const{
+if( s144.find( s152 ) != s144.end() )
+return true;
+return false;}
+void s143::s157( const wstring& s152, vector<s9<s141>>& s153 ) const{
+auto i = s144.equal_range( s152 );
+if( i.first == i.second )
+return;
+for( auto it = i.first; it != i.second; ++it )
+s153.push_back( it->second );}
+const s142 s143::s158( const wstring& s152 ) const{
+if( s144.count( s152 ) > 1 )
+throw new s16( L"multiple values: " + s152, (uint32_t)s149 );
+auto s681 = s144.find( s152 );
+return s681->second;}
+void s143::s159( const std::wstring& s76, s142 s347, s145 ap ){
+if( s144.find( s76 ) != s144.end() ) {
+if( ap == s146 )
+throw new s16( L"Field already exists: " + s76, (uint32_t)s16::s17::s21 );
+else if( ap == s148 )
+return;
+else if( ap == s147 )
+s144.erase( s76 );}
+s144.insert( make_pair( s76, s347 ) );}
+void s143::s1619( const std::wstring& s76 ){
+if( s144.find( s76 ) == s144.end() )
+throw new s16( L"Attribute doesn't exist: " + s76, (uint32_t)s16::s17::s21 );
+s144.erase( s76 );}
+void s143::s160( vector<pair<wstring, s9<s141>>>& s153 ) const{
+for( auto it = s144.begin(); it != s144.end(); ++it ) 
+s153.push_back( *it );}
+void s143::s161( wostream* pd, int s197 ) const{
+for( auto it = s144.begin(); it != s144.end(); ++it ) {
+*pd << FILL(s197) << it->first << " : " << endl;
+it->second->s161( pd, s197 + 2 );}}
+void s141::s161( wostream* pd, int s197 ) const{
+if( s198 == s133 )
+obj.s161( pd, s197 + 2 );
+else if( s198 == s135 ) {
+for( size_t n = 0; n < s162.size(); ++n ) {
+s162[n]->s161( pd, s197 );
+if( n < s162.size() - 1 )
+*pd << endl;}}
+else if( s198 == s134 )
+*pd << FILL( s197 ) << str << endl;
+else if( s198 == s136 )
+*pd << FILL( s197 ) << s163 << endl;
+else if( s198 == s140 )
+*pd << FILL( s197 ) << s163 << endl;
+else if( s198 == s137 )
+*pd << FILL( s197 ) << b << endl;
+else if( s198 == s138 )
+*pd << FILL( s197 ) << L"null" << endl;
+else
+throw new s16( L"unknown variant" );}
+bool operator==( const std::vector<s9<s141>>& l,
+const std::vector<s9<s141>>& r ){
+if( l.size() == r.size() ) {
+for( size_t n = 0; n < l.size(); ++n )
+if( !(*( l[n] ) == *( r[n] ) ) )
+return false;
+return true;}
+return false;}
+s131 s1695::s1539( const std::wstring& s77, size_t& pos, double& s153 ){
+return s6::s1539( s77, pos, s153, conf );}
+} // namespace s6
 namespace s2 {
 uint32_t s16::s27;
 std::vector<std::wstring> s989 = {
@@ -1131,571 +1698,6 @@ w = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 h = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;}
 } // namespace consutils
 #endif // WIN32
-using namespace s1;
-using namespace s5;
-namespace s6{
-wstring s185 = L"-.0123456789";
-wstring s1527 = L"0123456789";
-wstring s1528 = L".0123456789";
-wstring s186 = L" ,]}\t\r\n";
-wstring s2133 = L"-_[]@";
-s1681 s1743;
-thread_local std::list<bool> s1755;
-void s1684( const wstring& dd, const wstring& fs, bool ab, bool rb, bool sb ){
-s1743 = s1681( dd, fs, ab, rb, sb );}
-void s1684( const s1681& cnf ){
-s1743 = cnf;}
-void s938::s170( const wstring& s77, size_t& pos, s9<s143> ob ){
-size_t s74, s75;
-s54( s77, pos, L'{', L'}', s74, s75, true );
-if( s74 == string::npos )
-return;
-s1052 = s74 - 1;
-wstring sob = s77.substr( s74, s75 - s74 + 1 );
-pos = s75 + 1;
-try {
-s1755.push_back( s1746.s151 );
-ob->s154( sob, s1746 );
-s1755.pop_back();}
-catch( s16* e ) {
-s1755.pop_back();
-e->s30( L"during reading the object: " + sob.substr( 0, 50 ) + L"...");
-throw e;}}
-bool s938::s998( wstring& s, size_t s68, size_t s679, size_t& line ) const{
-line = 0;
-s = L"";
-auto itst = s1107.lower_bound( s68 );
-auto iten = s1107.lower_bound( s679 );
-if( itst == end(s1107) || iten == end(s1107) )
-return false;
-line = itst->second;
-s = s1106[itst->second-1];
-if( iten != itst )
-s += L"\n ...\n" + s1106[iten->second-1];
-return true;}
-void s187( wstring& s77 ){
-wregex s188(
-LR"regex(\n\r?\/\/.*?\n\r?)regex"
-);
-wsmatch sm;
-wstring::const_iterator itst = s77.begin();
-wstring::const_iterator iten = s77.end();
-while( std::regex_search( itst, iten, sm, s188 ) ) {
-s77.erase( sm.position(), sm.length() - 
-(sm[0].str()[sm.length()-1]=='\r' ? 2 : 1 ) );
-itst = s77.begin();
-iten = s77.end();}}
-s938::s938( const std::wstring& file, bool s1622, const s1681& s1745 )
-: s1746( s1745 ){
-if( file.empty() )
-return;
-size_t pl = file.find_first_not_of( s4::s48 );
-if( pl == string::npos )
-return;
-if( file[pl] == L'{' || s1622 == false )
-s1105 = file;
-else
-s194 = file;}
-void s938::read( vector<s9<s143>>& s153, const wstring& s190 ){
-size_t pos = 0;
-if( s194.size() ) {
-std::ifstream fs( TOFS( s194 ));
-if( !fs.good() )
-throw runtime_error( "Failed to read TSD file: " + U8( s194 ));
-string s191( (std::istreambuf_iterator<char>( fs )), std::istreambuf_iterator<char>());
-s1105 = conv.from_bytes( s191 );
-s4::s81( s1105, s1106, s1107 );
-if( s190.size() ) {
-pos = s1105.find( s190 );
-if( pos == string::npos )
-throw new s16( s190 + L" directive not found in the source file." );
-pos += s190.size() + 1;
-if( s1105.size() > 13 && s1105[14] == '\r' )
-++pos;}}
-size_t s192 = pos;
-wstring s278;
-bool s193 = false;
-while( ( pos = s1105.find( L'{', pos ) ) != string::npos ) {
-size_t pl = s1105.rfind( '}', pos );
-size_t subl = pos - pl - 1;
-if( string::npos == pl ) {
-pl = s192; subl = pos - s192;}
-else
-pl += 1;
-wstring s1 = s52( s1105.substr( pl, /*pos - pl - 1*/subl ), s48 );
-if( s1.size() ) {
-if( s1[s1.size()-1] != L':' )
-throw new s16( L"Malformed syntax: " + s1.substr( 0, 20 ) + L"...",
-(uint32_t)s16::s17::s20 );
-if( s1.size() == 1 )
-s193 = true;
-else
-s278 = s52( s1, s48 + L":" );}
-if( s278.empty() ) {
-size_t pl1 = s1105.rfind( '\n', pl );
-if( pl1 < pl - 1 ) {
-wstring s1 = s52( s1105.substr( pl1, pl ), s48 );
-if( s1.size() ) {
-if( ( !s193 && s1[s1.size() - 1] != L':' ) ||
-( s193 && s1[s1.size() - 1] == L':' ) ||
-(!s193 && s1.size() == 1 ) )
-throw new s16( L"Malformed syntax: " + s1.substr( 0, 20 ) + L"...",
-(uint32_t)s16::s17::s20 );
-s278 = s52( s1, s48 + L":" );}}}
-if( s88.find( s278[0] ) != string::npos ) {
-if( s278[0] != s278[s278.size()-1] )
-throw new s16( L"Malformed block name: " + s278.substr( 0, 20 ) + L"...",
-(uint32_t)s16::s17::s20 );}
-else {
-if(	iswdigit( s278[0] ) )
-throw new s16( L"wrong unquoted syntax: " + s278.substr( 0, 20 ) + L"...",
-(uint32_t)s16::s17::s20 );}
-s9<s143> ob = new s143( this );
-try {
-s1755.push_back( s1746.s151 );
-s170( s1105, pos, ob );
-s1755.pop_back();}
-catch( s16* e ) {
-s1755.pop_back();
-e->s30( L"during reading the file: " + s194 );
-throw e;}
-if( s278.size() )
-ob->s159( L"@name", new s141( s278 ), s143::s145::s147 );
-s278 = L"";
-s193 = false;
-s153.push_back( ob );}}
-void s171( const wstring& s194, const vector<s1::s9<s143>>& s195 ){
-std::ofstream fs( TOFS( s194 ), ios::out | ios::trunc | ios::binary );
-if( !fs.good() )
-throw runtime_error( "Reading state file failed: " + U8( s194 ) );
-for( auto ob : s195 ) {
-basic_stringstream<wchar_t> ss;
-ob->s155( &ss );
-string s = U8( ss.str() );
-s += "\n\n";
-fs.write( s.c_str(), s.size() );}}
-void s172( const wstring& s77, size_t& pos, wchar_t quote, wstring& s153, bool s151 = false ){
-size_t s74, s75;
-s55( s77, pos, quote, s74, s75 );
-if( s75 != string::npos ) {
-pos = s75 + 1;
-if( !s1755.empty() && s1755.back() )
-s153 = s52( s77.substr( s74, s75 - s74 + 1), s48 ); 
-else
-s153 = s52( s77.substr( s74+1, s75 - s74 - 1 ), s48 ); }
-else
-pos = string::npos;}
-void s173( wostream* pd, const wstring& s ){
-wchar_t q = L'\"';
-if( s88.find( s[0] ) != string::npos )
-q = s[0];
-size_t start = 1;
-*pd << q;
-if( s[0] != q ) 
-start = 0;
-for( size_t n = start; n < s.size(); ++n ) {
-if( s[n] == q && s[n-1] != L'\\' && n != s.size() - 1 )
-*pd << L'\\';
-*pd << s[n];}
-if( s.empty() || s[s.size()-1] != q )
-*pd << q;}
-void s174( const wstring& s77, size_t& pos, wstring& s153 ){
-if( !std::isgraph<wchar_t>( s77[pos], locloc ) ||
-s77[pos] == L':' || s77[pos] == L',' )
-throw new s16( L"unrecognized unquoted syntax: " + s77.substr(pos, 20), 
-(uint32_t)s16::s17::s20 );
-size_t s196 = pos + 1;
-while( std::isgraph<wchar_t>( s77[s196], locloc ) &&
-s77[s196] != L':' && s77[s196] != L',' )
-++s196;
-s153 = s52( s77.substr( pos, s196 - pos ), s48 );
-pos = s196;}
-void s175( const wstring& s77, size_t& pos, wchar_t s1198, wchar_t s1240, wstring& s153 ){
-size_t s74, s75;
-s54( s77, pos, s1198, s1240, s74, s75, true );
-if( s75 == string::npos )
-throw new s16( L"unmatched unquoted parentheses: " + s77.substr(pos, 20), 
-(uint32_t)s16::s17::s20 );
-if( s75 == s77.size() - 1 ) {
-pos = s75;}
-else {
-size_t pl = s77.find_first_not_of( s48, s75 + 1 );
-if( pl == string::npos && s77[pl] != L',' && s77[pl] != L'}' )
-throw new s16( L"wrong unquoted parentheses syntax: " + s77.substr( pos, 20 ),
-(uint32_t)s16::s17::s20 );
-pos = s75 + 1;}}
-s131 s176( const wstring& s77, size_t& pos, wstring& s153, const s1681& s1745 ){
-if( s77[pos] == s1745.s1683[0] && s1745.s1730) {
-s153 = L"";
-return s132;}
-if( !std::isgraph<wchar_t>( s77[pos], locloc ) ||
-s77[pos] == L':' || s77[pos] == L',' )
-throw new s16( L"empty element or unrecognized unquoted syntax: " + s77.substr( pos, 20 ),
-(uint32_t)s16::s17::s20 );
-size_t s196 = pos;
-int shift = 0;
-if( s77[pos] == L'(' && s1745.s1685) {
-s175( s77, s196, L'(', L')', s153 );
-if( s196 == s77.size() - 1 )
-shift = 1;}
-else {
-s196 = pos + 1;
-while( std::isgraph<wchar_t>( s77[s196], locloc ) &&
-s77[s196] != L':' && s77[s196] != L',' ) {
-if( s77[s196] == L'<'  && s1745.s1686 ) {
-s175( s77, s196, L'<', L'>', s153 );}
-else if( s77[s196] == L'(' && s1745.s1685 ) {
-s175( s77, s196, L'(', L')', s153 );
-if( s196 == s77.size() - 1 )
-shift = 1;
-break;}
-else
-++s196;}}
-s153 = s52( s77.substr( pos, s196 - pos + shift ), s48 );
-pos = s196;
-return s134;}
-void s177( wostream* pd, const wstring& s ){
-if( ( !std::isalpha<wchar_t>( s[0], locloc ) && s[0] != L'_' ) ||
-s[s.size()-1] == L'"' )
-throw new s16( L"wrong unquoted syntax: " + s.substr(0, 20),
-(uint32_t)s16::s17::s20 );
-for( size_t n = 0; n < s.size(); ++n ) 
-if( !std::isgraph<wchar_t>( s[n], locloc ) )
-throw new s16( L"wrong unquoted syntax: " + s.substr(0, 20),
-(uint32_t)s16::s17::s20 );
-*pd << s;}
-void s178( const s938* pf, const wstring& s77, vector<s9<s141>>& s153, 
-const s1681& s1745 ){
-size_t s68 = s77.find_first_not_of( s48 );
-s1755.push_back( s1745.s1718 );
-while( true ) {
-s153.push_back( s9<s141>(new s141( pf, s77, s68, s1745 ) ) );
-s4::s994( s77, s68, s1745.s1683 );
-if( s68 == string::npos )
-break;
-++s68;}
-s1755.pop_back();}
-void s178( const s938* pf, const wstring& s77, size_t& pos,
-vector<s9<s141>>& s153, const s1681& s1745 ){
-size_t s74, s75, s68 = 0;
-s54( s77, pos, L'[', L']', s74, s75, true );
-pos = s75 + 1;
-wstring ar = s52( s77.substr( s74 + 1, s75 - s74 - 1 ), s48 );
-if( ar.empty() )
-return;
-s1755.push_back( s1745.s1718 );
-while( true ) {
-s153.push_back( s9<s141>(new s141( pf, ar, s68, s1745 ) ) );
-s4::s994( ar, s68, s1745.s1683 );
-if( s68 == string::npos )
-break;
-++s68;}
-s1755.pop_back();}
-void s179( wostream* pd, const vector<s9<s141>>& v, bool s151=false ){
-*pd << L'[';
-for( size_t n = 0; n < v.size(); ++n ) {
-v[n]->s155( pd, s151 );
-if( n != v.size() - 1 )
-*pd << L',';}
-*pd << L']';}
-void s180( const wstring& s77, size_t& pos, wstring& s153, bool s151 = false ){
-size_t pl = s77.find_first_not_of( L", \n\r\t", pos );
-if( s88.find( s77[pl] ) != string::npos ) 
-s172( s77, pos, s77[pl], s153, s151 );
-else {
-if( !std::isgraph<wchar_t>( s77[pos], locloc ) ||
-s77[pos] == L':' || s77[pos] == L',' )
-throw new s16( L"unrecognized name syntax: " + s77.substr( pos, 20 ) +
-L"...",	(uint32_t)s16::s17::s20 );
-size_t s196 = pos + 1;
-wchar_t c = s77[s196];
-while( c != L':' && c != L',' ) {
-if( !std::isalnum<wchar_t>( c, locloc ) &&	!std::isspace<wchar_t>( c, locloc ) && 
-s2133.find( c ) == string::npos )
-throw new s16( L"unrecognized name syntax: " + s77.substr( pos, 20 ) +
-L"...",	(uint32_t)s16::s17::s20 );
-c = s77[++s196];}
-s153 = s52( s77.substr( pos, s196 - pos ), s48 );
-pos = s196;}}
-void s181( wostream* pd, const wstring& s, bool s151=false ){
-bool space = false;
-for( size_t n = 0; n < s.size(); ++n )
-if( !std::isgraph<wchar_t>( s[n], locloc ) ) {
-space = true;
-break;}
-if( !space && !s151 && s88.find( s[0] ) == string::npos )
-s177( pd, s );
-else
-s173( pd, s );}
-s131 s182( const wstring& s77, size_t& pos, double& s153 ){
-s131 s681 = s140;
-size_t pl = s77.find_first_not_of( L"-0123456789.", pos );
-size_t pl1 = s77.find( L".", pl );
-if( pl1 < pl )
-s681 = s136;
-if( pl == string::npos )
-s153 = stod( s77.substr( pos ) );
-else
-s153 = stod( s77.substr( pos, pl - pos ) );
-pos = pl;
-return s681;}
-s131 s1539( const wstring& s77, size_t& pos, double& s153, const s1681& s1745 ){
-const wchar_t* ps = s77.c_str();
-size_t sz = s77.size();
-size_t st = pos;
-if( ps[st] == L'-' ) {
-if( sz == st+1 || s1528.find( ps[st+1] ) == string::npos )
-return s132;
-st += 1;}
-if( ( ps[st] == L'0' && sz > st + 1 && s1527.find( ps[st+1] ) != string::npos ) ||
-( s1527.find( ps[st] ) == string::npos ) )
-return s132;
-size_t s680 = st;
-bool pt = false;
-while( s680 < sz ) {
-if( ps[s680] == s1745.s1682[0] ) {
-if( pt ) return s132;
-pt = true;
-s680++;}
-else if( s1527.find( ps[s680] ) != string::npos )
-s680++;
-else if( (s48 + s1745.s1683 + L"}").find( ps[s680] ) != string::npos  )
-break;
-else
-return s132;}
-s131 s681 = s140;
-if( pt )
-s681 = s136;
-if( s680 == sz )
-s153 = stod( s77.substr( pos ) );
-else
-s153 = stod( s77.substr( pos, s680 - pos ) );
-pos = s680;
-return s681;}
-bool s183( const wstring& s77, size_t& pos, bool& s153 ){
-size_t pl = 0;
-if( s77.find( L"true", pos, 4 ) == pos )
-pl = 4;
-else if( s77.find( L"false", pos, 5 ) == pos )
-pl = 5;
-if( pl ) {
-if( s186.find( s77[pos+pl] ) != string::npos ) {
-pos += pl;
-s153 = (pl == 4);
-return true;}}
-return false;}
-bool s184( const wstring& s77, size_t& pos ){
-if( s77.find( L"null", pos, 4 ) == pos ) {
-if( s186.find( s77[pos+4] ) != string::npos ) {
-pos += 4;
-return true;}}
-return false;}
-s141::s141( const s938* pf, const wstring& s77, size_t& pos, const s1681& s1745 )
-: s198( s132 ), obj( pf ), s1075( pos + (pf ? pf->s942():0), 0 ), s1074( (s938*)pf ){
-size_t s68 = s77.find_first_not_of( L" \n\r\t", pos );
-if( s68 == string::npos ) {
-if( s1745.s1730 )
-s198 = s132;
-else {
-s16* s961 = new s16(wstring( 28, L' ' ) + L"|^|" );
-s961->s30( L"empty array item: " + s77.substr( pos - 10, 20 ) );
-throw s961;}}
-else if( s77[s68] == L'{' ) {
-size_t s74, s75;
-s54( s77, s68, L'{', L'}', s74, s75, true );
-pos = s75+1;
-obj.s154( s52( s77.substr( s74 + 1, s75 - s74 - 1 ), s48 ), s1745 );
-s198 = s133;}
-else {
-pos = s68;
-if ( s88.find( s77[pos] ) != string::npos ) {
-s172( s77, pos, s77[pos], str, s1745.s151 );
-s198 = s139;}
-else if ( s77[pos] == L'[' ) {
-s178( (s938*)s1074, s77, pos, s162, s1745 ); 
-s198 = s135;}
-else {
-s198 = s1539( s77, pos, s163, s1745 );
-if( s198 != s132 )
-(void)0;
-else if( s183( s77, pos, b ) )
-s198 = s137;
-else if( s184( s77, pos ) )
-s198 = s138;
-else
-s198 = s176( s77, pos, str, s1745 );;}}
-s1075.second = pf ? pos - 1 + pf->s942() : 0;}
-s141::s141( double d, s131 v ) 
-: s198( v ), obj( NULL ), s163( d ) {
-assert( v == s136 || v == s140 );}
-bool s141::s1002( wstring& f, std::wstring& s, size_t& line  ) const{
-if( !s1075.first || s1074.s13() )
-return false;
-f = s1074->Path();
-s1074->s998( s, s1075.first, s1075.second, line );
-return true;}
-const s143& s141::s166() const{
-if( s198 == s133 )
-return obj;
-throw new s16( L"NQJ value: wrong variant" );}
-const std::vector<s142>& s141::s167() const{
-if( s198 == s135 )
-return s162;
-throw new s16( L"NQJ value: wrong variant" );}
-double s141::s168() const{
-if( s198 == s136 )
-return s163;
-throw new s16( L"NQJ value: wrong variant" );}
-int s141::s56() const{
-if( s198 == s140 )
-return (int)s163;
-throw new s16( L"NQJ value: wrong variant" );}
-bool s141::s722() const{
-if( s198 == s137 )
-return b;
-throw new s16( L"NQJ value: wrong variant" );}
-const std::wstring& s141::s169() const{
-if( s198 == s134 || s198 == s139 )
-return str;
-throw new s16( L"NQJ value: wrong variant" );}
-const std::wstring& s141::s859() const{
-if( s198 == s139 )
-return str;
-throw new s16( L"NQJ value: wrong variant" );}
-std::wstring s141::s851() const{
-if( s198 == s139 )
-return str.substr( 1, str.size() - 2 );
-throw new s16( L"NQJ value: wrong variant" );}
-void s143::s154( const wstring& s77, const s1681& s1745 ){
-s144.clear();
-size_t s68;
-size_t pl = s77.find_first_not_of( L" \n\r\t" );
-if( pl == string::npos )
-return;
-if( s77[pl] == L'{' )
-s68 = s77.find_first_not_of( L" \n\r\t", pl + 1 );
-else
-s68 = pl;
-while( true ) {
-wstring s76;
-s180( s77, s68, s76, s1745.s151 );
-size_t pl = s77.find_first_not_of( L" \n\r\t", s68 );
-if( pl == string::npos || s77[pl] != L':' )
-throw new s16( L"unrecognized nqj syntax: " + s77.substr(s68, 50), 
-(uint32_t)s16::s17::s20 );
-s68 = pl + 1;
-s144.insert( make_pair( s76, new s141( src, s77, s68, s1745 ) ) );
-pl = s77.find_first_not_of( L" \n\r\t", s68 );
-if( pl != string::npos && s186.find( s77[pl] ) == string::npos ) 
-throw new s16( L"wrong nqj syntax: missed separator or closing brace: " + s77.substr(s68, 50), 
-(uint32_t)s16::s17::s20 );
-if( pl != string::npos )
-pl = s77.find_first_not_of( L" \n\r\t", pl+1 );
-if( pl == string::npos )
-break;
-s68 = pl;}}
-bool s143::operator==( const s143& r )  const{
-bool s681 = true;
-for( auto it = s144.begin(); it != s144.end(); ++it ) {
-auto it1 = r.s144.find( it->first );
-if( it1 == r.s144.end() || !( *( it->second ) == *( it->second ) ) ) {
-s681 = false;
-break;}}
-return s681;}
-void s143::s155( wostream* pd, bool s151 ) const{
-*pd << L"{\n";
-for( auto it = s144.begin(); it != s144.end(); ++it ) {
-if( it != s144.begin() )
-*pd << L",\n";
-s181( pd, it->first, s151 );
-*pd << L" : ";
-it->second->s155( pd );}
-*pd << L"\n}";}
-void s141::s155( wostream* pd, bool s151 ) const{
-if( s198 == s133 )
-obj.s155( pd, s151 );
-else if( s198 == s135 )
-s179( pd, s162, s151 );
-else if( s198 == s134 )
-s181( pd, str, s151 );
-else if( s198 == s139 )
-s181( pd, str, true );
-else if( s198 == s136 )
-*pd << to_wstring( s163 );
-else if( s198 == s140 )
-*pd << to_wstring( (int)s163 );
-else if( s198 == s137 )
-*pd << ( b ? L"true" : L"false" );
-else if( s198 == s138 )
-*pd << L"null" << endl;
-else
-throw new s16( L"unknown variant" );}
-bool s143::s156( const wstring& s152 ) const{
-if( s144.find( s152 ) != s144.end() )
-return true;
-return false;}
-void s143::s157( const wstring& s152, vector<s9<s141>>& s153 ) const{
-auto i = s144.equal_range( s152 );
-if( i.first == i.second )
-return;
-for( auto it = i.first; it != i.second; ++it )
-s153.push_back( it->second );}
-const s142 s143::s158( const wstring& s152 ) const{
-if( s144.count( s152 ) > 1 )
-throw new s16( L"multiple values: " + s152, (uint32_t)s149 );
-auto s681 = s144.find( s152 );
-return s681->second;}
-void s143::s159( const std::wstring& s76, s142 s347, s145 ap ){
-if( s144.find( s76 ) != s144.end() ) {
-if( ap == s146 )
-throw new s16( L"Field already exists: " + s76, (uint32_t)s16::s17::s21 );
-else if( ap == s148 )
-return;
-else if( ap == s147 )
-s144.erase( s76 );}
-s144.insert( make_pair( s76, s347 ) );}
-void s143::s1619( const std::wstring& s76 ){
-if( s144.find( s76 ) == s144.end() )
-throw new s16( L"Attribute doesn't exist: " + s76, (uint32_t)s16::s17::s21 );
-s144.erase( s76 );}
-void s143::s160( vector<pair<wstring, s9<s141>>>& s153 ) const{
-for( auto it = s144.begin(); it != s144.end(); ++it ) 
-s153.push_back( *it );}
-void s143::s161( wostream* pd, int s197 ) const{
-for( auto it = s144.begin(); it != s144.end(); ++it ) {
-*pd << FILL(s197) << it->first << " : " << endl;
-it->second->s161( pd, s197 + 2 );}}
-void s141::s161( wostream* pd, int s197 ) const{
-if( s198 == s133 )
-obj.s161( pd, s197 + 2 );
-else if( s198 == s135 ) {
-for( size_t n = 0; n < s162.size(); ++n ) {
-s162[n]->s161( pd, s197 );
-if( n < s162.size() - 1 )
-*pd << endl;}}
-else if( s198 == s134 )
-*pd << FILL( s197 ) << str << endl;
-else if( s198 == s136 )
-*pd << FILL( s197 ) << s163 << endl;
-else if( s198 == s140 )
-*pd << FILL( s197 ) << s163 << endl;
-else if( s198 == s137 )
-*pd << FILL( s197 ) << b << endl;
-else if( s198 == s138 )
-*pd << FILL( s197 ) << L"null" << endl;
-else
-throw new s16( L"unknown variant" );}
-bool operator==( const std::vector<s9<s141>>& l,
-const std::vector<s9<s141>>& r ){
-if( l.size() == r.size() ) {
-for( size_t n = 0; n < l.size(); ++n )
-if( !(*( l[n] ) == *( r[n] ) ) )
-return false;
-return true;}
-return false;}
-s131 s1695::s1539( const std::wstring& s77, size_t& pos, double& s153 ){
-return s6::s1539( s77, pos, s153, conf );}
-} // namespace s6
 using namespace s6;
 namespace transd {
 namespace s7 {
@@ -7746,7 +7748,8 @@ s68 = s69 + s72.size();
 if( adds->s347.size() )
 pv->s318().push_back( (s481*)adds->s333( 0,0 ) );}}}}
 void s357::s1920( Stream* s1919 ) const{
-if( s1919->s2052() )
+if( s1919->s2052() && (s347[0] != L'"' 
+&& s347.back() != L'"' ))
 s1919->s1469( L"\"" 
 + s347 + 
 L"\"" );
@@ -13803,22 +13806,22 @@ for( size_t n = 0; n < nlocs; ++n ) {
 if( *( s579 + n ) ) {
 s470 pc = ( ( s482* )*( s579 + n ) )->s492();
 if( pc == s473 )
-*( s578 + n + shift ) =
+s628[n] =
 (s481*)( ( s369* )*( s579 + n ) )->s375();
 else if( pc == s474 ) {
 s974[n+shift] = (s481*)( ( s589* )*( s579 + n ) )->s495( s687, s691 );
-*( s578 + n + shift ) = s974[n + shift];}
+s628[n] = s974[n + shift].s15<s271*>();}
 else if( pc == s472 || pc == s1235 ) {
 if( n < s580.size() )
-*( s578 + n + shift ) = ( s481* )*( s579 + n );
+s628[n] = ( s481* )*( s579 + n );
 else
-*( s578 + n + shift ) = ( s481* )((s482*)*( s579 + n ))->s333( 0, 0 );}
+s628[n] = ( s481* )((s482*)*( s579 + n ))->s333( 0, 0 );}
 else if( pc == s478 ) {
-*( s578 + n + shift ) = ( s481* )( ( s482* )*( s579 + n ) )->s333( 0, 0 );
-s272* po = (s272*)( *( s578 + n + shift ) );
-if( !po->s1195() ) // ???DEBUG??? 220627
-(*( s578 + n + shift ))->s498( this, false );}}}
-if( s581.size() > 1 ) {
+s628[n] = ( s481* )( ( s482* )*( s579 + n ) )->s333( 0, 0 );
+s272* po = s628[n].s15<s272*>();
+if( !po->s1195() )
+s628[n]->s498( this, false );}}}
+if( 0 && s581.size() > 1 ) {
 for( size_t n = 1; n < s581.size(); ++n )
 s628[n - 1] = s581[n];}}
 else {
@@ -14314,7 +14317,6 @@ void
 s609::s498( const s272* s1658, bool proc ){
 s78.create( s274 );
 s584 = s364.s15<s481*>();
-s581.push_back( s274[0]->s494() );
 s1252();}
 s484 s609::s495( s481** s699, size_t s496 ){
 return &s78;}

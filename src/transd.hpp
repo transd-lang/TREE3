@@ -5991,7 +5991,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.505"
+#define TRANSD_VERSION L"0.506"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
