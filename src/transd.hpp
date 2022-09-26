@@ -2121,7 +2121,7 @@ class s272
 protected:
 const s272* s623;
 const s272* s624;
-s369 s1649;
+s487 s1649;
 const std::wstring& s345;
 std::wstring s278;
 std::wstring s625;
@@ -3167,6 +3167,7 @@ static void s2074( s481** s274, size_t n );
 static void s2073( s481** s274, size_t n );
 static void s1244( s481** s274, size_t n );
 static void s1257( s481** s274, size_t n );
+static void issorted_impl( s481** s274, size_t n );
 static void s1581( s481** s274, size_t n );
 static void s1575( s481** s274, size_t n );
 static void s774( s481** s274, size_t n );
@@ -3199,6 +3200,7 @@ typedef s334::s335 s335;
 static void s1623( s481** s274, size_t n );
 static void s1609( s481** s274, size_t n );
 static void s1257( s481** s274, size_t n );
+static void issorted_impl( s481** s274, size_t n );
 static void s774( s481** s274, size_t n );
 static void s1453( s481** s274, size_t n );
 static void s1958( s481** s274, size_t n );
@@ -4793,6 +4795,8 @@ s346.insert( std::make_pair( L"back", new s335( L"back", &s1390<_Cont, s1301, De
 { s1113() }, 0, 0 ) ) );
 s346.emplace( std::make_pair( L"is-el", new s335( L"is-el", &s1390<_Cont, s1301, Der, s1570>::s2222, s1139,
 { s1113( { s7::s1386 } ) }, 1, 1, true ) ) );
+s346.emplace( std::make_pair( L"is-sorted", new s335( L"is-sorted", &s1390<_Cont, s1301, Der, s1570>::issorted_impl, s1139,
+{ s1113( ) }, 0, 0, true ) ) );
 s346.equal_range( L"begin" ).first->second->s1251( true );
 s346.equal_range( L"end" ).first->second->s1251( true );
 s346.equal_range( L"front" ).first->second->s1251( true );
@@ -4828,6 +4832,9 @@ s346.insert( std::make_pair( L"join", new s335( L"join", &s1564<_Cont, s1301, De
 if( s346.count( L"is-el" ) ) s346.erase( L"is-el" );
 s346.emplace( std::make_pair( L"is-el", new s335( L"is-el", &s1564<_Cont, s1301, Der>::s2222, s1139,
 { s1113( { s7::s1386 } ) }, 1, 1, true ) ) );
+if( s346.count( L"is-sorted" ) ) s346.erase( L"is-sorted" );
+s346.emplace( std::make_pair( L"is-sorted", new s335( L"is-sorted", &s1564<_Cont, s1301, Der>::issorted_impl, s1139,
+{ s1113( { s1404 } ), s1113( { s1404, tp } ), s1113(), s1113( { tp } ) }, 0, 1, true ) ) );
 s346.equal_range( L"front" ).first->second->s1251( true );
 s346.equal_range( L"back" ).first->second->s1251( true );
 s346.equal_range( L"sort" ).first->second->s1251( true );
@@ -5061,6 +5068,30 @@ s1509 = rp.second.s15<s933*>()->s1136();
 typename _Cont::iterator s1966 = std::find( s1508, s1509, *el );
 *((s358*)*s274)->s355() = ( s1966 != pv->s347.end() );}
 template <class _Cont, class s1301, class Der, class s1570>
+void s1390<_Cont, s1301, Der, s1570>::issorted_impl( s481** s274, size_t s496 ){
+using s933 = typename Der::s1130;
+Der* pv = NULL;
+s1135 pr = s311<_Cont, s1301, Der>::s1415( s274[1], &pv );
+if( ( (s324*)pv )->s1129() < 2 )
+throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );
+s589* s1197 = NULL;
+if( s496 == 3 )
+s1197 = (s589*)s274[2];
+s1291<s1301> s2217;
+s2217.s853 = s1197;
+bool s153;
+if( pv->s1129() >= 1 && pr.first.s15<s1116*>()->Reversed() ) {
+typename _Cont::reverse_iterator s1508, s1509;
+s1508 = pr.first.s15<s933*>()->s1137();
+s1509 = pr.second.s15<s933*>()->s1137();
+s153 = std::is_sorted( s1508, s1509, s2217 );}
+else {
+typename _Cont::iterator s1508, s1509;
+s1508 = pr.first.s15<s933*>()->s1136();
+s1509 = pr.second.s15<s933*>()->s1136();
+s153 = std::is_sorted( s1508, s1509, s2217 );}
+*((s358*)s274)->s355() = s153;}
+template <class _Cont, class s1301, class Der, class s1570>
 void s1390<_Cont, s1301, Der, s1570>::s1731( s481** s274, size_t s496 ){
 using s1121 = Der;
 using s933 = typename Der::s1130;
@@ -5144,6 +5175,31 @@ s1509 = pr.second.s15<s933*>()->s1136();
 std::sort( s1508, s1509, s1954 );}
 *s274 = pv;}
 template <class _Cont, class s1301, class Der>
+void s1564<_Cont, s1301, Der>::issorted_impl( s481** s274, size_t s496 ){
+using s933 = typename Der::s1130;
+Der* pv = NULL;
+s1135 pr = s311<_Cont, s1301, Der>::s1415( s274[1], &pv );
+if( ( (s324*)pv )->s1129() < 2 )
+throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );
+s589* s1197 = NULL;
+if( s496 == 3 )
+s1197 = (s589*)s274[2];
+s1291<s1301> s1954;
+if( s1197 )
+s1954.s853 = s1197;
+bool s153;
+if( pv->s1129() >= 1 && pr.first.s15<s1116*>()->Reversed() ) {
+typename _Cont::reverse_iterator s1508, s1509;
+s1508 = pr.first.s15<s933*>()->s1137();
+s1509 = pr.second.s15<s933*>()->s1137();
+s153 = std::is_sorted( s1508, s1509, s1954 );}
+else {
+typename _Cont::iterator s1508, s1509;
+s1508 = pr.first.s15<s933*>()->s1136();
+s1509 = pr.second.s15<s933*>()->s1136();
+s153 = std::is_sorted( s1508, s1509, s1954 );}
+*((s358*)*s274)->s355() = s153;}
+template <class _Cont, class s1301, class Der>
 void s1564<_Cont, s1301, Der>::s774( s481** s274, size_t s496 ){
 using s933 = typename Der::s1130;
 Der* pv = NULL;
@@ -5216,9 +5272,9 @@ s681 += s72 + (*s1507)->to_wstring();
 template<class _Cont, class s1301, class Der>
 inline void s1564<_Cont, s1301, Der>::s2222( s481** s274, size_t s496 ){
 Der* pv = ( (Der*)s274[1] );
-pv->s495(0,0); // ???DEBUG??? 220816
+pv->s495(0,0);
 s484 el = (s481*)s274[2];
-el->s495(0,0); // ???DEBUG??? 220909
+el->s495(0,0);
 if( el->s1195() &&
 std::find_if( pv->s347.begin(), pv->s347.end(), [el]( s483 r ) { return el->operator==(r.s15<s481*>()); } ) != pv->s347.end() )
 *( (s358*)*s274 )->s355() = true;
@@ -5324,6 +5380,12 @@ throw new s2::s16( L"this type of iterable doesn't support the 'back' operation"
 template <>
 inline void s1564<s2236, s483, s2237>::s1609( s481** s274, size_t s496 ){
 throw new s2::s16( L"this type of iterable doesn't support the 'back' operation" );}
+template <>
+inline void s1390<s2236, s483, s2237, s483>::issorted_impl( s481** s274, size_t s496 ){
+throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );}
+template <>
+inline void s1564<s2236, s483, s2237>::issorted_impl( s481** s274, size_t s496 ){
+throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );}
 class s413
 : public s334{
 static s339 s346;
@@ -5991,7 +6053,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.506"
+#define TRANSD_VERSION L"0.507"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );

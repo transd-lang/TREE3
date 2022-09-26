@@ -36,8 +36,8 @@ wstring shellCallSite = L"_callSite";
 HPROG prog = 0;
 
 wstring version = L"0.2";
-// 220924
-wstring buildnum = L"33";
+// 220926
+wstring buildnum = L"34";
 wstring copyright = L"TREE3 (Transd Expression Evaluator, 3rd revision)\nVirtual compiler (interpreter) for Transd programming language."
 "\n\nCopyright (c) 2020-2022 Albert Berger."
 "\nVersion: " + version + L"." + buildnum + 

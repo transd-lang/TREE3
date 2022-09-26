@@ -75,7 +75,7 @@ ob->s154( sob, s1746 );
 s1755.pop_back();}
 catch( s16* e ) {
 s1755.pop_back();
-e->s30( L"during reading the object: " + sob.substr( 0, 50 ) + L"...");
+e->s30( L"failed to read the object: " + sob.substr( 0, 50 ) + L"...");
 throw e;}}
 bool s938::s998( wstring& s, size_t s68, size_t s679, size_t& line ) const{
 line = 0;
@@ -5765,14 +5765,14 @@ const wstring s469 = L"";
 s480 s683;
 s272::s272( s262* s300, s1054 s338, s470 pc/* = s471*/, const s263* ast_, s272* ns_, s2176 st )
 : s481( s300, pc, ast_, ns_ ), s623( NULL ), s624( NULL ), 
-s1649( s7::s1589, s300, s473 ), s345( s469 ), //s631( s683 ),
+s1649( new s369( s7::s1589, s300, s473 )), s345( s469 ), //s631( s683 ),
 s627( NULL )/*, s1350( ++s1351 )*/, s2180( st )
 {
 s623 = this;
 s491 = s338;}
 s272::s272( const s272& proto, std::vector<s483>& s699, const s263* ast_, s272* ns_ )
 : s481( proto.s300, /*s478*/proto.s490, ast_, ns_ ? ns_ : proto.ns ), s623( &proto ), 
-s624(NULL), s1649( s7::s1589, s300, s473 ), s345( proto.s345 ),
+s624(NULL), s1649( new s369( s7::s1589, s300, s473 )), s345( proto.s345 ),
 s627( proto.s627 ), //s631( s683 ),
 s629( proto.s629 ), s2180( proto.s2180 )//, s1350( ++s1351 )
 {
@@ -5787,20 +5787,20 @@ s628.push_back( s626.get( s629[n].s615() ) );
 if( s699.size() ) {
 s836* p = (s836*)s626.get( s7::s427 );
 p->s2259( s699 );}
-s1649.s349( s491 );
+s1649->s349( s491 );
 if( s490 == s478 )
 s1665( proto.s616() );}
 s272::s272( s1890& s672, s262* s300, s470 pc, const s263* ast_, s272* ns_,
 s2176 st )
 : s481( s300, pc, ast_, ns_ ), s623( NULL ), s624( NULL ), 
-s1649( s7::s1589, s300, s473 ), s345( s469 ), s278( s672 ),
+s1649( new s369( s7::s1589, s300, s473 )), s345( s469 ), s278( s672 ),
 s627( NULL ), s2180( st )//, s1350( ++s1351 )//, s631( *new s480() )
 {
 s623 = this;}
 s272::s272( s263& s695, s262* s300, s470 pc, s272* ns_, s534 am,
 s621& cl, s620& cnl, s622& al, s2176 st )
 : s481( s300, pc, &s695, ns_ ), s623(NULL), s624( NULL ), 
-s1649( s7::s1589, s300, s473 ), s345( s695.s299() ), s278( s695.s298() ),
+s1649( new s369( s7::s1589, s300, s473 )), s345( s695.s299() ), s278( s695.s298() ),
 s626( am ), s627( NULL ), s2180( st )//, s1350( ++s1351 ) //,s631( *new s480() )
 {
 if( s278.find( L" " ) != string::npos )
@@ -5997,7 +5997,7 @@ s628.push_back( s1354 );
 s629.push_back( s369( s7::s1346, s300 ) );
 if( s626.s156( s7::s426 ) ) {
 s836* s2169 = (s836*)s626.get( s7::s426 );
-vector<s271*> s1825 = { this }; // ???DEBUG??? 220615
+vector<s271*> s1825 = { this };
 s589::s829 s875;
 s2169->s808( s875 );
 for( size_t n = 0; n < s875.size(); ++n )
@@ -6046,15 +6046,14 @@ else
 p->s595( s873 );
 if( s492() == s478 ) {
 p->s2246();
-s1649.s380( this );
-p->s2172( &s1649 );
+s1649->s380( this );
+p->s2172( s1649 );
 p->s495( (s481**)&s274[0], 1 );}}
-s626.s498( (s272*)s873, this, s300->s1320() ); // ???DEBUG??? 220626
-}
+s626.s498( (s272*)s873, this, s300->s1320() );}
 catch( s16* e ) {
 throw new TDException( TDException::Stage::s1019, s7::s2275, s1544, s601(), *e );}}
 s627 = s623->s627;
-s1649.s349( s491 );}
+s1649->s349( s491 );}
 ns = (s272*)s873;}
 void s272::s2118( s589* s2042, s272* impl, bool s2159 ){
 return s481::s2118( s2042, impl, s2159 );
@@ -6287,8 +6286,7 @@ return s278;
 else if( s492() == s476 || s492() == s478 )
 return s345;
 assert( 0 );
-return /*s277 + L"::" +*/ s278;
-}
+return s278;}
 s481* s272::s342( s1890& s672, s1890& s332,
 bool s518 /*= true*/, bool s2151 /*= true*/ ) const
 {
@@ -6786,8 +6784,7 @@ void s589::s841( s271* par, size_t pos, s483& s153, const s272* s1658, bool proc
 if( par->s492() == s475 ) {
 s488 cs = new s559( *((s559*)par) );
 s153 = s598( cs, s300, (s272*)s1658, this, s1658->s2154(), cs->s2166() );
-s153.s15<Transd*>()->s498( s586 ? s586 : s1658, cs->s2166() ); // ???DEBUG??? 220617
-}
+s153.s15<Transd*>()->s498( s586 ? s586 : s1658, cs->s2166() );}
 else if( par->s492() == s472 ) {
 par->s498( /*s586*/ this, false );
 s153 = par;}
@@ -6796,20 +6793,16 @@ s153 = par; // par->s494();
 s153->s2118( this, (s272*)s1658, s153.s15<Transd*>()->s2166()  );	  //???DEBUG??? 220828
 }
 else if( par->s492() == s1235 ) {
-if( this->s492() == s1235 ) //???DEBUG??? 220622 V
+if( this->s492() == s1235 )
 ( (s832*)par )->s586 = this; 
 par->s498( this, false );
 s153 = par;}
 else
 s153 = par;}
-void s589::s587(const wstring& s332){
-return; // ???DEBUG??? 220213
-for( size_t n = 0; n < s580.size(); ++n )
-s580[n]->s498( s585/*s586*/ );
-}
+void s589::s587(const wstring& s332){}
 void s589::s498( const s272* s2161, bool proc/*=false*/ )
 {
-s1649.s349( s491 );
+s1649->s349( s491 );
 s667 = proc ? s2154() : s2161->s2154(); // ???DEBUG??? 220420
 if( s586 && (s586->s492() == s477 || s586->s492() == s476 )) {
 if( 0 && s586->s492() == s476 ) 
@@ -6828,7 +6821,7 @@ par.s15<s369*>()->reset();
 s485 s1661 = s586;
 if( s2161 != this )
 s586 = (s272*)s2161;
-par.s15<s369*>()->s498( s585, s2159 ); // ???DEBUG??? 220920
+par.s15<s369*>()->s498( s585, s2159 );
 s586 = s1661;}
 s581.push_back( par.s15<s369*>()->s375() );}
 else if( par->s492() == s1056 || par->s492() == s479 )
@@ -6963,28 +6956,20 @@ return;}
 if( s274.size() > s628.size() )
 throw s961.s993( L"too many arguments" );
 for( size_t n = 0; n < s274.size(); ++n ) {
-if( s573 != s565 && n == 0 && s274[n]->s616() == s7::s861 )  // ???DEBUG??? 220617
+if( s573 != s565 && n == 0 && s274[n]->s616() == s7::s861 )
 continue;
 s483 par = s274[n];
 if( par->s492() == s473 ) {
 if( !par.s15<s369*>()->s379().s13() )
 par.s15<s369*>()->reset();
 par.s15<s369*>()->s498( s585.s14() ? s585.s15<s589*>() 
-: s1658, false ); // ???DEBUG??? 220618
+: s1658, false ); 
 s581.push_back( par.s15<s369*>()->s375() );}
 else
 s841( par, n, s274[n], s1658, proc );
 s481* par_ = s274[n]->s492() == s474 ? s274[n]->s494() : s274[n].s15<s481*>();
 s626.s539( s629[n].s615(), par_, s480::s147 );
 s628[n] = par_;
-if( 0 && s274[n]->s492() == s474 ) {
-s369* ref = new s369( s629[n].s615(), s300, s473 );
-size_t off = s638( s629[n].s615() );
-s271* s1053 = s628[off].s15<s271*>()->s494();
-if( !s1053 )
-s1053 = (s271*)s300->TR().s1000( s628[off]->s350() );
-ref->s377( off, s1053->s501() );
-s274[n].s15<s589*>()->s2172( ref );}
 if( s580.size() > n ) {
 if( s580[n]->s350() == Types.No ) {
 if( !s580[n]->s499( s274[n].s15<s481*>() ) )
@@ -8215,7 +8200,8 @@ s717 = par;
 else
 throw new s16( s690 + L"unknown parameter '" + rf->s615() + L"'." );}
 s771 = 0; s760 = ( ( s760 == s758 || s760 == s713 ) ? s810 : s758 );}}
-s720++;}}
+s720++;}
+s1252();}
 s484 s811::s495( s481** s687, size_t s691 ){
 size_t s192 = 0, s679 = string::npos;
 wstring s755, s719;
@@ -9865,7 +9851,7 @@ s346.insert( make_pair( L"sumeq", new s335( L"sumeq", &s314::s391, s1143,
 { s1113( { s7::s1383, s7::s1388 } ) }, 1, 100 )));
 s346.emplace( make_pair( L"mul", new s335( L"mul", &s314::s388, 0,
 { s1113( { s1501::s1538 } ) }, 1, 1, true ) ) );
-s346.emplace( make_pair( L"erase", new s335( L"erase", &s314::s331, s1143,
+s346.emplace( make_pair( L"erase", new s335( L"erase", &s314::s331, 0,
 { s1113( { s1501::s1538 } ), s1113( { s1501::s1538, s1501::s1538 } ) }, 1, 2, false ) ) );
 s346.emplace( make_pair( L"resize", new s335( L"resize", &s314::s327, s1143,
 { s1113( { s1501::s1538 } ) }, 1, 1, false ) ) );
@@ -9882,6 +9868,7 @@ s346.equal_range( L"get" ).first->second->s1251( true );
 s346.equal_range( s7::s1346 ).first->second->s1251( true );
 s346.equal_range( L"sum" ).first->second->s1251( true );
 s346.equal_range( L"mul" ).first->second->s1251( true );
+s346.equal_range( L"erase" ).first->second->s1251( true );
 s300->TR().s1153( s491, s7::s1401, s1501::s1497 );
 s300->TR().s1153( s491, s7::s1399, s1501::s1495 );
 s300->TR().s1153( s491, s7::s1400, s1501::s1496 );}
@@ -9898,7 +9885,7 @@ s1054 s314::s1179( const wstring& s1541, const vector<s483>& l ) const{
 s1054 s681 = 0;
 if( s1541 == L"get" )
 s681 = s323;
-else if( s1541 == s7::s1346 || s1541 == L"sum" || s1541 == L"mul" )
+else if( s1541 == s7::s1346 || s1541 == L"sum" || s1541 == L"mul" || s1541 == L"erase")
 s681 = s491;
 else
 s681 = s1564::s1179( s1541, l );
@@ -10031,7 +10018,8 @@ if( idx + s163 >= pv->s347.size() )
 it2 = pv->s347.end();
 else
 it2 = pv->s347.begin() + idx + s163;
-pv->s347.erase( it1, it2 );}
+pv->s347.erase( it1, it2 );
+*s274 = pv;}
 inline void s314::s1304( s481** s274, size_t s496 ){
 s314* pv = (s314*)DR;
 pv->s347.push_back( s274[2]->s333(0,0)->s495(0,0).s15<s271*>());
@@ -12131,14 +12119,16 @@ s1252();}}
 void s2237::s348(){
 s1564<s2236, s483, s2237>::s348();
 s346 = s1564<s2236, s483, s2237>::s340();
-s346.insert( make_pair( s7::s1346, new s335( s7::s1346, &s2237::s1227, s1143,
+s346.emplace( make_pair( s7::s1346, new s335( s7::s1346, &s2237::s1227, s1143,
 { s1113(), s1113( { s7::s1382, s7::s1388 } ) }, 0, 0, false, { L":typedTable", L":untypedTable" } ) ) );
 s346.emplace( make_pair( L"set", new s335( L"set", &s2237::s385, s1143,
 { s1113( { s1501::s1496 } ) }, 1, 1, false ) ) );
 s346.emplace( make_pair( L"insert", new s335( L"insert", &s2237::s330, s1143,
 { s1113( { s7::s1386 } ) }, 1, 1, false ) ) );
-s346.insert( make_pair( L"sort", new s335( L"sort", &s2237::s2228, 0,
+s346.emplace( make_pair( L"sort", new s335( L"sort", &s2237::s2228, 0,
 { s1113( { s7::s1383 } ) }, 1, 1 ) ) );
+s346.emplace( make_pair( L"is-sorted", new s335( L"is-sorted", &s2237::s2228, 0,
+{ s1113( {  s7::s1382, s7::s1388 } ) }, 0, 1 ) ) );
 s346.equal_range( s7::s1346 ).first->second->s1251( true );
 s300->TR().s1153( s491, s7::s1399, s1501::s1495 );
 s300->TR().s1153( s491, s7::s1400, s1501::s1496 );}
@@ -13748,8 +13738,9 @@ s2210( s215, proc );
 if( s300->s1320() || s2089 ) { 
 s491 = 0; // s1143;
 if( !s585 ) s585 = (s589*)s215;
-for( size_t n = 0; n < s582.size(); ++n )
-s582[n].s15<s559*>()->s2171( true );
+for( size_t n = 0; n < s582.size(); ++n ) {
+if( s582[n]->s492() == s475 )
+s582[n].s15<s559*>()->s2171( true );}
 s589::s498( s586->s492() == s478 ? s586.s15<s272*>() : (s272*)this, proc ); // ???DEBUG??? 220830
 if( s1888.size() < 2 || s1888.back() == s1143 ) {
 if( s1888.empty() ) {
