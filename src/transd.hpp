@@ -710,6 +710,7 @@ DEFCONSTI s861;
 DEFCONSTI s862;
 DEFCONSTI s1733;
 DEFCONSTI s1190;
+DEFCONST s2300;
 DEFCONST s1402;
 DEFCONST s1513;
 DEFCONST s1400;
@@ -859,6 +860,7 @@ s1306;
 #define s2087		3
 #define s2174  4
 #define s2279    5
+#define s2299   6
 class s262;
 class s263;
 class s270;
@@ -1048,7 +1050,8 @@ bool s654( const std::wstring& s, bool s708 = true );
 } // namespace tdlang
 extern const std::wstring s469;
 enum s470 { s471, s472, s473, s1327, s474, s1235, s1236, 
-s475, s476, s477, s478, s479, s1056, s2150 };
+s475, s476, s477, s478, s479, s1056, s2150,
+s2307 };
 enum s1984 { s2032 = 0, s2033, s2031, s2030 };
 enum s1983 { s2039 = 0, s2035, s2036, s2037, s2038 };
 enum s2176 { s2187, s2183, s2186, s2188, s2184, s2185 };
@@ -1213,6 +1216,7 @@ size_t s320() const { return s1086; }
 };
 class s480;
 class s262;
+class s832;
 struct s958{
 std::size_t operator()( const s807& k ) const{
 return k.s320();}
@@ -1223,6 +1227,7 @@ return l.operator==( r );}
 };
 class s489{
 typedef std::map<std::wstring, s1054> s953;
+typedef std::map<s1054, s1::s9<s832>> s2301;
 typedef std::unordered_map<s807, s1054, s958, s959> s956;
 typedef std::map<std::wstring, std::list<std::wstring>> s1776;
 typedef std::map<std::wstring, std::set<std::wstring>> s907;
@@ -1231,20 +1236,24 @@ typedef std::map<std::wstring, traitnum_t> s1145;
 typedef std::unordered_map<traitnum_t, std::wstring> s1238;
 std::vector<s484> s1104;
 std::vector<std::wstring> s1087;
+std::vector<std::wstring> s2303;
 std::vector<s807> s1092;
 s953 s1088;
+s2301 s2309;
 s956 s1093;
 s1776 s1827;
 s920 s911;
 s1145 s886;
 s1238 s1249;
 traitnum_t s1196;
+s1054 s2306;
 std::vector<traitnum_t>s1264;
 std::vector<s1054>s1500;
 std::vector<std::vector<s1054>> s1540;
 s262* s300;
 s1054 s1061( const s807::Cont& v, s1890& s345 );
 void s1162( s1890& alias, s1890& s345, s1890& s1826 );
+void s2304( s1890& def, s832* pred, s1890& s1826 );
 public:
 s489( s262* pass_ );
 void reset();
@@ -1679,6 +1688,7 @@ s271* s333( s589* s2042, s272* impl ) const override;
 bool s499( const s481* s500 ) const override;
 bool s1530( s1054 tp ) const override;
 traitnum_t s1529() const { return s1262; }
+s1890& s351() const override;
 void* addr() override { return (void*)0; }
 void s354( s271* p ) const override { }
 size_t s320() const override;
@@ -1952,6 +1962,7 @@ class s344
 static s339 s346;
 static void s1227( s481** s274, size_t n );
 static void s2291( s481** s274, size_t n );
+static void s2308( s481** s274, size_t n );
 void s348() override;
 const s339& s340() const override { return s346; }
 public:
@@ -1966,6 +1977,7 @@ virtual ~s344();
 s481* s352( const s263& s695, s272* s586, s1890& s332 ) const override;
 s481* s353( s272* s586, const std::vector<s271*>& l, const s263* ast_ ) const override;
 bool s1530( s1054 tp ) const override;
+s1054 s1179( s1890& s1541, const std::vector<s483>& l ) const override;
 void s498( const s272* s585, bool ) override;
 s271* s333( s589* s2042, s272* impl ) const override;
 void s354( s271* p ) const override;
@@ -3167,7 +3179,7 @@ static void s2074( s481** s274, size_t n );
 static void s2073( s481** s274, size_t n );
 static void s1244( s481** s274, size_t n );
 static void s1257( s481** s274, size_t n );
-static void issorted_impl( s481** s274, size_t n );
+static void s2305( s481** s274, size_t n );
 static void s1581( s481** s274, size_t n );
 static void s1575( s481** s274, size_t n );
 static void s774( s481** s274, size_t n );
@@ -3200,7 +3212,7 @@ typedef s334::s335 s335;
 static void s1623( s481** s274, size_t n );
 static void s1609( s481** s274, size_t n );
 static void s1257( s481** s274, size_t n );
-static void issorted_impl( s481** s274, size_t n );
+static void s2305( s481** s274, size_t n );
 static void s774( s481** s274, size_t n );
 static void s1453( s481** s274, size_t n );
 static void s1958( s481** s274, size_t n );
@@ -3635,16 +3647,15 @@ public:
 typedef s1566 s1130;
 s357( const s357&, const s263* ast_ = NULL );
 s357( s262* s300, s272* s586, const std::vector<s271*>& l, const s263* ast_ = NULL );
-s357( s262* s300, const std::wstring& s = std::wstring( L"" ), s272* s586=NULL, const s263* ast_ = NULL );
-s357( s262* s300, const std::wstring& s, size_t& pos, const s263* ast_ = NULL );
+s357( s262* s300, s1890& s = std::wstring( L"" ), s272* s586=NULL, const s263* ast_ = NULL );
+s357( s262* s300, s1890& s, size_t& pos, const s263* ast_ = NULL );
 virtual ~s357();
 s481* s352( const s263& s695, s272* s586, 
 const std::wstring& s332 ) const override;
 s481* s353( s272* s586, const std::vector<s271*>& l, 
 const s263* ast_ ) const override;
 size_t s1129() const override { return 2; }
-s1054 s1179( const std::wstring& s1541, 
-const std::vector<s483>& l ) const override;
+s1054 s1179( s1890& s1541, const std::vector<s483>& l ) const override;
 void s498( const s272* s873, bool ) override;
 s271* s333( s589* s2042, s272* impl ) const override;
 void s354( s271* p ) const override;
@@ -4795,7 +4806,7 @@ s346.insert( std::make_pair( L"back", new s335( L"back", &s1390<_Cont, s1301, De
 { s1113() }, 0, 0 ) ) );
 s346.emplace( std::make_pair( L"is-el", new s335( L"is-el", &s1390<_Cont, s1301, Der, s1570>::s2222, s1139,
 { s1113( { s7::s1386 } ) }, 1, 1, true ) ) );
-s346.emplace( std::make_pair( L"is-sorted", new s335( L"is-sorted", &s1390<_Cont, s1301, Der, s1570>::issorted_impl, s1139,
+s346.emplace( std::make_pair( L"is-sorted", new s335( L"is-sorted", &s1390<_Cont, s1301, Der, s1570>::s2305, s1139,
 { s1113( ) }, 0, 0, true ) ) );
 s346.equal_range( L"begin" ).first->second->s1251( true );
 s346.equal_range( L"end" ).first->second->s1251( true );
@@ -4833,7 +4844,7 @@ if( s346.count( L"is-el" ) ) s346.erase( L"is-el" );
 s346.emplace( std::make_pair( L"is-el", new s335( L"is-el", &s1564<_Cont, s1301, Der>::s2222, s1139,
 { s1113( { s7::s1386 } ) }, 1, 1, true ) ) );
 if( s346.count( L"is-sorted" ) ) s346.erase( L"is-sorted" );
-s346.emplace( std::make_pair( L"is-sorted", new s335( L"is-sorted", &s1564<_Cont, s1301, Der>::issorted_impl, s1139,
+s346.emplace( std::make_pair( L"is-sorted", new s335( L"is-sorted", &s1564<_Cont, s1301, Der>::s2305, s1139,
 { s1113( { s1404 } ), s1113( { s1404, tp } ), s1113(), s1113( { tp } ) }, 0, 1, true ) ) );
 s346.equal_range( L"front" ).first->second->s1251( true );
 s346.equal_range( L"back" ).first->second->s1251( true );
@@ -5068,7 +5079,7 @@ s1509 = rp.second.s15<s933*>()->s1136();
 typename _Cont::iterator s1966 = std::find( s1508, s1509, *el );
 *((s358*)*s274)->s355() = ( s1966 != pv->s347.end() );}
 template <class _Cont, class s1301, class Der, class s1570>
-void s1390<_Cont, s1301, Der, s1570>::issorted_impl( s481** s274, size_t s496 ){
+void s1390<_Cont, s1301, Der, s1570>::s2305( s481** s274, size_t s496 ){
 using s933 = typename Der::s1130;
 Der* pv = NULL;
 s1135 pr = s311<_Cont, s1301, Der>::s1415( s274[1], &pv );
@@ -5090,7 +5101,7 @@ typename _Cont::iterator s1508, s1509;
 s1508 = pr.first.s15<s933*>()->s1136();
 s1509 = pr.second.s15<s933*>()->s1136();
 s153 = std::is_sorted( s1508, s1509, s2217 );}
-*((s358*)s274)->s355() = s153;}
+*((s358*)*s274)->s355() = s153;}
 template <class _Cont, class s1301, class Der, class s1570>
 void s1390<_Cont, s1301, Der, s1570>::s1731( s481** s274, size_t s496 ){
 using s1121 = Der;
@@ -5175,7 +5186,7 @@ s1509 = pr.second.s15<s933*>()->s1136();
 std::sort( s1508, s1509, s1954 );}
 *s274 = pv;}
 template <class _Cont, class s1301, class Der>
-void s1564<_Cont, s1301, Der>::issorted_impl( s481** s274, size_t s496 ){
+void s1564<_Cont, s1301, Der>::s2305( s481** s274, size_t s496 ){
 using s933 = typename Der::s1130;
 Der* pv = NULL;
 s1135 pr = s311<_Cont, s1301, Der>::s1415( s274[1], &pv );
@@ -5381,10 +5392,10 @@ template <>
 inline void s1564<s2236, s483, s2237>::s1609( s481** s274, size_t s496 ){
 throw new s2::s16( L"this type of iterable doesn't support the 'back' operation" );}
 template <>
-inline void s1390<s2236, s483, s2237, s483>::issorted_impl( s481** s274, size_t s496 ){
+inline void s1390<s2236, s483, s2237, s483>::s2305( s481** s274, size_t s496 ){
 throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );}
 template <>
-inline void s1564<s2236, s483, s2237>::issorted_impl( s481** s274, size_t s496 ){
+inline void s1564<s2236, s483, s2237>::s2305( s481** s274, size_t s496 ){
 throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );}
 class s413
 : public s334{
@@ -6053,7 +6064,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.507"
+#define TRANSD_VERSION L"0.508"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
