@@ -55,12 +55,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 namespace s1 {
 #ifdef OS_64
 typedef std::int64_t				INT_PTR, *PINT_PTR;
+#ifndef _WIN64
 typedef std::uint64_t				UINT_PTR, *PUINT_PTR;
 typedef long								LONG_PTR, *PLONG_PTR;
 typedef unsigned long				ULONG_PTR, *PULONG_PTR;
 typedef long long						LONGLONG;
 typedef unsigned long long	ULONGLONG;
 typedef ULONG_PTR		    		DWORD_PTR, *PDWORD_PTR;
+#endif
 #else
 typedef _W64 int						INT_PTR, *PINT_PTR;
 typedef _W64 unsigned int		UINT_PTR, *PUINT_PTR;
@@ -1148,6 +1150,7 @@ s481* s1879( s481** s274, size_t s496 );
 s481* s1923( s481** s274, size_t s496 );
 s481* s2277( s481** s274, size_t s496 );
 s481* s2278( s481** s274, size_t s496 );
+s481* DC_call( s481** s274, size_t s496 );
 virtual s481* s1881( s481** s274, size_t s496 );
 public:
 s481( s262* s300, s470 pc, const s263* ast_, s272* ns_ ) 
@@ -6064,7 +6067,7 @@ s1054 s2000( s1890& s852 ) const override;
 std::wstring to_wstring( uint32_t s1553 = 0 ) const override;
 void s304( std::wostream* pd, int s197 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.508"
+#define TRANSD_VERSION L"0.509"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );

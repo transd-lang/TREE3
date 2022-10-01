@@ -2585,10 +2585,15 @@ L"is-def", Types.Bool,	cs->s601(), cs->s2166() );}
 else if( s672 == L"undef" ) {
 return new s1667( s300, s1658, s215, &s481::s2278, cs->s600(),
 L"undef", Types.Null,	cs->s601(), cs->s2166() );}
+else if( s672 == L"call" ) {
+return new s1667( s300, s1658, s215, &s481::DC_call, cs->s600(), L"call",
+0, cs->s601(), cs->s2166() );}
 return NULL;}
 s481* s481::s1689( s481** s274, size_t s496 ){
 return (s481*)s333(0,0);}
 s481* s481::s1879( s481** s274, size_t s496 ){
+return s495( s274, s496 );}
+s481* s481::DC_call( s481** s274, size_t s496 ){
 return s495( s274, s496 );}
 s481* s481::s1923( s481** s274, size_t s496 ){
 return new s357( s300, s351() );}
