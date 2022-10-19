@@ -4278,18 +4278,19 @@ s358::s358( s261* s299, s1889& s/* = std::wstring( L"" )*/ )
 wh = s7::s437;
 s490 = Types.No == 0 ? 0 : Types.s358;}
 s358::s358( const s358& r )
-: s333( r.s299, NULL, NULL ), s2263( r.s2263 ), s78( r.s78 ){
+: s333( r.s299, NULL, NULL ), s2263( r.s2263 ), s78( r.s78 ), obj( r.obj ){
 s490 = r.s490;
 wh = r.wh;}
 void s358::create( const vector<s482>& l ){
-s2263 = s2261;
 if( l.size() ) {
-if( l[0]->s491() == s472 ) {
+s2263 = s2261;
+if( l[0]->s491() == s472 || l[0]->s491() == s1055 ) {
 s368* rf = l[0].s15<s368*>();
 rf->s974( s2260 );
 s2263 = (s2259) rf->s1293();}
-if( l.back()->s491() == s471 )
-s78 = l.back()->to_wstring();}}
+obj = l.back().s15<s480*>()->s494(0,0);}
+else if( s78.size() ) {
+obj = new s356( s299, s78 );}}
 void s358::s347(){
 s345.insert( make_pair( L"report", new s334( L"report", &s358::s785, Types.Null,
 { s1112() }, 0, 0 )));
@@ -4298,13 +4299,16 @@ s345.insert( make_pair( L"str", new s334( L"str", &s358::s505, Types.String,
 s345.insert( make_pair( L"is-type", new s334( L"is-type", &s358::s2265, Types.Bool,
 { s1112() }, 0, 0, true, s2260 )));}
 void s358::s497( const s271* s872, bool ){}
+s483 s358::s494( s480** s273, size_t s495 ){
+return obj->s494(0,0);}
 s480* s358::s352( s271* s585, const std::vector<s270*>& l, const s262* ast_ ) const{
 return new s358( s299 );}
 s270* s358::s332( s588* s2041, s271* impl ) const{
 return new s358( *this );}
 void s358::s353( s270* p ) const{
 ((s358*)p)->s2263 = s2263;
-((s358*)p)->s78 = s78;}
+((s358*)p)->s78 = s78;
+((s358*)p)->obj = obj;}
 s480* s358::s351( const s262& s694, s271* s585, s1889& s331 ) const{
 wstring s = s694.s290();
 if( s.find( L"Exception(" ) == 0 )
@@ -4315,9 +4319,11 @@ return NULL;}
 #undef s691
 #define s691 ((s358*)(s481*)*s273)
 inline void s358::s785( s480** s273, size_t s495 ){
-wcout << ( (s358*)DR )->s78;}
+if( ( (s358*)DR )->obj.s14() )
+wcout << ( (s358*)DR )->obj->s494( 0, 0 )->to_wstring();}
 inline void s358::s505( s480** s273, size_t s495 ){
-*( (s356*)s273[0] )->s354() = ( (s358*)DR )->s78;}
+if( ( (s358*)DR )->obj.s14() )
+*( (s356*)s273[0] )->s354() = ( (s358*)DR )->obj->s494( 0, 0 )->to_wstring();}
 inline void s358::s2265( s480** s273, size_t s495 ){
 s358* dr = (s358*)DR;
 int idx = (int)*((s368*)s273[2])->s374();
@@ -4918,7 +4924,7 @@ s345.insert( make_pair( L"mul", new s334( L"mul", &s1295<s1301, Der>::s387, s151
 { s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 ) ) );
 s345.insert( make_pair( L"div", new s334( L"div", &s1295<s1301, Der>::s388, s1513,
 { s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 ) ) );
-s345.insert( make_pair( L"pow", new s334( L"pow", &s1295<s1301, Der>::s389, s1513,
+s345.insert( make_pair( L"pow", new s334( L"pow", &s1295<s1301, Der>::s389, s1514,
 { s1112( { s1500::s1537 } ) }, 1, 1 ) ) );
 s345.insert( make_pair( L"pow", new s334( L"pow", &s1295<s1301, Der>::s389, s1140,
 { s1112( { s1140 } ) }, 1, 1 ) ) );
@@ -5030,8 +5036,26 @@ s691->s346 /= tmp.s346;
 }}
 template<class s1301, class Der>
 inline void s1295<s1301, Der>::s389( s480** s273, size_t s495 ){
+if( DR->s349() == Types.Double || s273[2]->s349() == Types.Double ) {
 s273[2]->s353( s273[0] );
-s691->s346 =(s1301) std::pow( (double)( (Der*)DR )->s346, (double)s691->s346 );}
+*( (s1292*)s273[0] )->s354() = (s1301)std::pow( (double)( (Der*)DR )->s346, (double)*( (s1292*)s273[0] )->s354() );}
+else {
+int64_t i = ( (Der*)DR )->s346;
+s273[2]->s353( s273[0] );
+int64_t e = *((s1292*)s273[0])->s354();
+int64_t s680 = -1;
+if( e == 0 ) s680 = 1;
+else if( e == 1 ) s680 = i;
+else {
+s680 = 1;
+while( 1 ) {
+if( ( e & 1 ) == 1 ) {
+s680 = s680 * i;
+--e;}
+if( e == 0 ) break;
+e /= 2;
+i *= i;}}
+*( (s1292*)s273[0] )->s354() = s680;}}
 template<class s1301, class Der>
 inline void s1295<s1301, Der>::s390( s480** s273, size_t s495 ){
 s273[2]->s353( s273[0] );
@@ -5853,6 +5877,11 @@ ss.flags( flags );
 ss << s346;
 s1918->s1468( ss.str() );}
 s2309 s2380( std::to_wstring( s2316 ) );
+void s2352( s2398& v ){
+if( v.empty() ) return;
+int i = (int)v.size();
+while( i > 0 && v[--i] == 0 );
+v.resize( i + 1 );}
 s2309::s2309( const s2309& r, bool s2390 )
 : s2344( r.s2344 ), _val( r._val ), s2339( r.s2339 ),
 s2342( s2390 ){
@@ -5860,18 +5889,39 @@ if( s2332() ) {
 if( ( s2342 && s2344 > 0 ) || ( !s2342 && s2344 < 0 ) )
 s2344 = -s2344;}}
 s2309::s2309( s2382 s1057, bool s2390 )
-: s2344(0), s2339( (s2384)s1057 ), s2342( s2390 ){}
+: s2344(0), s2339( s1057 ), s2342( s2390 ){}
 s2309::s2309( const wstring& s )
 : s2344(0), s2339( NULL ), s2342( false ){
 s1944( s );}
 s2309::s2309( s2394 sm )
 : s2344( sm ), s2339( NULL ), s2342( sm < 0 ){}
+void s2309::reset(){
+_val.clear();
+s2344 = 0;
+s2339 = NULL;
+s2342 = false;}
+s2398& s2309::s1411(){
+if( s2339 ) s2339 = NULL;
+return _val;}
+void s2309::s2406(){
+if( _val.empty() ) return;
+s2352( _val );
+s2354();}
+void s2309::s2413( s2309& s152 ){
+s152.s2387( *this );
+s152.s2388( false );}
 int s2309::s2325( const s2398& l, const s2398& r ){
 if( l.size() != r.size() ) {
 return l.size() > r.size() ? 1 : -1;}
 for(auto s2376 = l.rbegin(),s2377 = r.rbegin(); s2376 != l.rend(); s2376++,s2377++) {
 if (*s2376 != *s2377) return *s2376 > *s2377 ? 1 : -1;}
 return 0;}
+int s2309::s2325( s2394 b ) const{
+if( !s2332() )	return 1;
+if( std::abs( s2344) > std::abs( b ) )
+return 1;
+return ( std::abs( s2344) < std::abs( b ) ) ?
+-1 : 0;}
 size_t s2309::s2393() const{
 if( _val.size() )
 return 0;
@@ -5885,37 +5935,48 @@ if( s2344 <= INT64_MAX )
 return 64;
 return 0;}
 bool s2309::s2330() const{
-return ( s2323().size() < 4 && s2325( s2323(), s2380.s2323() ) < 0 );}
+if( s2323().size() != 3 )
+return s2323().size() < 3;
+if( s2323()[2] != 92233 ) return s2323()[2] < 92233;
+if( s2323()[1] != 7203685 ) return s2323()[1] < 7203685;
+return (s2323()[0] - s2342 ) <= 4775807;}
 double s2353( double d ){
 if( d > 0 ) return std::floor( d );
 return std::ceil( d );}
 void s2309::s2351(){
 if( !_val.empty() ) return;
-s2394 s346 = std::abs( s2344 );
+s2394 s346;
+bool s2421 = false;
+if( s2344 == s2317 ) {
+s346 = std::abs( s2344 + 1 );
+s2421 = true;}
+else s346 = std::abs( s2344 );
 if( s346 < s2314 )
 _val.push_back( s346 );
 else if( s346 < _BASE2 ) {
 _val.push_back( s346 % s2314 );
-_val.push_back( (s2394) std::floor( ((long double)s346) / s2314 ) );
+_val.push_back( (s2394) std::floor( ((double)s346) / s2314 ) );
 }
 else {
 _val.push_back( s346 % s2314 );
-_val.push_back( ((int) std::floor( ((long double)s346) / s2314 )) % s2314 );
-_val.push_back( (s2394) std::floor( ((long double)s346) / _BASE2 ) );
-}
+_val.push_back( ((s2394) std::floor( ((double)s346) / s2314 )) % s2314 );
+_val.push_back( (s2394) std::floor( ((double)s346) / _BASE2 ) );
+if( s2421 ) _val[0] += 1;}
 s2342 = ( s2344 < 0 );
-s2344 = 0;}
+s2344 = 0;
+s2339 = NULL;}
 bool s2309::s2354(){
 if( s2332() )
 return true;
 if( s2330() ) {
-switch( s2323().size() ) {
-case 0: s2344 = 0;
-case 1: s2344 = s2323()[0];
-case 2: s2344 = s2323()[0] + s2323()[1] * s2314;
-case 3: s2344 =  s2323()[0] + (s2323()[1] + s2323()[2] * s2314 ) * s2314;
-default: throw;}
+size_t l = s2323().size();
+if( l == 0 ) s2344 = 0;
+else if( l == 1 ) s2344 = s2323()[0];
+else if( l == 2 ) s2344 = s2323()[0] + s2323()[1] * s2314;
+else if( l == 3 ) s2344 =  s2323()[0] + (s2323()[1] + s2323()[2] * s2314 ) * s2314;
+else throw;
 _val.clear();
+if( s2344 == 0 ) s2342 = false;
 if( s2342 ) s2344 *= -1;
 return true;}
 return false;}
@@ -5931,10 +5992,15 @@ s152.push_back( a % s2314 );
 s152.push_back( ((s2394)std::floor( ((long double) a) / s2314 )) % s2314 );
 s152.push_back( (s2394) std::floor( ((long double)a ) / _BASE2 ));
 }}
-void s2352( s2398& v ){
-int i = (int)v.size();
-while( i > 0 && v[--i] == 0 );
-v.resize( i + 1 );}
+size_t s2309::s319() const{
+if( s2332() )
+return (size_t) s2344;
+size_t s680 = _val.size();
+for(auto x : _val) {
+x = ((x >> 32) ^ x) * 0xE1B250D31686427B;
+x = (x >> 32) ^ x;
+s680 ^= x + 0x21854D3C9E3779B9 + (s680 << 6) + (s680 >> 2);}
+return s680;}
 void s2309::s2318( const s2398& b, s2398& s152 ) const{
 assert( s2323().size() >= b.size() );
 const s2398& a = s2323();
@@ -5977,7 +6043,8 @@ _a.s2318( b.s2344, s152.s1411() );}
 else
 s152.s2344 = s2344 + b.s2344;}
 else {
-s2318( b.s2344, s152.s1411() );}}
+s2318( std::abs( b.s2344 ), s152.s1411() );}
+s152.s2388( s2342 );}
 void s2309::s2319( const s2309& b, s2309& s152 ) const{
 if( s2332() ) 
 b.s2318( s2344, s152.s1411() );
@@ -5985,7 +6052,8 @@ else {
 if( s2323().size() >= b.s2323().size() ) 
 s2318( b.s2323(), s152.s1411() );
 else
-b.s2318( s2323(), s152.s1411() );}}
+b.s2318( s2323(), s152.s1411() );}
+s152.s2388( s2342 );}
 void s2309::s2318( const s2398& l, const s2398& r,
 s2398& s152 ){
 s2384 pa, pb;
@@ -6008,6 +6076,7 @@ s2324 = (s2349 == s2314 ? 1 : 0);
 s152[i++] = s2349 - s2324 * s2314;}
 if( s2324 > 0 ) s152.push_back( s2324 );}
 void s2309::s2360( const s2309& b, s2309& s152 ) const{
+s152.reset();
 if( s2342 != b.s2342 )
 s2396( s2309( b, !b.s2342 ), s152 );
 else {
@@ -6015,6 +6084,22 @@ if( b.s2332() )
 s2320( b, s152 );
 else
 s2319( b, s152 );}}
+void s2309::s2414( const s2309& b ){
+s2309 tmp(0);
+s2360( b, tmp );
+s2387( tmp );}
+void s2309::s2441( const s2309& b ){
+s2309 tmp(0);
+s2381( b, tmp );
+s2387( tmp );}
+void s2309::s2419( const s2309& b ){
+s2309 tmp(0);
+s2418( b, tmp );
+s2387( tmp );}
+void s2309::s2447( const s2309& b ){
+s2309 tmp(0);
+s2396( b, tmp );
+s2387( tmp );}
 /*void s2309::s2346( const s2398& b, s2398& s152 ) const
 {
 const s2398& a = _val;
@@ -6036,14 +6121,15 @@ s152.resize( i -1 );
 }*/
 void s2309::s2346( const s2398& l, const s2398& r, s2398& s152 ){
 s2384 pa, pb;
-if( l.size() > r.size() ) { pa = (s2384) &l; pb = (s2384) &r; }
+if( l.size() >= r.size() ) { pa = (s2384) &l; pb = (s2384) &r; }
 else { pa = (s2384) &r; pb = (s2384) &l; }
 const s2398& a = *pa;
 const s2398& b = *pb;
-int s2361 = (int)a.size();
-int s2363 = (int)b.size();
+size_t s2361 = a.size();
+size_t s2363 = b.size();
 s152.resize( s2361 );
-int64_t s2322 = 0, s2326, i = 0;
+int64_t s2322 = 0, s2326;
+size_t i = 0;
 for( i = 0; i < s2363; ++i ) {
 s2326 = a[i] - s2322 - b[i];
 if( s2326 < 0 ) {
@@ -6052,9 +6138,16 @@ s2322 = 1;}
 else
 s2322 = 0;
 s152[i] = s2326;}
+for( i = s2363; i < s2361; ++i ) {
+s2326 = a[i] - s2322;
+if( s2326 < 0 ) s2326 += s2314;
+else {
+s152[i++] = s2326;
+break;}
+s152[i] = s2326;}
 for(; i < s2361; ++i )
 s152[i] = a[i];
-s152.resize( i - 1 );}
+s2352( s152 );}
 void s2309::s2346( const s2398& a, s2394 b, s2398& s152 ){
 size_t s2361 = a.size();
 s152.resize( s2361 );
@@ -6071,22 +6164,25 @@ assert( b.s2342 == s2342 );{
 s152.s2344 = s2344 - b.s2344;
 if( s152.s2344 < 0 ) s152.s2342 = true;}}
 else {
-s2346( s2323(), b.s2344, s152.s1411() );}}
+s2346( s2323(), std::abs( b.s2344 ), s152.s1411() );
+s152.s2388( s2342 );}}
 void s2309::s2347( const s2309& b, s2309& s152 ) const{
-if( s2325( s2323(), b.s2323() ) >= 0 )
+if( s2325( s2323(), b.s2323() ) >= 0 ) {
 s2346( s2323(), b.s2323(), s152.s1411() );
+s152.s2342 = s2342;}
 else {
 s2346( b.s2323(), s2323(), s152.s1411() );
-s152.s2342 = !s152.s2342;}}
+s152.s2342 = !s2342;}}
 void s2309::s2396( const s2309& b, s2309& s152 ) const{
-if( s2342 != b.s2342 )
-s2360( s2309( b, !b.s2342 ), s152 );
+s152.reset();
+if( s2342 != b.s2342 ) {
+s2360( s2309( b, !b.s2342 ), s152 );}
 else {
 if( b.s2332() )
 s2348( b, s152 );
 else
 s2347( b, s152 );}
-s152.s2354();}
+s152.s2406();}
 void s2309::s2333( const s2398& b, s2398& s152 ) const{
 const s2398& a = s2323();
 size_t s2361 = a.size();
@@ -6116,7 +6212,7 @@ s2355 = a[i];
 for( j = 0; j < s2363; ++j ) {
 s2362 = b[j];
 s2337 = s2355 * s2362 + s152[i + j];
-s2324 = (s2394) std::floor( ((long double) s2337 ) / s2314 );
+s2324 = (s2394) std::floor( ((double) s2337 ) / s2314 );
 s152[i + j] = s2337 - s2324 * s2314;
 s152[i + j + 1] += s2324;}}
 s2352( s152 );}
@@ -6127,11 +6223,11 @@ s2394 s2324 = 0, s2337;
 size_t i;
 for( i = 0; i < s2361; ++i ) {
 s2337 = a[i] * b + s2324;
-s2324 = (s2394) std::floor( ((long double) s2337 ) / s2314 );
+s2324 = (s2394) std::floor( ((double) s2337 ) / s2314 );
 s152[i] = s2337 - s2324 * s2314;}
 while( s2324 > 0 ) {
 s152[i++] = s2324 % s2314;
-s2324 = (s2394) std::floor( ((long double) s2324 ) / s2314 );
+s2324 = (s2394) std::floor( ((double) s2324 ) / s2314 );
 }
 s2352( s152 );}
 s2398& s2392( const s2398& x, size_t n, s2398& s152 ){
@@ -6145,7 +6241,7 @@ size_t n = x.size() > y.size() ? x.size() : y.size();
 if( n <= 30 ) {
 s2333( x, y, s152 );
 return;}
-n = (s2394) std::ceil( ((double) n) / 2 );
+n = (size_t) std::ceil( ((double) n) / 2 );
 s2398 a( x.begin(), x.begin() + n );
 s2398 b( x.begin() + n, x.end() );
 s2398 c( y.begin(), y.begin() + n );
@@ -6173,12 +6269,19 @@ if( ( s2344 == -1 && b.s2344 == s2317 ) ||
 ( b.s2344 && s2344 < s2317 / b.s2344 ) ) {
 s2309 _a( s2344, s2342 );
 _a.s2351();
-s2333( _a.s2323(), b.s2344, s152.s1411() );}
+if( b.s2344 < s2314 )
+s2333( _a.s2323(), b.s2344, s152.s1411() );
+else {
+s2309 _b( b );
+_b.s2351();
+s2333( _a.s2323(), _b.s2323(), s152.s1411() );}}
 else {
 s152.s2344 = s2344 * b.s2344;
 s152.s2342 = (s152.s2344 < 0);}}
 else {
-s2333( s2323(), b.s2344, s152.s1411() );}}
+s2309 _b( b );
+_b.s2351();
+s2333( s2323(), _b.s2323(), s152.s1411() );}}
 void s2309::s2334( const s2309& b, s2309& s152 ) const{
 if( s2332() )  {
 if( s2344 < s2314 ) {
@@ -6201,14 +6304,16 @@ s2335( s2323(), b.s2323(), s152.s1411() );
 else
 s2333( b.s2323(), s152.s1411() );}}
 void s2309::s2381( const s2309& b, s2309& s152 ) const{
+s152.reset();
 if( b.s2332() )
 s2336( b, s152 );
 else
-s2334( b, s152 );}
+s2334( b, s152 );
+s152.s2406();}
 void s2309::_divmod1( const s2398& b, s2398& quot, s2398& rem ) const{
 size_t s2361 = s2323().size();
 size_t s2363 = b.size();
-quot.resize( s2363 );
+quot.resize( s2361 );
 s2394 s2368 = b.back();
 s2394 s2378 = (s2394) std::ceil( ((double)s2314) / ( 2 * s2368 ) );
 s2398 s2369, s2386;
@@ -6223,7 +6328,7 @@ s2368 = s2369[ s2363 - 1 ];
 for( s2391 = (int)(s2361 - s2363); s2391 >= 0; --s2391 ) {
 s2385 = s2314 - 1;
 if( s2386[s2391 + s2363] != s2368 ) {
-s2385 = (s2394) std::floor( ((long double)
+s2385 = (s2394) std::floor( ((double)
 s2386[s2391 + s2363] * s2314 + s2386[s2391 + s2363 - 1]) / s2368 );
 }
 s2324 = 0;
@@ -6231,7 +6336,7 @@ s2321 = 0;
 l = s2369.size();
 for( i = 0; i < l; ++i ) {
 s2324 += s2385 * s2369[i];
-q = (s2394) std::floor( ((long double)s2324) / s2314 );
+q = (s2394) std::floor( ((double)s2324) / s2314 );
 s2321 += s2386[s2391 + i] - (s2324 - q * s2314);
 s2324 = q;
 if( s2321 < 0 ) {
@@ -6253,6 +6358,7 @@ s2386[s2391 + i] = s2324;
 s2324 = 1;}}
 s2321 += s2324;}
 quot[s2391] = s2385;}
+s2352( quot );
 s2309 s2340( &s2386, false );
 s2398 s2350;
 s2327( s2340.s2323(), s2378, rem, s2350 );}
@@ -6268,7 +6374,7 @@ if( s2325( s2338, b ) < 0 ) {
 quot.push_back( 0 );
 continue;}
 xl = s2338.size();
-s2371 = s2338.back() * s2314 + s2338[xl - 2];
+s2371 = s2338.back() * s2314 + s2338[(size_t)xl - 2];
 s2372 = b.back() * s2314 + b[s2363 - 2];
 if( xl > (s2394)s2363 )
 s2371 = ( s2371 + 1 ) * s2314;
@@ -6291,6 +6397,7 @@ s2369 = s2386 * s2314 + a[i];
 q = (s2394) s2353( (double) s2369 / b );
 s2386 = s2369 - q * b;
 quot[i] = (int) q;}
+s2352( quot );
 s2343( s2386, rem );}
 void s2309::s2329( const s2309& b, s2309& quot, s2309& rem ) const{
 if( !b.s2344 )
@@ -6317,10 +6424,9 @@ return;}
 s2394 s2359 = abs( b.s2344 );
 if( s2359 < s2314 ) {
 s2327( s2323(), s2359, quot.s1411(), rem.s1411() );
-if( s2342 ) rem.s2388( s2342 );
-if( quot.s2332() ) {
+rem.s2388( s2342 );
 if( s2342 != b.s2342 )
-quot.s2388( !quot.s2342 );}
+quot.s2388( true );
 return;}
 s2309 _b( b, b.s2342 );
 _b.s2351();
@@ -6339,29 +6445,56 @@ if( s2323().size() + b.s2323().size() <= 200 )
 _divmod1( b.s2323(), quot.s1411(), rem.s1411() );
 else
 _divmod2( b.s2323(), quot.s1411(), rem.s1411() );
-if( s2342 == b.s2342 )
-quot.s2388( !quot.s2342 );
-rem.s2388( s2342 );
-s2352( quot._val );
-s2352( rem._val );
-quot.s2354();
-rem.s2354();}
+if( s2342 != b.s2342 )
+quot.s2388( quot.s2342 );
+rem.s2388( s2342 );}
 void s2309::s2367( const s2309& b, s2309& quot, s2309& rem ) const{
+quot.reset();
+rem.reset();
 if( b.s2332() )
 s2329( b, quot, rem );
 else
-s2328( b, quot, rem );	}
-void s2309::s2360( int64_t b, s2309& s152 ) const{}
-void s2309::s2396( int64_t b, s2309& s152 ) const{}
-void s2309::s2381( int64_t b, s2309& s152 ) const{}
-void s2309::s2367( int64_t b, s2309& quot, s2309& rem ) const{}
+s2328( b, quot, rem );	
+rem.s2406();
+quot.s2406();}
+void s2309::s2360( int64_t b, s2309& s152 ) const{
+s152.reset();
+bool s2416 = ( b < 0 );
+if( s2342 != s2416 )
+s2348( s2309( s2416 ? b : -b ), s152 );
+else
+s2320( s2309( b ), s152 );
+s152.s2406();}
+void s2309::s2396( int64_t b, s2309& s152 ) const{
+s152.reset();
+bool s2416 = ( b < 0 );
+if( s2342 != s2416 )
+s2320( s2309( s2416 ? b : -b ), s152 );
+else
+s2348( s2309( b ), s152 );
+s152.s2406();}
+void s2309::s2381( int64_t b, s2309& s152 ) const{
+s152.reset();
+s2309 _b( b );
+s2336( _b, s152 );
+s152.s2406();}
+void s2309::s2367( int64_t b, s2309& quot, s2309& rem ) const{
+quot.reset();
+rem.reset();
+s2309 _b( b );
+s2329( _b, quot, rem );
+rem.s2406();
+quot.s2406();}
 void s2309::s2395(){
 if( s2332() ) {
 s2394 s892 = s2344;
 if( s2344 > s2316 / s2344 ) {
 s2309 s1793( 0 );
 s2351();
+if( s892 < s2314 )
 s2333( s2323(), s892, s1793.s1411() );
+else
+s2333( s2323(), s2323(), s1793.s1411() );
 s2387( s1793 );}
 else
 s2344 = s892 * s892;}
@@ -6377,7 +6510,7 @@ s2324 = 0 - s2355 * s2355;
 for( size_t j = i; j < len; ++j ) {
 s2356 = _val[j];
 s2337 = 2 * (s2355 * s2356) + s1793._val[i + j] + s2324;
-s2324 = std::floor( ((double) s2337) / s2314 );
+s2324 = (s2394) std::floor( ((double) s2337) / s2314 );
 s1793._val[i + j] = s2337 - s2324 * s2314;}
 s1793._val[i + len] = s2324;}
 s2352( s1793.s1411() );
@@ -6394,7 +6527,8 @@ if( e == 0 ) break;
 e /= 2;
 i *= i;}
 return s680;}
-void s2309::s2383( int32_t b, s2309& s152 ){
+void s2309::s2383( int32_t b, s2309& s152 ) const{
+s152.reset();
 if( b == 0 ) s152.s2389( 1 );
 else if( s2332() && s2344 == 0 ) s152.s2389( 0 );
 else if( s2332() && s2344 == 1 ) s152.s2389( 1 );
@@ -6423,7 +6557,58 @@ _res1._val.clear(); _res1._val.push_back(0);}
 if( !b ) break;
 b /= 2;
 x.s2395();}
-s2352( s152.s1411() );}}
+s2352( s152.s1411() );}
+s152.s2406();}
+void s2309::s2418( const s2309& b, s2309& s152 ) const{
+s2309 r(0);
+s2367( b, s152, r );
+s152.s2406();}
+void s2309::s2438( const s2309& b, s2309& s152 ) const{
+s2309 q(0);
+s2367( b, q, s152 );
+s152.s2406();}
+void s2309::s2439( const s2309& b, s2309& s152 ) const{
+s152.reset();
+s2309 t(0), s2444(1), s2443( *this, false ), r( b ),
+q(0), s2435(0),	s2434(0), s2411(0);
+while( !s2443.s2429() ) {
+r.s2418( s2443, q );
+s2435.s2387( t );
+s2434.s2387( r );
+q.s2333( s2444.s2323(), s2411.s1411() );
+s2346( s2435.s2323(), s2411.s2323(), s2444.s1411() );
+q.s2333( s2443.s2323(), s2411.s1411() );
+s2346( s2434.s2323(), s2411.s2323(), s2443.s1411() );}
+if( !r.s2428() ) throw; // not co-prime
+if( t.s2375( 0 ) ) t.s2414( b );
+if( s2424() ) t.s2388( false );
+s152.s2387( t );
+s152.s2406();}
+void s2309::s2440( const s2309& s2420, const s2309& mod, s2309& s152 ) const{
+s152.reset();
+if( mod.s2429() ) throw;
+s152.s2387( 1 );
+s2309 base(0);
+s2438( mod, base );
+s2309 exp( s2420 );
+s2309 s2411(0);
+if( exp.s2424() ) {
+exp.s2441( s2309( -1 ) );
+s2309 s2411(0);
+base.s2439( mod, s2411 );
+base.s2387( s2411 );}
+while( exp.s2425() ) {
+if( base.s2429() ) {
+s152.s2387( 0 );
+break;}
+if( !exp.s2374() ) {
+s152.s2381( base, s2411 );
+s2411.s2438( mod, s152 );}
+exp.s2419( s2309( 2 ) );
+base.s2395();
+base.s2438( mod, s2411 );
+base.s2387( s2411 );}
+s152.s2406();}
 void s2309::s2389( s2394 s346 ){
 _val.clear();
 s2339 = NULL;
@@ -6434,6 +6619,16 @@ _val = bl._val;
 s2339 = bl.s2339;
 s2344 = bl.s2344;
 s2342 = bl.s2342;}
+void s2309::s2387( int64_t s346 ){
+_val.clear();
+s2339 = NULL;
+s2344 = s346;
+s2342 = ( s346 < 0 );
+s2351();}
+void s2309::s2387( const wstring& s ){
+reset();
+s1944( s );
+s2351();}
 void s2309::s2388( bool s2390 ){
 s2342 = s2390;
 if( s2332() ) {
@@ -6445,13 +6640,30 @@ s2344 *= -1;}
 else if( s2344 > 0 && s2342 )
 s2344 *= -1;}}
 bool s2309::s2373( const s2309& bl ) const{
+if( s2332() != bl.s2332() )
+return false;
+if( s2332() )
+return s2344 == bl.s2344;
 if( s2342 != bl.s2342 || s2325( s2323(), bl.s2323() ) != 0 )
 return false;
 return true;}
+bool s2309::s2373( s2394 b ) const{
+if( s2332() ) return s2344 == b;
+return false;}
 bool s2309::s2375( const s2309& bl ) const{
 if( s2342 != bl.s2342 )
 return  s2342;
+if( s2332() ) {
+if( !bl.s2332() ) return false;
+return s2344 < bl.s2344;}
 int _cmp = s2325( s2323(), bl.s2323() );
+if( ( _cmp > 0 && s2342 ) || ( _cmp < 0 && !s2342 ) )
+return true;
+return false;}
+bool s2309::s2375( s2394 b ) const{
+if( s2342 != ( b < 0 ) )
+return  s2342;
+int _cmp = s2325( b );
 if( ( _cmp > 0 && s2342 ) || ( _cmp < 0 && !s2342 ) )
 return true;
 return false;}
@@ -6460,10 +6672,191 @@ if( _val.empty() )
 return ( ( s2344 & 1 ) == 0 );
 else
 return ( ( _val[0] & 1 ) == 0 );}
+bool s2309::s2429() const{
+if( s2332() ) return s2344 == 0;
+return s2323().size() == 1 && s2323()[0] == 0;}
+bool s2309::s2424() const{
+if( s2332() )
+return s2344< 0;
+return s2342;}
+bool s2309::s2425() const{
+if( s2332() )
+return s2344 > 0; // sic
+return !s2342;}
+bool s2309::s2428() const{
+if( s2332() ) return s2344 == 1;
+return s2323().size() == 1 && s2323()[0] == 1;}
+int64_t s2309::s2404( const s2309& s346, const s2309& base, s2309& p ){
+if( base.compare( s346 ) <= 0 ) {
+s2309 s2446( base );
+s2446.s2395();
+int64_t e = s2404( s346, s2446, p );
+s2309 t( 0 );
+p.s2381( base, t );
+if( t.compare( s346 ) <= 0 ) {
+p.s2387( t ); return e * 2 + 1;}
+else 
+return e * 2;	}
+p.s2389( 1 );
+return 0;}
+size_t s2309::s2401() const{
+s2309 n( *this );
+if( s2424() ) {
+n.s2388( false );
+n.s2447( 1 );}
+if( n.s2429() ) return 0;
+s2309 s2410( 0 );
+auto s152 = s2404( n, 2, s2410 );
+return (size_t) s152 + 1;}
+bool s2309::s2423( const s2309& b ) const{
+if( b.s2429() ) return false;
+if( b.s2428() ) return true;
+if( b.s2325( 2 ) ) return s2374();
+s2309 rem( 0 );
+s2438( b, rem );
+return rem.s2429();}
+int s2309::s2422() const{
+s2309 ab( *this, false );
+if( ab.s2428() ) return 0;
+if( ab.s2332() && ( ab.s2344== 2 || ab.s2344== 3 ||
+ab.s2344== 5 ) ) return 1;
+if( ab.s2374() || ab.s2423( s2309( 3 ) ) || 
+ab.s2423( s2309( 5 ) ) ) return 0;
+if( s2375( s2309( 49 ) ) ) return 1;
+return -1;}
+bool s2309::s2437( const s2309& n, const vector<int64_t>& a ){
+s2309 s2442( n );
+s2442.s2447( 1 );
+s2309 b( s2442 );
+s2309 x( 0 ), s2411( 0 );
+size_t r = 0, d, i;
+bool s585 = false;
+while( b.s2374() ) {	b.s2419( 2 ); ++r; }
+for( i = 0; i < a.size(); ++i ) {
+if( n.s2375( a[i] ) ) continue;
+s2309( a[i] ).s2440( b, n, x );
+if( x.s2428() || x.s2373( s2442 )) continue;
+for( d = r - 1; d != 0; --d ) {
+x.s2395(); x.s2438( n, s2411 );
+x.s2387( s2411 );
+if( x.s2428() ) return false;
+if( x.s2373( s2442 ) ) { s585 = true; break; }}
+if( s585 ) { s585 = false; continue; }
+return false;}
+return true;}
+bool s2309::s2437( const s2309& n, const vector<s2309>& a ){
+s2309 s2442( n );
+s2442.s2447( 1 );
+s2309 b( s2442 );
+s2309 x( 0 ), s2411( 0 );
+size_t r = 0, d, i;
+bool s585 = false;
+while( b.s2374() ) {	b.s2419( 2 ); ++r; }
+for( i = 0; i < a.size(); ++i ) {
+if( n.s2375( a[i] ) ) continue;
+a[i].s2440( b, n, x );
+if( x.s2428() || x.s2373( s2442 )) continue;
+for( d = r - 1; d != 0; --d ) {
+x.s2395(); x.s2438( n, s2411 );
+x.s2387( s2411 );
+if( x.s2428() ) return false;
+if( x.s2373( s2442 ) ) { s585 = true; break; }}
+if( s585 ) { s585 = false; continue; }
+return false;}
+return true;}
+bool s2309::s2426( bool s150 ) const{
+int s2432 = s2422();
+if( s2432 != -1 ) return s2432;
+s2309 n( *this, false );
+size_t s2415 = n.s2401();
+if( s2415 <= 64 ) {
+;
+return s2437( n, vector<int64_t> ( { 2,3,5,11,13,17,19,
+23,29,31,37 } ) );}
+double s2436 = 0.6931471805599453 * s2415;
+size_t t = (size_t) std::ceil( s150 ? 
+(2.0 * std::pow( s2436, 2.0 )) : s2436 );
+vector<int64_t> a;
+for( size_t i = 0; i < t; ++i )
+a.push_back( i + 2 );
+return s2437( n, a );}
+bool s2309::s2427( size_t s2433 = 5 ){
+int s2432 = s2422();
+if( s2432 != -1 ) return s2432;
+s2309 n( *this, false ), tw( 2 );
+n.s2447( 2 );
+vector<s2309> a;
+for( size_t i = 0; i < s2433; ++i ) {
+s2309 _t( 0 );
+s2445( tw, n, _t );
+a.push_back( _t );}
+return s2437( *this, a );}
+void s2309::s2445( const s2309& a, const s2309& b, s2309& s152 ){
+std::random_device rd;
+std::mt19937_64 mt(rd());
+s2309 range(0);
+b.s2396( a, range );
+range.s2414( 1 );
+if( range.s2332() ) {
+std::uniform_int_distribution<int64_t> dist( 0, range.s2344 );
+a.s2320( dist( mt ), s152 );
+return;}
+s2309 s2403(0), s2411(0);
+std::uniform_real_distribution<double> dist( 0.0, 1.0 );
+range.s2412( s2314, s2403 );
+bool s2407 = true;
+for( size_t i = 0; i < s2403._val.size(); ++i ) {
+s2394 s2448 = s2407 ? s2403._val[i] : s2314;
+double s2408 = dist( mt );
+s2394 s2402 = (s2394) (s2408 * s2448);
+s2411._val.push_back( s2402 );
+if( s2402 < s2448 ) s2407 = false;}
+std::reverse( begin( s2411._val ), end( s2411._val ) );
+s152.s2387( s2411 );}
+void s2309::s2412( const s2309& base, s2309& s152){
+if( base.s2375( 2 ) )
+throw;
+s2309 s2405( *this, false );
+s2309 q( 0 ), r( 0 );
+while( !s2405.s2375( base ) ) {
+s2405.s2367( base, q, r );
+s2405.s2387( q );
+s152._val.push_back( r.s2344 );}
+s152._val.push_back( q.s2344 );
+std::reverse( begin( s152._val ), end( s152._val ) );
+s152.s2388( s2342 );}
+bool s2309::operator==( const s2309& b ) const{
+if( ( s2342 != b.s2342 ) || s2332() != b.s2332() )
+return false;
+if( s2332() ) return s2344 == b.s2344;
+return s2325( s2323(), b.s2323() ) == 0;}
+bool s2309::operator<( const s2309& b ) const{
+if( s2342 != b.s2342 ) return s2342;
+if( s2332() != b.s2332() ) return s2332();
+if( s2332() ) return s2344< b.s2344;
+return s2325( s2323(), b.s2323() ) == -1;}
+int s2309::compare( const s2309& b ) const{
+if( s2342 != b.s2342 ) return s2342 ? -1 : 1;
+if( s2332() != b.s2332() ) return s2332() ? -1 : 1;
+if( s2332() ) {
+if( s2344== b.s2344) return 0;
+return s2344< b.s2344? -1 : 1;}
+return s2325( s2323(), b.s2323() );}
+int s2309::compare( s2394 b ) const{
+if( s2342 != (b < 0) ) return s2342 ? -1 : 1;
+if( !s2332() ) return 1;
+if( s2344 == b ) return 0;
+return s2344 < b ? -1 : 1;}
+int s2309::s2417( const s2309& b ) const{
+if( b.s2332() ) return s2325( b.s2344 );
+if( s2332() ) return -1;
+return s2325( s2323(), b.s2323() );}
 void s2309::s1944( const wstring& s ){
 assert( _val.empty() );
 if( s.empty() )
 throw;
+s2339 = NULL;
+s2344 = 0;
 if( s.size() < 21 ) {
 wchar_t *s67;
 errno = 0;
@@ -6493,7 +6886,8 @@ wstring s2309::to_wstring( uint32_t s1552 ) const{
 if( _val.empty() )
 return std::to_wstring( s2344 );
 int l = (int) _val.size() - 1;
-wstring s152 = std::to_wstring( _val[l--] );
+wstring s152 = s2342 ? L"-" : L"";
+s152 += std::to_wstring( _val[l--] );
 wstring zz = L"0000000";
 wstring dig = L"";
 while( l >= 0 ) {
@@ -6513,7 +6907,7 @@ if( n < _val.size() - 1 ) buf << L",";}}}
 #define DR ((s481*)*(s273 + 1))
 #define PARN(n)((s481*)*(s273 + n))
 s480* s2310::s351( const s262& s694, s271* s585, s1889& s331 ) const{
-wstring s = s694.s290();
+wstring s = s299->TR().s1264( s694.s290(), s331 );
 if( s.find_first_not_of( L"-0123456789" ) == std::string::npos &&
 1/*s.find( L"." ) != std::string::npos*/ ) {
 size_t pos = 0;
@@ -6557,17 +6951,41 @@ void s2310::s347(){
 s345.insert( make_pair( s7::s1345, new s334( s7::s1345, &s2310::s1226, Types.s2309,
 { s1112(), s1112( { Types.String } ), s1112( { s1500::s1260 } ) }, 0, 1 ) ) );
 s345.insert( make_pair( L"set", new s334( L"set", &s2310::s384, Types.s2309,
-{ s1112( { s1500::s1537 } ) }, 1, 1 )));
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
 s345.insert( make_pair( L"sum", new s334( L"sum", &s2310::s385, Types.s2309,
 { s1112( { Types.s2309 } ), s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
 s345.insert( make_pair( L"dif", new s334( L"dif", &s2310::s386, Types.s2309,
-{ s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
+{ s1112( ), s1112( { Types.s2309 } ), s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
 s345.insert( make_pair( L"mul", new s334( L"mul", &s2310::s387, Types.s2309,
-{ s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
 s345.insert( make_pair( L"div", new s334( L"div", &s2310::s388, Types.s2309,
-{ s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
 s345.insert( make_pair( L"pow", new s334( L"pow", &s2310::s389, Types.s2309,
-{ s1112( { s1141 } ) }, 1, 1 )));
+{ s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"sumeq", new s334( L"sumeq", &s2310::s390, Types.Null,
+{ s1112( { Types.s2309 } ), s1112( { Types.Int, s7::s1387 } ) }, 1, 10 )));
+s345.insert( make_pair( L"difeq", new s334( L"difeq", &s2310::s391, Types.Null,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"muleq", new s334( L"muleq", &s2310::s392, Types.Null,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"diveq", new s334( L"diveq", &s2310::s393, Types.Null,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"eq", new s334( L"eq", &s2310::s395, Types.Bool,
+{ s1112( { Types.s2309 } ), s1112( { Types.String } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"less", new s334( L"less", &s2310::s396, Types.Bool,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"greater", new s334( L"greater", &s2310::s397, Types.Bool,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"leq", new s334( L"leq", &s2310::s398, Types.Bool,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"geq", new s334( L"geq", &s2310::s399, Types.Bool,
+{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"neq", new s334( L"neq", &s2310::s400, Types.Bool,
+{ s1112( { Types.s2309 } ), s1112( { Types.String } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"is-probable-prime", new s334( L"is-probable-prime", 
+&s2310::s2431, Types.Bool,	{ s1112( { s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"is-prime", new s334( L"is-prime", 
+&s2310::s2430, Types.Bool,	{ s1112( ), s1112( { Types.Bool } ) }, 0, 1 )));
 s299->TR().s1152( s490, s7::s1401, s1500::s1260 );}
 s270* s2310::s332( s588* s2041, s271* impl ) const{
 return new s2310( *this );}
@@ -6607,11 +7025,14 @@ else if( p->s349() == Types.s1516 )
 ob->s346.s2389( (uint64_t)*((s1517*)p)->s354() );
 else if( p->s349() == Types.Int )
 ob->s346.s2389( (int64_t)*((s343*)p)->s354() );
+else if( p->s349() == Types.s2309 )
+ob->s346.s2387( ((s2310*)p)->s346 );
 else
 throw new s16( L"no conversion to " + ob->s350() + L" from type: " + p->s350() );}
 #undef s691
 #define s691 ((s2310*)(s481*)*s273)
 #define INTRES ((s343*)(s481*)*s273)
+#define s692 ((s357*)(s481*)*s273)
 inline void s2310::s1226( s480** s273, size_t s495 ){
 s2310* plv = NULL;
 if( s495 == 3 && s273[2]->s349() == Types.String ) {
@@ -6628,14 +7049,10 @@ plv->s1251();
 s273[0] = plv;}
 inline void s2310::s384( s480** s273, size_t s495 ){
 s2341( (s2310*)s273[1], s273[2] );}
-/*void s2310::s401( s480** s273, size_t s495 )
+void s2310::s401( s480** s273, size_t s495 ){
+((s2309*)DR)->s2413( s691->s346 );}
+/*void s2310::s1962( s480** s273, size_t s495 )
 {
-double t = (double)*DR;
-if( t >= 0 )
-s691->s346 = t;
-else
-s691->s346 = -t;}
-void s2310::s1962( s480** s273, size_t s495 ){
 double s680 = (double)*DR;
 if (isnan( s680 ) || s680 == -INFINITY || s680 == INFINITY) (void)0;
 else if ( s680 == 0.0 ) s680 = DBL_EPSILON;
@@ -6685,6 +7102,10 @@ s1292 lv( 0, 0 );
 s273[2]->s353( &lv );
 ( (s2310*)DR )->s346.s2367( *lv.s354(), s691->s346, rem );}}
 inline void s2310::s386( s480** s273, size_t s495 ){
+if( s495 == 2 ) {
+s691->s346 = ((s2310*)DR)->s346;
+s691->s346.s2388(((s2310*)DR)->s346.s2425());
+return;}
 if( s273[2]->s349() == Types.s2309 )
 ( (s2310*)DR )->s346.s2396( ((s2310*)s273[2])->s346, s691->s346 );
 else {
@@ -6693,105 +7114,79 @@ s273[2]->s353( &lv );
 ( (s2310*)DR )->s346.s2396( *lv.s354(), s691->s346 );}}
 inline void s2310::s389( s480** s273, size_t s495 ){
 ( (s2310*)DR )->s346.s2383( (int)*s273[2], s691->s346 );}
-/*
 inline void s2310::s390( s480** s273, size_t s495 ){
-s2310* pd = (s2310*) s273[1];
-for( size_t n = 2; n < s495; ++n ) {
-s480* p = s273[n];
-if( p->s349() == Types.Double )
-pd->s346 += *( (s2310*)p )->s354();
-else if( p->s349() == Types.Int )
-pd->s346 += ( s1374 )*( (s343*)p )->s354();}
-s691->s346 = ( (double)*DR );}
+if( s273[2]->s349() == Types.s2309 )
+( (s2310*)DR )->s346.s2414( ((s2310*)s273[2])->s346 );
+else {
+s1292 lv( 0, 0 );
+s273[2]->s353( &lv );
+( (s2310*)DR )->s346.s2414( *lv.s354() );}}
 inline void s2310::s391( s480** s273, size_t s495 ){
-( (s2310*)DR )->s346 -= (double)*PARN( 2 );
-for( size_t n = 3; n < s495; ++n )
-( (s2310*)DR )->s346 -= (double)*PARN( n );
-s691->s346 = ( (double)*DR );}
+if( s273[2]->s349() == Types.s2309 )
+( (s2310*)DR )->s346.s2447( ((s2310*)s273[2])->s346 );
+else {
+s1292 lv( 0, 0 );
+s273[2]->s353( &lv );
+( (s2310*)DR )->s346.s2447( *lv.s354() );}}
 inline void s2310::s392( s480** s273, size_t s495 ){
-( (s2310*)DR )->s346 *= (double)*PARN( 2 );
-for( size_t n = 3; n < s495; ++n )
-( (s2310*)DR )->s346 *= (double)*PARN( n );
-s691->s346 = ( (double)*DR );}
+if( s273[2]->s349() == Types.s2309 )
+( (s2310*)DR )->s346.s2441( ((s2310*)s273[2])->s346 );
+else {
+s1292 lv( 0, 0 );
+s273[2]->s353( &lv );
+( (s2310*)DR )->s346.s2441( *lv.s354() );}}
 inline void s2310::s393( s480** s273, size_t s495 ){
-( (s2310*)DR )->s346 /= (double)*PARN( 2 );
-for( size_t n = 3; n < s495; ++n )
-( (s2310*)DR )->s346 /= (double)*PARN( n );
-s691->s346 = ( (double)*DR );}
+if( s273[2]->s349() == Types.s2309 )
+( (s2310*)DR )->s346.s2419( ((s2310*)s273[2])->s346 );
+else {
+s1292 lv( 0, 0 );
+s273[2]->s353( &lv );
+( (s2310*)DR )->s346.s2419( *lv.s354() );}}
+/*
 inline void s2310::s394( s480** s273, size_t s495 ){
 ( (s2310*)DR )->s346 = ::pow( (double)*DR, (double)*PARN( 2 ) );
 for( size_t n = 3; n < s495; ++n )
 ( (s2310*)DR )->s346 = ::pow( (double)*DR, (double)*PARN( n ) );
 s691->s346 = ( (double)*DR );}
+*/
 inline void s2310::s395( s480** s273, size_t s495 ){
-double d = (double)*DR;
-if( std::abs( d - (double)*PARN(2) ) < 0.000001  ) // FIX:
-*s692->s354() = 1;
-else
-*s692->s354() = 0;}
+if( s273[2]->s349() == Types.s2309 )
+*s692->s354() = ((s2310*)DR)->s346.s2373( ((s2310*)s273[2] )->s346 );
+else if( s273[2]->s349() == Types.String )
+*s692->s354() = DR->to_wstring() == s273[2]->to_wstring();
+else {
+s1292 lv( 0, 0 );
+s273[2]->s353( &lv );
+*s692->s354() = ((s2310*)DR)->s346.s2373( *lv.s354() );}}
 inline void s2310::s396( s480** s273, size_t s495 ){
-if( ((double)*DR) < (double)*PARN( 2 ) )
-*s692->s354() = 1;
-else
-*s692->s354() = 0;}
+*s692->s354() = ((s2310*)DR)->s346.s2375( ((s2310*)s273[2] )->s346 );}
 inline void s2310::s397( s480** s273, size_t s495 ){
-if( ( (double)*DR ) > (double)*PARN( 2 ) )
-*s692->s354() = 1;
-else
-*s692->s354() = 0;}
+*s692->s354() = (((s2310*)DR)->s346.compare( ((s2310*)s273[2] )->s346 ) == 1);}
 inline void s2310::s398( s480** s273, size_t s495 ){
-if( ( (double)*DR ) <= (double)*PARN( 2 ) )
-*s692->s354() = 1;
-else
-*s692->s354() = 0;}
+*s692->s354() = (((s2310*)DR)->s346.compare( ((s2310*)s273[2] )->s346 ) != 1);}
 inline void s2310::s399( s480** s273, size_t s495 ){
-if( ( (double)*DR ) >= (double)*PARN( 2 ) )
-*s692->s354() = 1;
-else
-*s692->s354() = 0;}
+*s692->s354() = (((s2310*)DR)->s346.compare( ((s2310*)s273[2] )->s346 ) != -1);}
 inline void s2310::s400( s480** s273, size_t s495 ){
-if( ( (double)*DR ) != (double)*PARN( 2 ) )
-*s692->s354() = 1;
-else
-*s692->s354() = 0;}
+if( s273[2]->s349() == Types.s2309 )
+*s692->s354() = !((s2310*)DR)->s346.s2373( ((s2310*)s273[2] )->s346 );
+else if( s273[2]->s349() == Types.String )
+*s692->s354() = DR->to_wstring() != s273[2]->to_wstring();
+else {
+s1292 lv( 0, 0 );
+s273[2]->s353( &lv );
+*s692->s354() = !((s2310*)DR)->s346.s2373( *lv.s354() );}}
+inline void s2310::s2431( s480** s273, size_t s495 ){
+*s692->s354() = ((s2310*)DR)->s346.s2427( (int)*s273[2] );}
+inline void s2310::s2430( s480** s273, size_t s495 ){
+bool s2409 = false;
+if( s495 == 3 )
+s2409 = (bool)*s273[2];
+*s692->s354() = ((s2310*)DR)->s346.s2426( s2409 );}
+/*
 inline void s2310::s403( s480** s273, size_t s495 ){
 s691->s346 = ::sqrt((double)*DR);}
 inline void s2310::s404( s480** s273, size_t s495 ){
 *( (s2310*)s273[0] )->s354() = ::pow( (double)*DR, (double)*PARN( 2 ) );}
-inline void s2310::s407( s480** s273, size_t s495 ){
-double dl = (double)*DR;
-double dr = (double)*PARN( 2 );
-double diff = (double)*PARN( 3 );
-if( dl > dr ) {
-if( dl - dr <= diff )
-*INTRES->s354() = 0;
-else
-*INTRES->s354() = 1;}
-else {
-if( dr - dl <= diff )
-*INTRES->s354() = 0;
-else
-*INTRES->s354() = -1;}}
-inline void s2310::s408( s480** s273, size_t s495 ){
-double dl = (double)*DR;
-double dr = (double)*PARN( 2 );
-double diff = (double)*PARN( 3 );
-if( dl > dr ) {
-if( dl / dr - 1 <= diff )
-*INTRES->s354() = 0;
-else
-*INTRES->s354() = 1;}
-else {
-if( dr / dl - 1 <= diff )
-*INTRES->s354() = 0;
-else
-*INTRES->s354() = -1;}}
-inline void s2310::s2197( s480** s273, size_t s495 ){
-double dv = ( (s2310*)DR )->s346;
-*( (s2310*)s273[0] )->s354() = floor( dv );}
-inline void s2310::s2195( s480** s273, size_t s495 ){
-double dv = ( (s2310*)DR )->s346;
-*( (s2310*)s273[0] )->s354() = ceil( dv );}
 inline void s2310::s409( s480** s273, size_t s495 ){
 int s1320 = -1;
 if( s495 == 3 )
@@ -15354,23 +15749,26 @@ code = (int)*s580[1];
 throw new s16( (uint32_t) code );}
 s270* s889::s332( s588* s2041, s271* impl ) const{
 return new s889( *this );}
+vector<wstring> s2400( { L":stopIter" } );
 s608::s608( s261* s299, s271* s589, s588* s590, const std::vector<s270*>& l, const s262* s694 )
 : s588( s299, s589, s590, s590, s562, s258, s694 ), s78( s299 ){
 if( l.size() > 2 )
 throw new s16( s258 + L": wrong number of arguments" );
 s273.assign( l.begin(), l.end() );
 s490 = Types.No;
-s78.s11();}
+s78.s11();
+s588::s1231( ( vector<s270*>& )l, s2400 );}
 s608::s608( s261* s299 )
 : s588( s299, NULL, NULL, NULL, s562, s258, NULL ), s78( s299 ){
 s490 = Types.No;
 s78.s11();}
 void
 s608::s497( const s271* s1657, bool proc ){
-s78.create( s273 );
+s588::s497( s1657, proc );
 s583 = s363.s15<s480*>();
 s1251();}
 s483 s608::s494( s480** s698, size_t s495 ){
+s78.create( s273 );
 return &s78;}
 s609::s609( s261* s299, s271* s589, s588* s590, const std::vector<s270*>& l, const s262* s694 )
 : s588( s299, s589, s590, s590, s562, s256, s694, true ), 
@@ -15401,6 +15799,7 @@ s680 = s581[n]->s494( s698, s495 );
 if( s680->s615() < 0 ) {
 if( s680->s615() == s7::s437 ) {
 ( (s358*)s680 )->s353( &s616 );
+s616.create( vector<s482>{} );
 s680 = ctch->s494( &s680, 1 );}
 break;}}
 s583 = s680;

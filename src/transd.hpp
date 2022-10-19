@@ -1633,6 +1633,7 @@ void s347() override;
 const s338& s339() const override { return s345; }
 s2259 s2263;
 std::wstring s78;
+s483 obj;
 public:
 s358( const s358& right );
 s358( s261* s299, const std::wstring& s = std::wstring( L"" ) );
@@ -1644,6 +1645,7 @@ s1889& Msg() const { return s78; }
 void s360( const std::wstring& s ) { s78 = s; }
 void* addr() override { return (void*)0; }
 void s497( const s271* s584, bool b = true ) override;
+s483 s494( s480** s273, size_t s495 ) override;
 s270* s332( s588* s2041, s271* impl ) const override;
 void s353( s270* p ) const override;
 size_t s319() const override;
@@ -2143,10 +2145,10 @@ static const int s2314 =  10000000;
 static const int64_t _BASE2 = 100000000000000;
 s2394 s2344;
 s2398 _val;
-s2384 s2339;
+s2382 s2339;
 bool s2342;
 const s2398& s2323() const { return s2339 ? *s2339 : _val; }
-s2398& s1411() { return s2339 ? *s2339 : _val; }
+s2398& s1411();
 bool s2332() const { return s2339 ? s2339->empty() : _val.empty(); }
 static void s2318( const s2398& l, const s2398& r, s2398& s152 );
 void s2318( const s2398& b, s2398& s152 ) const;
@@ -2169,16 +2171,20 @@ void s2328( const s2309& b, s2309& quot, s2309& rem ) const;
 void _divmod1( const s2398& b, s2398& quot, s2398& rem ) const;
 void _divmod2( const s2398& b, s2398& quot, s2398& rem ) const;
 static void s2327( const s2398& a, s2394 b, s2398& quot, s2398& rem );
+int s2325( s2394 b ) const;
 static int s2325( const s2398& a, const s2398& b );
 static void s2343( s2394 a, s2398& s152 );
 bool s2330() const;
-void s2351();
-bool s2354();
+void s2406();
+void s2412( const s2309& base, s2309& s152);
+size_t s2401() const;
+static int64_t s2404( const s2309& s346, const s2309& base, s2309& p );
 public:
 s2309( const std::wstring& s );
 s2309( s2394 _sm );
 s2309( s2382 s1057, bool s2390 );
 s2309( const s2309& r, bool s2390 );
+void reset();
 void s2360( const s2309& b, s2309& s152 ) const;
 void s2396( const s2309& b, s2309& s152 ) const;
 void s2381( const s2309& b, s2309& s152 ) const;
@@ -2188,18 +2194,50 @@ void s2396( int64_t b, s2309& s152 ) const;
 void s2381( int64_t b, s2309& s152 ) const;
 void s2367( int64_t b, s2309& quot, s2309& rem ) const;
 void s2395();
-void s2383( int32_t e, s2309& s152 );
+void s2383( int32_t e, s2309& s152 ) const;
+void s2418( const s2309& b, s2309& s152 ) const;
+void s2438( const s2309& b, s2309& s152 ) const;
+void s2440( const s2309& exp, const s2309& mod, s2309& s152 ) const;
+void s2439( const s2309& b, s2309& s152 ) const;
+void s2414( const s2309& b );
+void s2441( const s2309& b );
+void s2447( const s2309& b );
+void s2419( const s2309& b );
+void s2413( s2309& s152 );
 size_t s2393() const;
 s2394 s2370() const { return s2344; }
 void s2389( s2394 s346 );
 void s2387( const s2309& bl );
+void s2387( int64_t s346 );
+void s2387( const std::wstring& s );
 void s2388( bool s2390 );
+size_t s319() const;
+bool operator==( const s2309& p ) const;
+bool operator<( const s2309& p ) const;
+int compare( const s2309& b ) const;
+int s2417( const s2309& b ) const;
+int compare( s2394 b ) const;
 bool s2373( const s2309& bl ) const;
+bool s2373( s2394 b ) const;
 bool s2375( const s2309& bl ) const;
+bool s2375( s2394 b ) const;
 bool s2374() const;
+bool s2429() const;
+bool s2428() const;
+bool s2424() const;
+bool s2425() const;
+bool s2423( const s2309& b ) const;
+int s2422() const;
+static bool s2437( const s2309& n, const std::vector<int64_t>& v );
+static bool s2437( const s2309& n, const std::vector<s2309>& v );
+bool s2426( bool s150 ) const;
+bool s2427( size_t s2433 );
+void s2445( const s2309& a, const s2309& b, s2309& s152 );
 void s1944( const std::wstring& s ); // override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const; // override;
 void s303( std::wostream* pd, int s196 = 0 ) const; // override
+void s2351();
+bool s2354();
 };
 extern s2309 s2380;
 class s2310
@@ -2208,11 +2246,24 @@ static s338 s345;
 s2309 s346;
 static void s1226( s480** s273, size_t n );
 static void s384( s480** s273, size_t n );
+static void s401( s480** s273, size_t n );
 static void s385( s480** s273, size_t n );
 static void s386( s480** s273, size_t n );
 static void s387( s480** s273, size_t n );
 static void s388( s480** s273, size_t n );
 static void s389( s480** s273, size_t n );
+static void s390( s480** s273, size_t n );
+static void s391( s480** s273, size_t n );
+static void s392( s480** s273, size_t n );
+static void s393( s480** s273, size_t n );
+static void s395( s480** s273, size_t n );
+static void s396( s480** s273, size_t n );
+static void s397( s480** s273, size_t n );
+static void s398( s480** s273, size_t n );
+static void s399( s480** s273, size_t n );
+static void s400( s480** s273, size_t n );
+static void s2431( s480** s273, size_t n );
+static void s2430( s480** s273, size_t n );
 void s347() override;
 const s338& s339() const override { return s345; }
 static void s2341( s2310* ob, s270* v );
@@ -6185,7 +6236,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.510"
+#define TRANSD_VERSION L"0.511"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
