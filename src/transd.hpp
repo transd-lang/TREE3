@@ -5387,8 +5387,6 @@ void s1563<_Cont, s1300, Der>::s773( s480** s273, size_t s495 ){
 using s932 = typename Der::s1129;
 Der* pv = NULL;
 s1134 rp = s310<_Cont, s1300, Der>::s1414( s273[1], &pv );
-if( ( (s323*)pv )->s1128() < 2 )
-throw new s2::s16( L"this type of iterable doesn't support the 'sort' operation" );
 s588* s1196 = NULL;
 if( s495 == 3 )
 s1196 = (s588*)s273[2];
@@ -5454,12 +5452,17 @@ s680 += s72 + (*s1506)->to_wstring();
 (*s273)->s1251();}
 template<class _Cont, class s1300, class Der>
 inline void s1563<_Cont, s1300, Der>::s2221( s480** s273, size_t s495 ){
-Der* pv = ( (Der*)s273[1] );
+using s932 = typename Der::s1129;
+Der* pv = NULL;
+s1134 rp = s310<_Cont, s1300, Der>::s1414( s273[1], &pv );
 pv->s494(0,0);
 s483 el = (s480*)s273[2];
 el->s494(0,0);
+typename _Cont::iterator s1507, s1508;
+s1507 = rp.first.s15<s932*>()->s1135();
+s1508 = rp.second.s15<s932*>()->s1135();
 if( el->s1194() &&
-std::find_if( pv->s346.begin(), pv->s346.end(), [el]( s482 r ) { return el->operator==(r.s15<s480*>()); } ) != pv->s346.end() )
+std::find_if( s1507, s1508, [el]( s482 r ) { return el->operator==(r.s15<s480*>()); } ) != s1508 )
 *( (s357*)*s273 )->s354() = true;
 else
 *( (s357*)*s273 )->s354() = false;
@@ -6236,7 +6239,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.511"
+#define TRANSD_VERSION L"0.512"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
