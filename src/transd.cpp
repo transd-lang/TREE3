@@ -18768,9 +18768,9 @@ s481* pr = s668->s493();
 try {
 s1308 = false;
 if( !pr )
-s668->s497( this, false );
+s668->s497( mod, false ); 
 else
-s668->s594( this );}
+s668->s594( mod );}
 catch( s16* e ) {
 throw e->s30( L"\nwhile linking '" + s668->s298() + L"' function " );}
 s1308 = true;

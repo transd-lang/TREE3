@@ -2184,8 +2184,8 @@ s2394 s2456() const;
 size_t s2401() const;
 static int64_t s2404( const s2309& s346, const s2309& base, s2309& p );
 static void s2453( const s2309& s346, bool s2460, std::vector<s2309>& s152 );
-static void s2451( const s2309& s346, int64_t seed, int64_t c, s2309& s152 );
-static void _pollardRho2( const s2309& s346, int64_t seed, int64_t c, s2309& s152 );
+static void s2451( const s2309& s346, int64_t s2457, int64_t c, s2309& s152 );
+static void _pollardRho2( const s2309& s346, int64_t s2457, int64_t c, s2309& s152 );
 static void s2452( const s2309& n, std::vector<s2309>& s152 );
 public:
 s2309( const std::wstring& s );
@@ -6256,7 +6256,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.513"
+#define TRANSD_VERSION L"0.514"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
