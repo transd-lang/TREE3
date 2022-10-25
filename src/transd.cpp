@@ -5876,6 +5876,9 @@ ss.imbue( std::locale( "C" ) );
 ss.flags( flags );
 ss << s346;
 s1918->s1468( ss.str() );}
+s2394 s2309::_P2_ARR[] = {1,2,4,8,16,32,64,128,256,512,1024,
+2048,4096,8192,16384,32768,65536,131072,262144,524288,1048576,
+2097152,4194304,8388608};
 s2309 s2380( std::to_wstring( s2316 ) );
 void s2352( s2398& v ){
 if( v.empty() ) return;
@@ -6242,10 +6245,12 @@ if( n <= 30 ) {
 s2333( x, y, s152 );
 return;}
 n = (size_t) std::ceil( ((double) n) / 2 );
-s2398 a( x.begin(), x.begin() + n );
-s2398 b( x.begin() + n, x.end() );
-s2398 c( y.begin(), y.begin() + n );
-s2398 d( y.begin() + n, y.end() );
+size_t nx = (std::min)(x.size(), n);
+size_t ny = (std::min)(y.size(), n);
+s2398 a( x.begin(), x.begin() + nx );
+s2398 b( x.begin() + nx, x.end() );
+s2398 c( y.begin(), y.begin() + ny );
+s2398 d( y.begin() + ny, y.end() );
 s2398 ac, s2158, s2357, aAb, s2365;
 s2335( a, c, ac );
 s2335( b, d, s2158 );
@@ -6488,7 +6493,7 @@ quot.s2406();}
 void s2309::s2395(){
 if( s2332() ) {
 s2394 s892 = s2344;
-if( s2344 > s2316 / s2344 ) {
+if( s2344 && (s2344 > s2316 / s2344 )) {
 s2309 s1793( 0 );
 s2351();
 if( s892 < s2314 )
@@ -6515,12 +6520,45 @@ s1793._val[i + j] = s2337 - s2324 * s2314;}
 s1793._val[i + len] = s2324;}
 s2352( s1793.s1411() );
 s2387( s1793 );}}
+void s2309::s2469( s2394 n ){
+if( std::abs( n ) > s2314 ) throw;
+if( s2429() ) return;
+if( n < 0 ) return s2470( -n );
+s2309 s2411( *this ), _hp2(_HP2);
+while( n >= _HP2_LEN ) {
+s2411.s2441( _hp2 );
+n -= ( _HP2_LEN - 1 );}
+s2411.s2381( s2309( _P2_ARR[n] ), *this );}
+void s2309::s2470( s2394 n ){
+if( std::abs( n ) > s2314 ) throw;
+if( s2429() ) return;
+if( n < 0 ) return s2469( -n );
+s2309 s2411( *this ), _hp2(_HP2), s2454(0), s2455(0);
+while( n >= _HP2_LEN ) {
+if( s2411.s2429() || (s2411.s2424() && s2411.s2428()) ) { s2387( s2411 ); return; }
+s2411.s2367( _hp2, s2454, s2455 );
+s2411.s2387( s2454 );
+if( s2455.s2424() ) s2411.s2447( 1 );
+n -= ( _HP2_LEN - 1 );}
+s2411.s2367( _P2_ARR[n], s2454, s2455 );
+s2387( s2454 );
+if( s2455.s2424() ) s2447( 1 );}
+void s2309::s2463(){
+if( s2342 ) throw;
+if( s2332() ) { s2389( std::sqrt( s2344 ) ); return;}
+s2394 bl = s2401() + 1; bl = bl >> 1;
+s2309 a( (1 << bl) ), b(0), _t(0);
+while( true ) {
+s2418( a, _t ); _t.s2414( a ); _t.s2470( 1 );
+b.s2387( _t );
+if( !a.s2375( b ) ){ s2387( a ); return; }
+a.s2387( b );}}
 int64_t s2312(int64_t i, int64_t e){
 if( e == 0 ) return 1;
 if( e == 1 ) return i;
 int64_t s680 = 1;
 while( 1 ) {
-if ((e & 1) == 1) { 
+if ((e & 1) == 1) {
 s680 = s680 * i;
 --e;}
 if( e == 0 ) break;
@@ -6609,6 +6647,9 @@ base.s2395();
 base.s2438( mod, s2411 );
 base.s2387( s2411 );}
 s152.s2406();}
+void s2309::s2468( const std::wstring& s ){
+reset();
+s1944( s );}
 void s2309::s2389( s2394 s346 ){
 _val.clear();
 s2339 = NULL;
@@ -6654,7 +6695,7 @@ bool s2309::s2375( const s2309& bl ) const{
 if( s2342 != bl.s2342 )
 return  s2342;
 if( s2332() ) {
-if( !bl.s2332() ) return false;
+if( !bl.s2332() ) return true;
 return s2344 < bl.s2344;}
 int _cmp = s2325( s2323(), bl.s2323() );
 if( ( _cmp > 0 && s2342 ) || ( _cmp < 0 && !s2342 ) )
@@ -6686,6 +6727,11 @@ return !s2342;}
 bool s2309::s2428() const{
 if( s2332() ) return s2344 == 1;
 return s2323().size() == 1 && s2323()[0] == 1;}
+bool s2309::s2462() const{
+s2309 t( *this );
+t.s2463();
+t.s2395();
+return s2373( t );}
 int64_t s2309::s2404( const s2309& s346, const s2309& base, s2309& p ){
 if( base.compare( s346 ) <= 0 ) {
 s2309 s2446( base );
@@ -6711,10 +6757,41 @@ return (size_t) s152 + 1;}
 bool s2309::s2423( const s2309& b ) const{
 if( b.s2429() ) return false;
 if( b.s2428() ) return true;
-if( b.s2325( 2 ) ) return s2374();
+if( b.s2325( 2 ) == 0 ) return s2374();
 s2309 rem( 0 );
 s2438( b, rem );
 return rem.s2429();}
+s2394 s2309::s2456() const{
+int64_t s2465 = 1 << 30;
+int64_t s2464 = (s2314 & -s2314) * (s2314 & -s2314) | s2465;
+s2394 s680;
+if( s2332() )
+s680 = s2344 | s2465;
+else
+s680 = ( _val[0] + _val[1] * s2314 ) | s2464;
+return s680 & (-s680 + 1);}
+void s2309::gcd( const s2309& _a, const s2309& _b, s2309& s152 ){
+if( _a.s2373( _b ) || _b.s2429() ) {
+s152.s2387( _a ); return;}
+if( _a.s2429() ){
+s152.s2387( _b ); return;}
+s2309 a(_a, false), b(_b, false), c( 1 ), d( 0 ), t( 0 );
+while( a.s2374() && b.s2374() ) {
+s2309 d ((std::min)( a.s2456(), b.s2456() ));
+a.s2419( d );
+b.s2419( d );
+c.s2441( d );}
+while( a.s2374() ) a.s2419( a.s2456() );
+while( true ) {
+while( b.s2374() ) b.s2419( b.s2456() );
+if( b.s2375( a ) ) {
+s2309 t( b );
+b.s2387( a );
+a.s2387( t );}
+b.s2447( a );
+if( b.s2429() ) break;		}
+if( c.s2428() ) s152.s2387( a );
+else a.s2381( c, s152 );}
 int s2309::s2422() const{
 s2309 ab( *this, false );
 if( ab.s2428() ) return 0;
@@ -6779,7 +6856,7 @@ vector<int64_t> a;
 for( size_t i = 0; i < t; ++i )
 a.push_back( i + 2 );
 return s2437( n, a );}
-bool s2309::s2427( size_t s2433 = 5 ){
+bool s2309::s2427( size_t s2433 = 5 ) const{
 int s2432 = s2422();
 if( s2432 != -1 ) return s2432;
 s2309 n( *this, false ), tw( 2 );
@@ -6812,6 +6889,118 @@ s2411._val.push_back( s2402 );
 if( s2402 < s2448 ) s2407 = false;}
 std::reverse( begin( s2411._val ), end( s2411._val ) );
 s152.s2387( s2411 );}
+void s2309::_pollardRho2( const s2309& n, int64_t s2457, int64_t s2459, s2309& s152 ){
+s2309 g( n ), y(2), c(1), m(100), x(0), ys(0), _t(0), k(0), q(0);
+while( g.s2373( n ) ) {
+s2445( s2309(0), n, y );
+s2445( s2309(0), n, c );
+s2445( s2309(0), n, m );
+size_t r = 1;
+g.s2389( 1 ); q.s2389( 1 );
+while( g.s2373( 1 ) ) {
+k.s2389( 0 );
+size_t i, s2448;
+x.s2387( y );
+for( i = 0; i < r; ++i ) {
+_t.s2387(y); _t.s2395(); _t.s2414( c ); _t.s2438(n, y);}
+while( k.s2375( r ) && g.s2373( 1 ) ) {
+ys.s2387( y );
+if( m.s2375( r - k.s2344 ) ) s2448 = m.s2344;
+else s2448 = r - k.s2344;
+for( i = 0; i < s2448; ++i ) {
+_t.s2387(y); _t.s2395(); _t.s2414( c ); _t.s2438(n, y);
+x.s2396(y, _t); _t.s2441( q ); _t.s2438( n, q );}
+s2309::gcd(q, n, g);
+k.s2414( m );}
+r *= 2;
+if( r > 1000000000 ) g.s2387( n );}
+if( g.s2373( n ) ) {
+while( true ) {
+_t.s2387(ys); _t.s2395(); _t.s2414( c ); _t.s2438(n, ys);
+x.s2396( ys, _t);
+s2309::gcd( _t, n, g );
+if( g.compare( 1 ) == 1 ) break;}}}
+s152.s2387( g );}
+void s2309::s2451( const s2309& s346, int64_t s2457, int64_t c, s2309& s152 ){
+wcout << L"in Rho: " << s346.to_wstring() << endl;	
+std::function<void( s2309& a )> g = [c,s346]( s2309& a ) -> void 
+{ s2309 _t( a ); _t.s2395(); _t.s2414( s2309( c ) ); _t.s2438( s346, a ); };
+s152.s2389( 1 );
+s2309 x( s2457 ), y( s2457 ), z( 1 ), s2411( 0 );
+int64_t s2450 = 0;
+while( true ) {
+g( x ); g( y ); g( y );
+x.s2396( y, s2411 );
+if( s2411.s2429() ) {
+s152.s2389( 0 );
+return;}
+s2411.s2388( false );
+s2411.s2438( s346, s152 );
+z.s2441( s152 );
+++s2450;
+if( s2450 == 100 ) { 
+s2309::gcd( z, s346, s152 );
+if( s152.compare( 1 ) != 0 ) break;
+wcout << z._val.back() << endl;
+z.s2389( 1 );
+s2450 = 0;}}
+if( s152.s2373( s346 ) ) s152.s2389( 0 );}
+void s2309::s2452( const s2309& _n, vector<s2309>& s152 ){
+s2309 n( _n );
+s2394 inc[] = { 4,2,4,2,4,6,2,6 };
+s2309 k( 37 ), _t( 37 * 37 );
+s2394 i = 0;
+while( !n.s2375( _t ) ) {
+if( n.s2423( k ) ) {
+s152.push_back( k );
+n.s2419( k );}
+else {
+k.s2414( inc[i] );
+i = (i + 1) % 8;
+k.s2381(k, _t);}}
+if( n.compare( 1 ) == 1 ) s152.push_back( n );}
+void s2309::s2453( const s2309& s346, bool s2460, vector<s2309>& s152 ){
+if( s346.s2427( 15 ) ) {
+s152.push_back( s346 );
+return;}
+s2309 n( s346 );
+int64_t s2457 = 2, c = 1;
+bool s2449 = true;
+int64_t s2458 = 100000000000;
+if( s2460 ) {
+for( auto p : { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 } ) {
+while( n.s2423( p ) ) {
+s152.push_back( s2309( p ) );
+n.s2419( s2309( p ) );}}}
+while( !n.s2375( 2 ) ) {
+if( s2449 && n.s2427( 10 ) ) {
+s152.push_back( n );
+break;}
+if( !n.s2375( s2458 ) ) {
+s2309 d( 0 );
+_pollardRho2( n, s2457, c, d );
+if( !d.s2429() ) {
+s2309::s2453( d, false, s152 );
+n.s2419( d );
+s2449 = true;}
+else if( c == 1 ) {
+if( n.s2462() ) {
+vector<s2309> s1793;
+n.s2463();
+s2453( n, true, s1793 );
+s152.insert( end( s152 ), begin(s1793), end(s1793));
+s152.insert( end( s152 ), begin(s1793), end(s1793));}
+else {
+c = 2;
+s2449 = false;}}
+else if( c < 101 ) ++c;
+else if( s2457 < 101 ) ++s2457;
+else { s2452( n, s152 ); break; }}
+else {
+s2452( n, s152 ); break;}}
+std::sort( begin( s152 ), end( s152 ) );}
+void s2309::s2466( std::vector<s2309>& s152 ) const{
+s2453( *this, true, s152 );}
 void s2309::s2412( const s2309& base, s2309& s152){
 if( base.s2375( 2 ) )
 throw;
@@ -6950,7 +7139,7 @@ void s2310::s347(){
 s345.insert( make_pair( s7::s1345, new s334( s7::s1345, &s2310::s1226, Types.s2309,
 { s1112(), s1112( { Types.String } ), s1112( { s1500::s1260 } ) }, 0, 1 ) ) );
 s345.insert( make_pair( L"set", new s334( L"set", &s2310::s384, Types.s2309,
-{ s1112( { Types.s2309 } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
+{ s1112( { Types.s2309 } ), s1112( { Types.String } ), s1112( { s1500::s1537 } ) }, 1, 1 )));
 s345.insert( make_pair( L"sum", new s334( L"sum", &s2310::s385, Types.s2309,
 { s1112( { Types.s2309 } ), s1112( { s1500::s1537, s7::s1387 } ) }, 1, 1 )));
 s345.insert( make_pair( L"dif", new s334( L"dif", &s2310::s386, Types.s2309,
@@ -6985,7 +7174,20 @@ s345.insert( make_pair( L"is-probable-prime", new s334( L"is-probable-prime",
 &s2310::s2431, Types.Bool,	{ s1112( { s1500::s1537 } ) }, 1, 1 )));
 s345.insert( make_pair( L"is-prime", new s334( L"is-prime", 
 &s2310::s2430, Types.Bool,	{ s1112( ), s1112( { Types.Bool } ) }, 0, 1 )));
+s345.insert( make_pair( L"prime-factors", new s334( L"prime-factors",
+&s2310::s2467, 0,	{ s1112() }, 0, 0 )));
+s345.equal_range( L"prime-factors" ).first->second->s1250( true );
 s299->TR().s1152( s490, s7::s1401, s1500::s1260 );}
+s1053 s2310::s1178( const wstring& s1540, const vector<s482>& l ) const{
+s1053 s680 = 0;
+if( s1540 == L"prime-factors" ) {
+s806::Cont s1268;
+wstring ts = this->s299->TR().s1341( 
+Types( s299, Types.Vector )->s350() + L"<" + s350() + L">" );
+s680 = ((s313*)Types( s299, Types.Vector ))->s1185( (s270*)this, ts, s1704, s1268 );}
+else
+s680 = s333::s1178( s1540, l );
+return s680;}
 s270* s2310::s332( s588* s2041, s271* impl ) const{
 return new s2310( *this );}
 void s2310::s353( s270* p ) const{
@@ -7026,6 +7228,8 @@ else if( p->s349() == Types.Int )
 ob->s346.s2389( (int64_t)*((s343*)p)->s354() );
 else if( p->s349() == Types.s2309 )
 ob->s346.s2387( ((s2310*)p)->s346 );
+else if( p->s349() == Types.String )
+ob->s346.s2468( ((s356*)p)->to_wstring() );
 else
 throw new s16( L"no conversion to " + ob->s350() + L" from type: " + p->s350() );}
 #undef s691
@@ -7174,13 +7378,22 @@ else {
 s1292 lv( 0, 0 );
 s273[2]->s353( &lv );
 *s692->s354() = !((s2310*)DR)->s346.s2373( *lv.s354() );}}
-inline void s2310::s2431( s480** s273, size_t s495 ){
+void s2310::s2431( s480** s273, size_t s495 ){
 *s692->s354() = ((s2310*)DR)->s346.s2427( (int)*s273[2] );}
-inline void s2310::s2430( s480** s273, size_t s495 ){
+void s2310::s2430( s480** s273, size_t s495 ){
 bool s2409 = false;
 if( s495 == 3 )
 s2409 = (bool)*s273[2];
 *s692->s354() = ((s2310*)DR)->s346.s2426( s2409 );}
+void s2310::s2467( s480** s273, size_t n ){
+s2310* p = (s2310*)DR;
+s313* s680 = new s313( p->s299, p->s349(), p->ns, p->s600() );
+vector<s482>& v = s680->s317();
+vector<s2309> s2461;
+p->s346.s2466( s2461 );
+for( auto bl: s2461 ) v.push_back( new s2310( p->s299, bl ) );
+s680->s1251();
+*s273 = s680;}
 /*
 inline void s2310::s403( s480** s273, size_t s495 ){
 s691->s346 = ::sqrt((double)*DR);}
