@@ -11848,7 +11848,7 @@ bool s313::operator==( const s480* p ) const{
 if( ( (s313*)p )->s346.size() != s346.size() )
 return false;
 for( size_t n = 0; n < s346.size(); ++n )
-if( !( ( s270* )&( *s346[n] ) == (s270*)( (s313*)p )->s346[n] ) )
+if( ! s346[n].s15<s480*>()->operator==( ((s313*)p )->s346[n].s15<s480*>()) ) // ???DEBUG??? 221028
 return false;
 return true;}
 bool s313::operator<( const s480* p ) const{
