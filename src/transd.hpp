@@ -743,6 +743,7 @@ DEFCONST s455;
 DEFCONST s457;
 DEFCONST s458;
 DEFCONST s459;
+DEFCONST s2471;
 DEFCONST s1362;
 DEFCONST s1966;
 DEFCONST s762;
@@ -1097,7 +1098,7 @@ virtual ~s270();
 s469 s491() const { return s489; }
 const s262* s600() const { return s968.s15<s262*>(); }
 virtual s480* s493();
-virtual s483 s494( s480** s273 = NULL, size_t s495 = 0 );
+virtual s483 s494( s480** s273, size_t s495 );
 virtual s1053 s349() const { return s490; }
 const s806& s1186() const;
 virtual const std::wstring& s350() const;
@@ -1295,6 +1296,7 @@ static void s1000( const s806::Cont& v, std::vector<size_t>& s2118,
 s806::Cont& s152 );
 size_t s1048( s1889& s, size_t& pos, s806::Cont& s152 );
 std::wstring s1004( const s806::Cont& tp );
+s1053 s2473( s1889& s, s806::Cont& vt );
 static std::wstring s1341( s1889& tn );
 std::wstring s1264( s1889& tn, s1889& s1102 );
 void s2121( const s806::Cont& v_, s806::Cont& s152, size_t s2101 = 0 );
@@ -2490,7 +2492,7 @@ void s2113( s574& s2112 );
 void s2117( s588* s2041, s271* impl, bool s2158 = true ) override;
 bool s553( s1889& s277, s368* ref, s1889& s331, bool ) const override;
 s270* s595( size_t off ) override;
-s483 s494( s480** s273 = NULL, size_t s495 = 0 ) override;
+s483 s494( s480** s273, size_t s495 ) override;
 s270* s332( s588* s2041, s271* impl ) const override;
 static s588* s596( const s262& s694, s261* s299, s271* obj,
 s1889& s277, s1889& s555 );
@@ -2513,7 +2515,7 @@ s1053 s490, s1889& s1540, const s262* s694, bool _bd = false );
 s834( const s834& right, s588* s584, s271* ns );
 virtual ~s834();
 void s497( const s271* s1657, bool proc ) override;
-s483 s494( s480** s273 = NULL, size_t s495 = 0 ) override;
+s483 s494( s480** s273, size_t s495 ) override;
 bool s553( s1889& s277, s368* ref,	s1889& s331, bool ) const override;
 s270* s332( s588* s2041, s271* impl ) const override;
 bool s1193() const override { return s1960; }
@@ -2529,7 +2531,7 @@ virtual ~s835();
 s482 s2283() override;
 void s1663( s271* s589 ) { s585 = s589; }
 void s497( const s271* s1657, bool proc ) override;
-s483 s494( s480** s273 = NULL, size_t s495 = 0 ) override;
+s483 s494( s480** s273, size_t s495 ) override;
 s270* s332( s588* s2041, s271* impl ) const override;
 void s2258( const std::vector<s482>& l );
 void s2245( );
@@ -2542,7 +2544,7 @@ s1346( const s1346& right, s271* s585, s588* s584, const std::vector<s270*>& s27
 const s262* s694 );
 virtual ~s1346();
 void s497( const s271* s1657, bool proc ) override;
-s483 s494( s480** s273 = NULL, size_t s495 = 0 ) override;
+s483 s494( s480** s273, size_t s495 ) override;
 s270* s332( s588* s2041, s271* impl ) const override;
 };
 namespace s1500 {
@@ -3380,6 +3382,7 @@ static void s2221( s480** s273, size_t n );
 static s338 s345;
 virtual void s347() override;
 virtual const s338& s339() const override { return s345; }
+virtual void s2472() {}
 s270* s1324( s1300 el ) { return el; }
 public:
 typedef s1389<_Cont, s1300, Der, s1569> s1160;
@@ -4219,7 +4222,8 @@ void s497( const s271* s872, bool fr=true ) override;
 s270* s332( s588* s2041, s271* impl ) const override;
 void s353( s270* p ) const override;
 s480* s1524( const s480* p ) const override;
-s483 s494( s480** s273 = NULL, size_t s495 = 0 ) override;
+s483 s494( s480** s273, size_t s495 ) override;
+void s2472() override;
 size_t s319() const override;
 bool operator==( const s480* p ) const override;
 bool operator<( const s480* p ) const override;
@@ -4284,7 +4288,7 @@ s1053 s316() const override;
 s1053 s930() const override { return Types.Int; }
 s1053 s1178( s1889& s1540, const std::vector<s482>& l ) const override;
 size_t s1128() const override { return 2; }
-s483 s494( s480** s273 = NULL, size_t s495 = 0 ) override;
+s483 s494( s480** s273, size_t s495 ) override;
 bool s498( const s480* s499 ) const override;
 void* addr() override { return (void*)&s346; }
 void s497( const s271* s872, bool ) override;
@@ -5669,6 +5673,8 @@ s482 where;
 s482 s1052;
 s368 s308;
 s1517 s309;
+s368 s2474;
+s1053 s2475{ 0 };
 Iterator* s2273;
 s1::s9<s323> s2272;
 bool s877;
@@ -6256,7 +6262,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.514"
+#define TRANSD_VERSION L"0.515"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
