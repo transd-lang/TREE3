@@ -9120,8 +9120,8 @@ s1389<s1564, wchar_t, s356, s1560>::s347();
 s345 = s1389<s1564, wchar_t, s356, s1560>::s339();
 s345.insert( make_pair( s7::s1345, new s334( s7::s1345, &s356::s1226, Types.String,
 { s1112(), s1112( { s7::s1381, s7::s1387 } ) }, 0, 100 ) ) );
-s345.insert( make_pair( L"find", new s334( L"find", &s356::s773, s1141,
-{ s1112( { Types.String } ), s1112( { s1143, s1500::s1537 } ) }, 1, 1 )));
+s345.insert( make_pair( L"index-of", new s334( L"index-of", &s356::search_impl, s1141,
+{ s1112( { Types.String } ), s1112( { s1143, s1500::s1537 } ) }, 1, 1, true, {L":rev"} )));
 s345.insert( make_pair( L"find-first-not-of", new s334( L"find-first-not-of", &s356::s1575, s1141,
 { s1112( { Types.String } ), s1112( { Types.String, s1141 } ), 
 s1112( { Types.String, s1141, s1141 } )}, 1, 3 )));
@@ -9134,6 +9134,8 @@ s345.insert( make_pair( L"set-el", new s334( L"set-el", &s356::s1579, s1143,
 s345.insert( make_pair( L"size", new s334( L"size", &s356::s325, s1141,
 { s1112() }, 0, 0 )));
 s345.insert( make_pair( L"starts-with", new s334( L"starts-with", &s356::s1674, s1138,
+{ s1112( { Types.String } ) }, 1, 1 ) ) );
+s345.insert( make_pair( L"ends-with", new s334( L"ends-with", &s356::endsWith_impl, s1138,
 { s1112( { Types.String } ) }, 1, 1 ) ) );
 s345.insert( make_pair( L"strip", new s334( L"strip", &s356::s2139, s1143,
 { s1112(), s1112( { Types.String } ), s1112( { Types.String, Types.String } ) }, 
@@ -9162,8 +9164,8 @@ s345.insert( make_pair( L"isupper", new s334( L"isupper", &s356::s2224, s1138,
 { s1112() }, 0, 0 )));
 s345.insert( make_pair( L"swapcase", new s334( L"swapcase", &s356::s2230, Types.String,
 { s1112() }, 0, 0 )));
-s345.insert( make_pair( L"rfind", new s334( L"rfind", &s356::s792, s1141,
-{ s1112( { Types.String } ) }, 1, 1 )));
+s345.insert( make_pair( L"rindex-of", new s334( L"rindex-of", &s356::rsearch_impl, s1141,
+{ s1112( { Types.String } ), s1112( { Types.String, s1500::s1537 } ) }, 1, 2 )));
 s345.insert( make_pair( L"eq", new s334( L"eq", &s356::s395, s1138,
 { s1112( { Types.String } ) }, 1, 1 )));
 s345.insert( make_pair( L"not", new s334( L"not", &s356::s410, s1138,
@@ -9452,12 +9454,16 @@ c = ( (s356*)s273[3] )->s346[0];
 inline void s356::s325( s480** s273, size_t s495 ){
 *( (s343*)s691 )->s354() = (int)( (s356*)DR )->s346.size();}
 inline void s356::s1674( s480** s273, size_t s495 ){
-wstring s689 = L"Invalid 'starts-with' syntax: ";
-if( s495 < 3 )
-throw new s16( s689 + L"too few parameters." );
 const wstring& dr = ( (s356*)DR )->s346;
 const wstring& str = ( (s356*)s273[2] )->s346;
 if( dr.find( str ) == 0 )
+*( (s357*)s273[0] )->s354() = true;
+else
+*( (s357*)s273[0] )->s354() = false;}
+inline void s356::endsWith_impl( s480** s273, size_t s495 ){
+const wstring& dr = ( (s356*)DR )->s346;
+const wstring& str = ( (s356*)s273[2] )->s346;
+if( dr.rfind( str ) == dr.size() - str.size() )
 *( (s357*)s273[0] )->s354() = true;
 else
 *( (s357*)s273[0] )->s354() = false;}
@@ -9557,8 +9563,6 @@ if( s679 < 0 )
 throw new s16( s689 + L"the characters count cannot be less than 0" );}
 s691->s346 = dr.substr( start, s679 );}
 inline void s356::s2244( s480** s273, size_t s495 ){
-if( s495 < 2 )
-throw new s16( L"charn: too few parameters." );
 const wstring& dr = ((s356*)DR)->s346;
 int start = 0;
 if( s495 > 2 ) {
@@ -9570,26 +9574,46 @@ throw new s16( L"charn: the char position is less than 0" );
 if( start > (int)dr.size() - 1 )
 throw new s16( L"charn: the char position is greater than string's length" );}
 *((s1560*)s273[0])->s354() = dr[start];}
-inline void s356::s773( s480** s273, size_t s495 ){
-wstring s689 = L"Invalid 'find' syntax: ";
-if( s495 < 3 )
-throw new s16( s689 + L"too few parameters." );
+inline void s356::search_impl( s480** s273, size_t s495 ){
+wstring s689 = L"Invalid 'index-of' syntax: ";
 const wstring& dr = ( (s356*)DR )->s346;
-const wstring& str = ( (s356*)s273[2] )->s346;
 int start = 0; 
+bool brev = false;
+size_t count = dr.size() - 1;
+size_t curIdx = 3;
 if( s495 > 3 ) {
-start = (int)*s273[3];
+if( s273[2]->s491() == s1055 &&
+s273[2]->s349() ) {
+brev = true;
+curIdx = 4;
+start = count - 1;}
+if( s495 > curIdx ) {
+start = (int)*s273[curIdx];
 if( start < 0 )
 start = (int)dr.size() + start;
 if( start < 0 )
 throw new s16( s689 + L"the start position is negative." );
 if( start > (int) dr.size() - 1 )
-throw new s16( s689 + L"the start position is greater than string's length." );}
-*((s343*)s273[0])->s354() = (int)dr.find( str, start );}
+throw new s16( s689 + L"the start position is greater than string's length." );}}
+const wstring& str = ( (s356*)s273[curIdx - 1] )->s346;
+if( !brev )
+*((s343*)s273[0])->s354() = (int)dr.find( str, start );
+else
+*( (s343*)s273[0] )->s354() = (int)dr.rfind( str, start );}
+inline void s356::rsearch_impl( s480** s273, size_t s495 ){
+wstring s689 = L"Invalid 'rsearch' syntax: ";
+const wstring& dr = ( (s356*)DR )->s346;
+const wstring& str = ( (s356*)s273[2] )->s346;
+int start = (std::numeric_limits<int>::max)();
+if( s495 > 3 ) {
+start = (int)*s273[3];
+if( start < 0 )
+start = (int)dr.size() + start;
+if( start < 0 )
+throw new s16( s689 + L"the start position is less than 0." );}
+*( (s343*)s273[0] )->s354() = (int)dr.rfind( str, start );}
 inline void s356::s1575( s480** s273, size_t s495 ){
 wstring s689 = L"Invalid 'find-first-not-of' syntax: ";
-if( s495 < 3 )
-throw new s16( s689 + L"too few parameters." );
 const wstring& dr = ( (s356*)DR )->s346;
 const wstring& str = ( (s356*)s273[2] )->s346;
 int start = 0;
@@ -9602,20 +9626,6 @@ throw new s16( s689 + L"the start position is negative." );
 if( start > (int) dr.size() - 1 )
 throw new s16( s689 + L"the start position is greater than string's length." );}
 *((s343*)s273[0])->s354() = (int)dr.find_first_not_of( str.c_str(), start );}
-inline void s356::s792( s480** s273, size_t s495 ){
-wstring s689 = L"Invalid 'rfind' syntax: ";
-if( s495 < 3 )
-throw new s16( s689 + L"too few parameters." );
-const wstring& dr = ( (s356*)DR )->s346;
-const wstring& str = ( (s356*)s273[2] )->s346;
-int start = (std::numeric_limits<int>::max)();
-if( s495 > 3 ) {
-start = (int)*s273[3];
-if( start < 0 )
-start = (int)dr.size() + start;
-if( start < 0 )
-throw new s16( s689 + L"the start position is less than 0." );}
-*( (s343*)s273[0] )->s354() = (int)dr.rfind( str, start );}
 inline void s356::s2189( s480** s273, size_t s495 ){
 wstring s689 = L"Invalid 'contains' syntax: ";
 const wstring& dr = ( (s356*)DR )->s346;
@@ -14759,7 +14769,8 @@ void s1390::s1449( std::wstring& s152, size_t s1460 ){
 s152.clear();
 wcin >> s152;
 if( s1460 && s152.size() > s1460 )
-s152.resize( s1460 );}
+s152.resize( s1460 );
+wcin >> std::ws;}
 void s1390::s1468( s1889& src ){
 throw new s16( L"cannot output to StdIn" );}
 void s1390::s1450( std::wstring& s152, s1889& s72 ){

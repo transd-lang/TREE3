@@ -3802,6 +3802,7 @@ static void s384( s480** s273, size_t n );
 static void s1579( s480** s273, size_t n );
 static void s325( s480** s273, size_t n );
 static void s1674( s480** s273, size_t n );
+static void endsWith_impl( s480** s273, size_t n );
 static void s2139( s480** s273, size_t n );
 static void s385( s480** s273, size_t n );
 static void s390( s480** s273, size_t n );
@@ -3813,8 +3814,8 @@ static void s2224( s480** s273, size_t n );
 static void s883( s480** s273, size_t n );
 static void s884( s480** s273, size_t n );
 static void s1575( s480** s273, size_t n );
-static void s773( s480** s273, size_t n );
-static void s792( s480** s273, size_t n );
+static void search_impl( s480** s273, size_t n );
+static void rsearch_impl( s480** s273, size_t n );
 static void s2189( s480** s273, size_t n );
 static void s395( s480** s273, size_t n );
 static void s396( s480** s273, size_t n );
@@ -5322,14 +5323,16 @@ template<class _Cont, class s1300, class Der, class s1569>
 void s1389<_Cont, s1300, Der, s1569>::s1622( s480** s273, size_t n ){
 Der* pv = ( (Der*)s273[1] );
 if( pv->s346.empty() )
-throw new s2::s16( L"(front) method was called on an empty container" );
+throw new s2::s16( L"(front) method was called on an empty container",
+(uint32_t)s2::s16::s17::s24 );
 auto it = pv->s346.begin();
 *s273 = (s480*)pv->s1324( *it );}
 template<class _Cont, class s1300, class Der, class s1569>
 void s1389<_Cont, s1300, Der, s1569>::s1608( s480** s273, size_t n ){
 Der* pv = ( (Der*)s273[1] );
 if( pv->s346.empty() )
-throw new s2::s16( L"(back) method was called on an empty container" );
+throw new s2::s16( L"(back) method was called on an empty container",
+(uint32_t)s2::s16::s17::s24 );
 auto it = pv->s346.end();
 --it;
 *s273 = (s480*)pv->s1324( *it );}
@@ -6262,7 +6265,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.516"
+#define TRANSD_VERSION L"0.517"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
