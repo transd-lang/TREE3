@@ -2876,6 +2876,7 @@ virtual s270* Idx() = 0;
 virtual s270* El() = 0;
 virtual s1053 s316() const { return ValType(); };
 virtual s1053 ValType() const = 0;
+virtual s1053 s930() const { return s1141; }
 virtual bool s1963() const = 0;
 virtual bool operator==( const Iterator* r ) const { return this == r; }
 virtual bool operator<( const Iterator* r ) const { return this < r; }
@@ -4048,6 +4049,7 @@ s932 s1135() { return s1204; }
 void reverse() override;
 s1053 s316() const override;
 s1053 ValType() const override;
+s1053 s930() const override;
 bool operator==( const Iterator* r ) const override;
 };
 class s1371
@@ -4070,6 +4072,7 @@ s270* El() override;
 s932 s1135() { return s1204; }
 s1053 s316() const override;
 s1053 ValType() const override;
+s1053 s930() const override;
 bool operator==( const Iterator* r ) const override;
 };
 class s2204
@@ -4095,6 +4098,7 @@ s932 s1135() { return s1204; }
 s1236 s1136() { return s1247; }
 void reverse() override;
 s1053 ValType() const override;
+s1053 s930() const override {return ValType();}
 bool operator==( const Iterator* r ) const override;
 };
 class s2237
@@ -4114,6 +4118,7 @@ s270* Idx() override;
 s270* El() override;
 s932 s1135() { return s1204; }
 s1053 ValType() const override;
+s1053 s930() const override {return ValType();}
 bool operator==( const Iterator* r ) const override;
 };
 class s1565
@@ -4178,8 +4183,9 @@ class s1133
 : public s333{
 s482 s585;
 s1::s1278<Iterator> s346;
-s1053 s314;
-s1053 s322;
+s1053 s314{0};
+s1053 s322{0};
+s1053 s1190{0};
 static s338 s345;
 void s347() override;
 const s338& s339() const override { return s345; }
@@ -4191,7 +4197,7 @@ static void s1731( s480** s273, size_t n );
 static void s400( s480** s273, size_t n );
 static void s384( s480** s273, size_t n );
 public:
-s1133( s261* s299 ) : s333( s299, NULL, NULL ), s322(0) {}
+s1133( s261* s299 ) : s333( s299, NULL, NULL ) {}
 s1133( s261* s299, s1889& s77, const s262* ast_ = NULL );
 s1133( const s1133& right, const s262* ast_ = NULL );
 s1133( s261* s299, s271* context, Iterator* it, const s262* ast_ = NULL );
@@ -4203,6 +4209,7 @@ void s497( const s271* s872, bool ) override;
 s1053 s1178( s1889& s1540, const std::vector<s482>& l ) const override;
 s1053 s316() const { return s314;  }
 s1053 ValType() const { return s322;  }
+s1053 s930() const { return s1190;  }
 s270* s332( s588* s2041, s271* impl ) const override;
 void s353( s270* p ) const override;
 size_t s319() const override;
@@ -6356,7 +6363,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.518"
+#define TRANSD_VERSION L"0.519"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
