@@ -5323,6 +5323,8 @@ if( s273 ) {
 assert( s273->size() == 1 );
 for( size_t n = 0; n < s273->size(); ++n ) {
 s482 par = s273->at( n );
+if( par->s491() == s474 )
+continue;
 if( par->s491() == s471 ) {
 s346 = (int)*par;}
 else if( par->s491() != s472 ) {
@@ -5337,8 +5339,7 @@ if( par.s15<s368*>()->s378().s13() )
 par->s497( s872, false );
 s346 = (int)*par.s15<s368*>()->s374();}}}
 delete s273;
-s1251(); // ???DEBUG??? 220703
-}}
+s1251(); }}
 inline bool
 s343::s1529( s1053 s616 ) const{
 if( ( s616 == s1515 && s346 >= 0 ) ||
