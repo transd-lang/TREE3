@@ -851,7 +851,7 @@ s251, s237, s239, s1927, s765, s1602, s1549,
 s246, s233, s241, s243, s1928, 
 s1870, s1603, s1604, s845, s260,
 s230, s1605, s1606, s752, s231,
-s1929, s250, s256, s811,
+s1929, s250, s2490, s256, s811,
 s254, s232,
 s2213,
 s744, 
@@ -1997,6 +1997,7 @@ operator bool() const override { return s346 != 0; }
 operator int() const override { return s346; }
 operator double() const override { return (double)s346; }
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
+s1311 to_bytes() const override;
 void s1919( Stream* ) const override;
 void to_null( ) override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
@@ -3081,7 +3082,7 @@ s1421, s1422, s2194, s2063, s1423, s1424, s1427,
 s1425, s1426, s1610, s1428, s1931, s1611, 
 s1429, s2215, s1430, s1613, s1614, s1431,
 s1871, s1612,	s1932, s1930, s1432,
-s1550, s1433, s1434, s1435, s1615,
+s1550, s1433, s2491, s1434, s1435, s1615,
 s1436,	s1437, s1438 };
 extern std::map<std::wstring, int> s1359;
 extern std::vector<int> BIFuncs1v;
@@ -4189,16 +4190,20 @@ s1053 s1190{0};
 static s338 s345;
 void s347() override;
 const s338& s339() const override { return s345; }
+static void s1226( s480** s273, size_t n );
 static void s395( s480** s273, size_t n );
 static void s1964( s480** s273, size_t n );
 static void s1576( s480** s273, size_t n );
 static void s2249( s480** s273, size_t n );
 static void s1731( s480** s273, size_t n );
 static void s400( s480** s273, size_t n );
+static void s410( s480** s273, size_t n );
 static void s384( s480** s273, size_t n );
 public:
 s1133( s261* s299 ) : s333( s299, NULL, NULL ) {}
 s1133( s261* s299, s1889& s77, const s262* ast_ = NULL );
+s1133( s261* s299, s271* s585, s1053 et, s1053 vt, s1053 it,
+const s262* ast_ = NULL );
 s1133( const s1133& right, const s262* ast_ = NULL );
 s1133( s261* s299, s271* context, Iterator* it, const s262* ast_ = NULL );
 virtual ~s1133() {}
@@ -4463,6 +4468,7 @@ s270* s1324( tdbyte_t el ) { return new s1284( s299, el ); }
 s480* s1180( Iterator* it ) override;
 void clear() { s346.clear(); }
 void add( tdbyte_t el ) { s346.push_back( el ); }
+void append( s1374& sub ) { s346.append( sub ); }
 void erase( size_t n ) { s346.erase( begin( s346 ) + n ); }
 size_t size() const { return s346.size(); }
 s1374& s317() { return s346; }
@@ -4995,6 +5001,20 @@ s1924( s261* s299 );
 void s497( const s271* s1657, bool proc ) override;
 s483 s494( s480** s273, size_t s495 ) override;
 s270* s332( s588* s2041, s271* impl ) const override;
+};
+class s2486
+: public s588{
+s482 s42;
+public:
+enum s1131{ s1223 };
+s2486( s261* s299, s271* s585, s588* s584, const std::vector<s270*>& l, const s262* s694,
+bool s2158 = false );
+s2486( const s2486& right, s271* s585, s588* s584 );
+s2486( s261* s299 );
+void s497( const s271* s1657, bool proc ) override;
+s483 s494( s480** s273, size_t s495 ) override;
+s270* s332( s588* s2041, s271* impl ) const override;	
+void s2117( s588* s2041, s271* impl, bool s2158 ) override;
 };
 template<class _Cont, class s1300, class Der>
 s1133* s310<_Cont, s1300, Der>::s1959( Der** pv, typename _Cont::iterator& s1965 ){
@@ -6363,7 +6383,7 @@ s1053 s1999( s1889& s851 ) const override;
 std::wstring to_wstring( uint32_t s1552 = 0 ) const override;
 void s303( std::wostream* pd, int s196 = 0 ) const override;
 };
-#define TRANSD_VERSION L"0.520"
+#define TRANSD_VERSION L"0.521"
 void evaluateExpression( const std::wstring& s77 );
 HPROG createAssembly();
 void deleteAssembly( int n );
